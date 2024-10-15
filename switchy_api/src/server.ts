@@ -1,19 +1,12 @@
-import express from "express";
-import { Router, Request, Response } from "express";
+import app from "./app";
+import "dotenv/config";
+import swaggerUi from "swagger-ui-express";
+//@ts-ignore
+import swaggerFile from "../swagger_output.json";
 
+const PORT = process.env.PORT;
 
-const app = express();
-
-const route = Router();
-
-app.use(express.json());
-
-
-
-route.get("/", (req: Request, res: Response) => {
-    res.json({ message: 'Hello world' });
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.listen(PORT, () => {
+    console.warn(`Application is running: http://localhost:${PORT}/swagger`);
 });
-
-app.use(route);
-
-app.listen(3333, () => "server running on port 3333");

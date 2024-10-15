@@ -3,13 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const express_2 = require("express");
-const app = (0, express_1.default)();
-const route = (0, express_2.Router)();
-app.use(express_1.default.json());
-route.get("/", (req, res) => {
-    res.json({ message: 'Hello world' });
+const app_1 = __importDefault(require("./app"));
+require("dotenv/config");
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+//@ts-ignore
+const swagger_output_json_1 = __importDefault(require("../swagger_output.json"));
+const PORT = process.env.PORT;
+app_1.default.use("/swagger", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_output_json_1.default));
+app_1.default.listen(PORT, () => {
+    console.warn(`Application is running: http://localhost:${PORT}/swagger`);
 });
-app.use(route);
-app.listen(3333, () => "server running on port 3333");
