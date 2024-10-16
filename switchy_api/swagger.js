@@ -1,6 +1,6 @@
 const swaggerAutogen = require('swagger-autogen')()
 const port = process.env.PORT
 const outputFile = './swagger_output.json'
-const endpointsFiles = ['./src/routes.ts']
+const endpointsFiles = ['./src/routes/routes.ts']
 
 swaggerAutogen(outputFile, endpointsFiles, {host: `localhost:3333`})
