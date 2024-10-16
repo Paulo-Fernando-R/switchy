@@ -1,8 +1,8 @@
-import app from "./app";
-import "dotenv/config";
-import swaggerUi from "swagger-ui-express";
 //@ts-ignore
 import swaggerFile from "../swagger_output.json";
+import swaggerUi from "swagger-ui-express";
+import app from "./app";
+import "dotenv/config";
 
 const PORT = process.env.PORT;
 
