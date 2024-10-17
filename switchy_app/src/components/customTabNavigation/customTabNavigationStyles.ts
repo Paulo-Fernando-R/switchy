@@ -1,0 +1,48 @@
+import { StyleSheet } from "react-native";
+import appTexts from "../../styles/appTexts";
+import appColors from "../../styles/appColors";
+
+const styles = StyleSheet.create({
+    tabBarBox: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingHorizontal: 40,
+        paddingVertical: 10,
+        height: 60,
+        borderTopColor: appColors.primary100,
+        borderTopWidth: 1,
+        backgroundColor: appColors.bg100,
+        borderRadius: 100,
+        position: 'absolute',
+        bottom: 20,
+        width: '80%',
+        alignSelf:'center'
+    },
+
+    image: {
+        width: 28,
+        height: 28,
+    },
+
+    tabBarButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+    },
+    tabActive: {
+        backgroundColor: appColors.bg300,
+        borderRadius: 20,
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+    },
+    tabBarTextAcive: {
+        ...appTexts.paragraph1Regular,
+        color: appColors.primary100,
+    },
+});
+export default styles;

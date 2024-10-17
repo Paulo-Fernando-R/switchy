@@ -32,7 +32,7 @@ const paragraph3Regular: TextStyle = {
     color: appColors.text100,
 };
 
-const textStyles = {
+const appTexts = {
     title1SemiBold,
     title2Medium,
     paragraph1Regular,
@@ -40,4 +40,4 @@ const textStyles = {
     paragraph3Regular,
 };
 
-export default textStyles;
+export default appTexts;
