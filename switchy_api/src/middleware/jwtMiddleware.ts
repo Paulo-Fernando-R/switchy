@@ -28,7 +28,6 @@ class JwtMiddleware {
         const token = jwt.sign({ userId: userId }, this.secret!, {
             expiresIn: expiration,
         });
-
         return token;
     }
 }
