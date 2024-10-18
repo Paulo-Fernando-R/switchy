@@ -11,7 +11,7 @@ const text200 = "#E0E0E0";
 const text300 = "#9F9F9F";
 const text400 = "#545454";
 
-const stroke100 = "#171725";
+const stroke100 = "#2C2C3E";
 
 const bg100 = "#0F0F1A";
 const bg200 = "#1E1F29";

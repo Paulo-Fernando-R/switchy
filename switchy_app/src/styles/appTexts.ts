@@ -16,19 +16,19 @@ const title2Medium: TextStyle = {
 const paragraph1Regular: TextStyle = {
     fontFamily: "Roboto",
     fontWeight: "regular",
-    fontSize: 14,
+    fontSize: 15,
     color: appColors.text100,
 };
 const paragraph2Regular: TextStyle = {
     fontFamily: "Roboto",
     fontWeight: "regular",
-    fontSize: 13,
+    fontSize: 14,
     color: appColors.text100,
 };
 const paragraph3Regular: TextStyle = {
     fontFamily: "Roboto",
     fontWeight: "regular",
-    fontSize: 10,
+    fontSize: 13,
     color: appColors.text100,
 };
 

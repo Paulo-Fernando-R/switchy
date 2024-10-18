@@ -9,14 +9,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         paddingVertical: 10,
         height: 60,
-        borderTopColor: appColors.primary100,
-        borderTopWidth: 1,
-        backgroundColor: appColors.bg100,
+        backgroundColor: appColors.bg200,
         borderRadius: 100,
-        position: 'absolute',
+        position: "absolute",
         bottom: 20,
-        width: '80%',
-        alignSelf:'center'
+        width: "80%",
+        alignSelf: "center",
+        elevation: 1,
     },
 
     image: {

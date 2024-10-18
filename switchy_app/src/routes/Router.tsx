@@ -24,7 +24,7 @@ function AuthRouter() {
 function AppRouter() {
     return (
         <NavigationContainer>
-            <Tab.Navigator screenOptions={{ headerShown: false }} tabBar={CustomTabNavigation}>
+            <Tab.Navigator screenOptions={{ headerShown: false }} tabBar={CustomTabNavigation} sceneContainerStyle={{paddingTop: 24}}>
                 <Tab.Screen name="Home" component={Home} />
                 <Tab.Screen name="Search" component={Search} />
                 <Tab.Screen name="Publish" component={Publish} />
