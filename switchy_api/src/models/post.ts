@@ -7,8 +7,8 @@ export interface IPost {
     parentId?: string;
     publishDate: Date;
     content: string;
-    comments?: { postId: Types.ObjectId }[];
-    likes: { userId: Types.ObjectId }[];
+    comments?: { postId: string }[];
+    likes?: { userId: string }[];
 }
 
 const postSchema = new Schema<IPost>({
@@ -17,8 +17,8 @@ const postSchema = new Schema<IPost>({
     parentId: { type: String, required: false, default:null },
     publishDate: { type: Date, default: new Date(Date.now()) },
     content: { type: String, required: true },
-    comments: [{ postId: { type: Schema.Types.ObjectId, required: false, defalt: [] } }],
-    likes: [{ userId: { type: Schema.Types.ObjectId, required: false, defalt: [] } }],
+    comments: [{ postId: { type: String, required: false, defalt: [] } }],
+    likes: [{ userId: { type: String, required: false, defalt: [] } }],
 });
 
 export const Post = model<IPost>("Post", postSchema);
