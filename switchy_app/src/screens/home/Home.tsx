@@ -4,15 +4,25 @@ import { Text, View, Image, FlatList } from "react-native";
 import logo from "../../../assets/images/logo.png";
 import styles from "./homeStyles";
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import HomeController from "./homeController";
 
 export default function Home() {
+    const controller = new HomeController();
+
+    const { data, error } = useQuery({
+        queryKey: ["Feeds"],
+        queryFn: () => controller.getFeedData(),
+    });
+
+    console.log(data, error);
     return (
         <FlatList
             ListHeaderComponent={() => <Header />}
             style={styles.page}
             contentContainerStyle={styles.list}
-            data={[1, 2, 3, 4, 4, 5]}
-            renderItem={() => <PostFeedItem />}
+            data={data}
+            renderItem={({ item, index }) => <PostFeedItem item={item} />}
         />
     );
 }
