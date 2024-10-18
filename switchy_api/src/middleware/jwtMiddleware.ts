@@ -4,7 +4,6 @@ import "dotenv/config";
 
 class JwtMiddleware {
     private readonly secret = process.env.JWT_SECRET;
-    private readonly expiration = process.env.TOKEN_EXPIRES;
 
     constructor() {}
 
@@ -25,9 +24,9 @@ class JwtMiddleware {
         });
     }
 
-    createJWT(userId: string) {
+    createJWT(userId: string, expiration: string) {
         const token = jwt.sign({ userId: userId }, this.secret!, {
-            expiresIn: this.expiration!,
+            expiresIn: expiration,
         });
 
         return token;
