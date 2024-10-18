@@ -75,6 +75,45 @@
           }
         }
       }
+    },
+    "/Login/SignIn": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok."
+          },
+          "400": {
+            "description": "Bad Request."
+          },
+          "404": {
+            "description": "User Not Found."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
     }
   }
 }
