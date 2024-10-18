@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from "axios";
 
-const url = "10.0.0.135";
+const url = process.env.EXPO_PUBLIC_API_URL;
 
 const instance = axios.create({
     baseURL: url,
