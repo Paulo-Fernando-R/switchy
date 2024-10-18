@@ -14,7 +14,7 @@ export interface IPost {
 const postSchema = new Schema<IPost>({
     id: { type: Schema.Types.ObjectId, ref: "id", required: false },
     user: { type: Map, required: false, default: null },
-    parentId: { type: String, required: true },
+    parentId: { type: String, required: false, default:null },
     publishDate: { type: Date, default: new Date(Date.now()) },
     content: { type: String, required: true },
     comments: [{ postId: { type: Schema.Types.ObjectId, required: false, defalt: [] } }],

@@ -15,4 +15,6 @@ postRoutes.post("/CreatePost/", jwtMiddleware.veryfyJWT, (req, res) => {
     return controller.createPost(req, res);
 });
 
+postRoutes.get('GetByUser')
+
 export default postRoutes;
