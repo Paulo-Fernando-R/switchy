@@ -5,7 +5,7 @@ import jwtMiddleware from "../middleware/jwtMiddleware";
 const postRoutes = Router();
 const controller = new PostController();
 
-postRoutes.post("/CreatePost/", jwtMiddleware.veryfyJWT, (req, res) => {
+postRoutes.post("/CreatePost", jwtMiddleware.veryfyJWT, (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }

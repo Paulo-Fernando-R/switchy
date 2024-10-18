@@ -115,7 +115,7 @@
         }
       }
     },
-    "/CreatePost/": {
+    "/CreatePost": {
       "post": {
         "tags": [
           "Post"
