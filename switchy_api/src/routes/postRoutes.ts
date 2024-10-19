@@ -29,6 +29,14 @@ postRoutes.post("/AddCommentPost", jwtMiddleware.veryfyJWT, (req, res) => {
     return controller.addCommentPost(req, res);
 });
 
+postRoutes.get("/getPostComments/:postId", /*jwtMiddleware.veryfyJWT,*/ (req, res) => {
+    // #swagger.tags = ['Post']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+    return controller.getPostComments(req, res);
+});
+
 postRoutes.get("/GetPostById/:postId", jwtMiddleware.veryfyJWT, (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }

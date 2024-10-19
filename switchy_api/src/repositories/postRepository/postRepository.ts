@@ -9,6 +9,42 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     constructor() {
         super();
     }
+    async getPostComments(id: string): Promise<IPost[]> {
+        try {
+            await this.connect();
+            const post = await Post.findById(id).exec();
+            const comments = post?.comments;
+
+            if (!comments) {
+                return [];
+            }
+
+            const res = await Post.find({
+                _id: {
+                    $in: comments?.map((e) => new Types.ObjectId(e.postId)),
+                },
+            }).exec();
+
+            const posts = res.map((e) => {
+                const aux: IPost = {
+                    content: e.content,
+                    publishDate: e.publishDate,
+                    user: e.user,
+                    id: e._id,
+                    parentId: e.parentId,
+                    comments: e.comments,
+                    likes: e.likes,
+                };
+                return aux;
+            });
+
+            return posts;
+        } catch (error) {
+            console.error(error);
+            //@ts-ignore
+            throw new ServerError(error.message ?? "");
+        }
+    }
 
     async createPost(post: IPost) {
         try {
@@ -92,7 +128,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
                     $push: { comments: { postId: res._id.toString() } },
                 });
                 console.log(res);
-                return
+                return;
             }
             throw new ServerError("unnable to insert");
         } catch (error) {
@@ -128,4 +164,4 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     }
 }
 
- //new PostRepository();
+//new PostRepository();

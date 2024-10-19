@@ -85,4 +85,14 @@ export default class PostController {
             res.status(StatusCodes.InternalServerError).send(error);
         }
     }
+
+    async getPostComments(req: Request, res:Response){
+        const { postId } = req.params;
+        try {
+            const response = await this.postRepository.getPostComments(postId);
+            res.status(StatusCodes.Ok).send(response);
+        } catch (error) {
+            res.status(StatusCodes.InternalServerError).send(error);
+        }
+    }
 }
