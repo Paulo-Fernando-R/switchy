@@ -1,11 +1,12 @@
 import type { StackNavigationProp } from "@react-navigation/stack";
 import type { NavigatorScreenParams, RouteProp } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import Post from "../../models/post";
 
 export type HomeStackParamList = {
     Home: undefined;
     Comments: {
-        postId: string;
+        post: Post
     };
 };
 

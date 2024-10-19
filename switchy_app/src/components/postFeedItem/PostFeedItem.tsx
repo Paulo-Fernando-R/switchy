@@ -9,19 +9,25 @@ import React, { useState } from "react";
 import Post from "../../models/post";
 import { Facebook } from "react-content-loader/native";
 import timeAgoFormatter from "../../../timeAgoFormatter";
+import { HomeNavigationProp } from "../../routes/types/navigationTypes";
 
 type PostFeedItemProps = {
     item: Post | undefined;
-    error:Error | null
+    error?: Error | null;
+    navigation?: HomeNavigationProp | undefined;
 };
 
-export default function PostFeedItem({ item, error }: PostFeedItemProps) {
+export default function PostFeedItem({ item, error, navigation }: PostFeedItemProps) {
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
 
     const timeAgo = timeAgoFormatter(item.publishDate);
     const [liked, setLiked] = useState(false);
+
+    function navigate() {
+        navigation?.navigate("Comments", { post: item! });
+    }
 
     function handleLike() {
         setLiked(!liked);
@@ -51,10 +57,13 @@ export default function PostFeedItem({ item, error }: PostFeedItemProps) {
 
                         <Text style={styles.contentActionText}>{item?.likes?.length}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.contentActionButton}>
-                        <FontAwesome name="comment-o" size={20} color={appColors.text100} />
-                        <Text style={styles.contentActionText}>{item.comments?.length}</Text>
-                    </TouchableOpacity>
+
+                    {navigation ? (
+                        <TouchableOpacity style={styles.contentActionButton} onPress={navigate}>
+                            <FontAwesome name="comment-o" size={20} color={appColors.text100} />
+                            <Text style={styles.contentActionText}>{item.comments?.length}</Text>
+                        </TouchableOpacity>
+                    ) : null}
                 </View>
             </View>
         </View>

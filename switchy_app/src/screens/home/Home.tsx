@@ -20,10 +20,6 @@ export default function Home({ navigation }: HomeProps) {
         queryFn: () => controller.getFeedData(),
     });
 
-    function nav() {
-        navigation.navigate("Comments", { postId: "111" });
-    }
-
     return (
         <FlatList
             refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
@@ -31,7 +27,7 @@ export default function Home({ navigation }: HomeProps) {
             style={styles.page}
             contentContainerStyle={styles.list}
             data={data}
-            renderItem={({ item, index }) => <PostFeedItem item={item} error={error} />}
+            renderItem={({ item, index }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
         />
     );
 }

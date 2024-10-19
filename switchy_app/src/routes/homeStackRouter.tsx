@@ -5,13 +5,13 @@ import { useTabBarContext } from "../contexts/tabBarContext";
 import { Text, View } from "react-native";
 import { useLayoutEffect } from "react";
 import Home from "../screens/home/Home";
+import Comments from "../screens/comments/Comments";
 
 const Stack = createStackNavigator<HomeStackParamList>();
 
 export default function HomeStackRouter({ navigation, route }: RootTabsHomeNavigationProp) {
-
     const { setTabBarVisible } = useTabBarContext();
-    
+
     useLayoutEffect(() => {
         const routName = getFocusedRouteNameFromRoute(route);
         if (routName === "Comments") {
@@ -25,16 +25,8 @@ export default function HomeStackRouter({ navigation, route }: RootTabsHomeNavig
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Group screenOptions={{ presentation: "modal" }}>
-                <Stack.Screen name="Comments" component={Tets} initialParams={{ postId: "" }} />
+                <Stack.Screen name="Comments" component={Comments} initialParams={{ post: undefined }} />
             </Stack.Group>
         </Stack.Navigator>
-    );
-}
-
-function Tets() {
-    return (
-        <View>
-            <Text>TESTE</Text>
-        </View>
     );
 }

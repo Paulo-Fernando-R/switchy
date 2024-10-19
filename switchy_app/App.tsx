@@ -10,7 +10,8 @@ import TimeAgo from "javascript-time-ago";
 import { useState } from "react";
 
 export default function App() {
-    TimeAgo.addDefaultLocale(br);
+    TimeAgo.addLocale(br);
+
     const [tabBarVisible, setTabBarVisible] = useState(true);
     const changeState = (isVisible: boolean) => setTabBarVisible(isVisible);
     return (
