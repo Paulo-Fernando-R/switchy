@@ -4,7 +4,7 @@ import jwtMiddleware from "../../middleware/jwtMiddleware";
 import ServerError from "../../errors/serverError";
 import IUserRepository from "./IuserRepository";
 
-class UserRepository extends DatabaseConnection implements IUserRepository {
+export default class UserRepository extends DatabaseConnection implements IUserRepository {
     async createUser(user: IUser) {
         try {
             await this.connect();
@@ -89,5 +89,3 @@ class UserRepository extends DatabaseConnection implements IUserRepository {
         return user;
     }
 }
-
-export default new UserRepository();
