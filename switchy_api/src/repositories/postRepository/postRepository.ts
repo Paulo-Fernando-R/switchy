@@ -5,7 +5,7 @@ import IPostRepository from "./IpostRepository";
 import { User } from "../../models/user";
 import { Types } from "mongoose";
 
-class PostRepository extends DatabaseConnection implements IPostRepository {
+export class PostRepository extends DatabaseConnection implements IPostRepository {
     constructor() {
         super();
     }
@@ -128,4 +128,4 @@ class PostRepository extends DatabaseConnection implements IPostRepository {
     }
 }
 
-export default new PostRepository();
+ //new PostRepository();

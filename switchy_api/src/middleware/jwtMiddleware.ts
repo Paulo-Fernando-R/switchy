@@ -3,14 +3,16 @@ import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import "dotenv/config";
 
 class JwtMiddleware {
-    private readonly secret = process.env.JWT_SECRET!;
+    private readonly secret: string;
 
-    constructor() {}
+    constructor() {
+        this.secret = process.env.JWT_SECRET!;
+    }
 
     veryfyJWT(request: Request, response: Response, next: NextFunction) {
         const token = request.headers["authorization"];
-
-        jwt.verify(token!, this.secret, (err, decoded) => {
+        const secret = process.env.JWT_SECRET!;
+        jwt.verify(token!, secret, (err, decoded) => {
             if (err) {
                 console.log(err);
                 return response.status(401).end("unauthorized");
@@ -25,9 +27,6 @@ class JwtMiddleware {
 
     isValid(token: string): JwtPayload {
         var result = jwt.verify(token!, this.secret);
-        /*if (result instanceof String) {
-            throw new JsonWebTokenError('Invalid token');
-        }*/
 
         result = result as JwtPayload;
 
