@@ -88,6 +88,7 @@ export default class PostController {
 
     async getPostComments(req: Request, res:Response){
         const { postId } = req.params;
+      
         try {
             const response = await this.postRepository.getPostComments(postId);
             res.status(StatusCodes.Ok).send(response);

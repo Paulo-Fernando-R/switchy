@@ -2,12 +2,14 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "./commentsStyles";
 import { HomeNavigationProp } from "../../routes/types/navigationTypes";
 import { CommentsRouteProp } from "../../routes/types/navigationTypes";
-import React from "react";
+import React, { useState } from "react";
 import BackButton from "../../components/backButton/BackButton";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import { FlatList } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import appColors from "../../styles/appColors";
+import CommentsController from "./commentsController";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 type CommentsProps = {
     route: CommentsRouteProp;
@@ -15,10 +17,21 @@ type CommentsProps = {
 };
 
 export default function Comments({ route, navigation }: CommentsProps) {
+    const controller = new CommentsController();
+    const [content, setContent] = useState("");
     const { post } = route.params;
     function goBack() {
         navigation.navigate("Home");
     }
+
+    const { data, error, refetch } = useQuery({
+        queryKey: [`Comments${post.id}`],
+        queryFn: () => controller.getComments(post.id!),
+    });
+
+    const mutation = useMutation({
+        mutationFn: () => controller.createComment(content, post.id!, refetch, setContent),
+    });
 
     return (
         <View style={styles.page}>
@@ -32,8 +45,8 @@ export default function Comments({ route, navigation }: CommentsProps) {
 
             <FlatList
                 contentContainerStyle={styles.list}
-                data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-                renderItem={({ item }) => <PostFeedItem item={post} navigation={navigation} />}
+                data={data}
+                renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} />}
             />
             <View style={styles.inputBox}>
                 <TextInput
@@ -41,8 +54,10 @@ export default function Comments({ route, navigation }: CommentsProps) {
                     placeholderTextColor={appColors.text300}
                     multiline={true}
                     style={styles.input}
+                    onChangeText={(text) => setContent(text)}
+                    value={content}
                 />
-                <TouchableOpacity activeOpacity={0.8}>
+                <TouchableOpacity activeOpacity={0.8} onPress={() => mutation.mutate()}>
                     <MaterialCommunityIcons name="send-outline" size={20} color={appColors.accent300} />
                 </TouchableOpacity>
             </View>

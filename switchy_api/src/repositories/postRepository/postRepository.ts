@@ -12,6 +12,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     async getPostComments(id: string): Promise<IPost[]> {
         try {
             await this.connect();
+
             const post = await Post.findById(id).exec();
             const comments = post?.comments;
 
@@ -92,7 +93,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
                     content: e.content,
                     publishDate: e.publishDate,
                     user: e.user,
-                    id: e.id,
+                    id: e._id,
                     parentId: e.parentId,
                     comments: e.comments,
                     likes: e.likes,
