@@ -38,6 +38,7 @@ class UserRepository extends DatabaseConnection implements IUserRepository {
             const user = await User.findById(id);
 
             const res: IUser = {
+                id: user?._id,
                 email: user?.email!,
                 name: user?.name!,
             };

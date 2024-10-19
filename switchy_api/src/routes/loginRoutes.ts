@@ -13,4 +13,13 @@ loginRoutes.post("/Login/SignIn", (req, res) => {
     return controller.signIn(req, res);
 });
 
+loginRoutes.post('/Login/RefreshToken', (req, res) => {
+    // #swagger.tags = ['Login']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[403] = { description: 'Forbidden.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+    return controller.refreshToken(req, res);
+});
+
 export default loginRoutes;
