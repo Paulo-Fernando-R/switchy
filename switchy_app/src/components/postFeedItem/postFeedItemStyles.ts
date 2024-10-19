@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     itemTitle: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 4,
+        gap: 8,
     },
     titleName: {
         ...appTexts.paragraph2Regular,

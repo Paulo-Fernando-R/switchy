@@ -2,7 +2,7 @@
 import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from "axios";
 
 const tempToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzEyYmE5MzkzOWRlNWEzZjFkZmU5NmEiLCJpYXQiOjE3MjkyODA2NTksImV4cCI6MTcyOTI4NDI1OX0.StEc8c6ItNo0qHnQ9CZnDONubeOi6ftsK8EdGgiTzeU";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzEzYTMzZTdhMmJhMmMxYmVhNjMxY2QiLCJpYXQiOjE3MjkzNDAyMjIsImV4cCI6MTcyOTQyNjYyMn0.gcsiRCzBBn7WmTg1fHhvpZF3ZHey15PCRpG7-ODFcWA";
 
 const instance = axios.create({
     baseURL: process.env.EXPO_PUBLIC_API_URL,
