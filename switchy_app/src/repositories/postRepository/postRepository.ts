@@ -1,7 +1,9 @@
+import { NetworkError, UnauthorizedError } from "../../errors/customErrors";
 import Post from "../../models/post";
 import axiosInstance from "../../services/customAxiosClient/customAxiosClient";
+import IPostRepository from "./IpostRepository";
 
-export default class PostRepository {
+export default class PostRepository implements IPostRepository {
     async getFeedPosts() {
         const response = await axiosInstance.get<Post[]>("/GetFeedPosts");
         response.data.map((e) => {
@@ -10,7 +12,18 @@ export default class PostRepository {
             return e;
         });
 
-        if (response.status === 200) return response.data;
-        else throw new Error("Failed to get feed posts");
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 401) {
+            throw new UnauthorizedError();
+        }
+
+        if (response.status !== 200) {
+            throw new Error();
+        }
+
+        return response.data;
     }
 }
