@@ -24,21 +24,6 @@ class JwtMiddleware {
             next();
         });
     }
-
-    isValid(token: string): JwtPayload {
-        var result = jwt.verify(token!, this.secret);
-
-        result = result as JwtPayload;
-
-        return result;
-    }
-
-    createJWT(userId: string, expiration: string) {
-        const token = jwt.sign({ userId: userId }, this.secret!, {
-            expiresIn: expiration,
-        });
-        return token;
-    }
 }
 
 export default new JwtMiddleware();
