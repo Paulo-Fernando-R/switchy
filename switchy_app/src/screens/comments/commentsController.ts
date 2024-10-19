@@ -25,7 +25,6 @@ export default class CommentsController {
         if (content.length < 3) {
             return;
         }
-      //  console.log(parentId, content);
 
         try {
             await this.repository.createPost(content, parentId);
