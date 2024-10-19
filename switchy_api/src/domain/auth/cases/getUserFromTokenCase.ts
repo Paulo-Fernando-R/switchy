@@ -1,15 +1,17 @@
 import { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
-import jwtMiddleware from "../../../middleware/jwtMiddleware";
 import { IUser } from "../../../models/user";
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
 import { UserNotFoundError } from "../../user/errors/userErrors";
 import { AuthEmptyFieldsError, AuthInvalidTokenError } from "../errors/authErrors";
+import ITokenService from "../../../services/token/itokenService";
 
 export default class GetUserFromTokenCase {
     private readonly userRepository: IUserRepository;
+    private readonly tokenService: ITokenService;
 
-    constructor(userRepository: IUserRepository) {
+    constructor(userRepository: IUserRepository, tokenService: ITokenService) {
         this.userRepository = userRepository;
+        this.tokenService = tokenService;
     }
 
     async execute(token: string): Promise<IUser> {
@@ -19,7 +21,7 @@ export default class GetUserFromTokenCase {
 
         let result: JwtPayload;
         try {
-            result = jwtMiddleware.isValid(token);
+            result = this.tokenService.isValid(token);
         } catch (ex) {
             if (ex instanceof JsonWebTokenError) {
                 throw new AuthInvalidTokenError();

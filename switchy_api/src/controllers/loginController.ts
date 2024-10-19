@@ -6,14 +6,22 @@ import { UserError, UserNotFoundError } from "../domain/user/errors/userErrors";
 import GenerateTokenFromUserCase from "../domain/auth/cases/generateTokenFromUserCase";
 import GetUserFromTokenCase from "../domain/auth/cases/getUserFromTokenCase";
 import { AuthEmptyFieldsError, AuthInvalidTokenError } from "../domain/auth/errors/authErrors";
+import ITokenService from "../services/token/itokenService";
+import JwtTokenService from "../services/token/jwtTokenService";
 
 export default class LoginController {
+    private readonly tokenService: ITokenService;
+    
+    constructor() {
+        this.tokenService = new JwtTokenService();
+    }
+
     async signIn(req: Request, res: Response) {
         const { email, password} = req.body;
 
         try {
             const user = await new GetUserByEmailPasswordCase(userRepository).execute(email, password);
-            const response = await new GenerateTokenFromUserCase().execute(user);
+            const response = await new GenerateTokenFromUserCase(this.tokenService).execute(user);
 
             res.type("application/json").status(StatusCodes.Ok).send(response);
         } catch (ex) {
@@ -33,8 +41,8 @@ export default class LoginController {
         const { token } = req.body;
 
         try {
-            const user = await new GetUserFromTokenCase(userRepository).execute(token);
-            const response = await new GenerateTokenFromUserCase().execute(user);
+            const user = await new GetUserFromTokenCase(userRepository, this.tokenService).execute(token);
+            const response = await new GenerateTokenFromUserCase(this.tokenService).execute(user);
 
             res.type("application/json").status(StatusCodes.Ok).send(response);
         } catch (ex) {
