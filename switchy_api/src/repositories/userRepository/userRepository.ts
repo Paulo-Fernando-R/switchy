@@ -32,22 +32,18 @@ export default class UserRepository extends DatabaseConnection implements IUserR
     }
 
     async getUserById(id: string) {
-        try {
-            await this.connect();
+        await this.connect();
 
-            const user = await User.findById(id);
+        const user = await User.findById(id);
+        if (user == null) return null;
 
-            const res: IUser = {
-                id: user?._id,
-                email: user?.email!,
-                name: user?.name!,
-            };
+        const res: IUser = {
+            id: user?._id,
+            email: user?.email!,
+            name: user?.name!,
+        };
 
-            return res;
-        } catch (error) {
-            console.error(error);
-            throw new ServerError();
-        }
+        return res;
     }
 
     async getByEmailAndPassword(email: string, password: string) {
@@ -69,7 +65,7 @@ export default class UserRepository extends DatabaseConnection implements IUserR
         return res;
     }
 
-    async getByEmail(email: string){
+    async getByEmail(email: string) {
         await this.connect();
         
         const userFromDataBase = await User.findOne({
