@@ -1,28 +1,29 @@
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
-import { Text, View, Image, FlatList } from "react-native";
+import { Text, View, Image, FlatList, RefreshControl } from "react-native";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
-import styles from "./homeStyles";
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import HomeController from "./homeController";
+import styles from "./homeStyles";
+import React from "react";
 
 export default function Home() {
     const controller = new HomeController();
 
-    const { data, error } = useQuery({
+    const { data, error, refetch, isRefetching } = useQuery({
         queryKey: ["Feeds"],
         queryFn: () => controller.getFeedData(),
     });
 
-    console.log(data, error);
+    //console.log(data, error);
     return (
         <FlatList
+            refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
             ListHeaderComponent={() => <Header />}
             style={styles.page}
             contentContainerStyle={styles.list}
             data={data}
-            renderItem={({ item, index }) => <PostFeedItem item={item} />}
+            renderItem={({ item, index }) => <PostFeedItem item={item} error={error} />}
         />
     );
 }

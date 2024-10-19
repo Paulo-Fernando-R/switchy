@@ -1,4 +1,4 @@
-import { Text, View, Image, TouchableOpacity } from "react-native";
+import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 //@ts-ignore
 import avatar from "../../../assets/icons/avatar.png";
@@ -7,15 +7,22 @@ import appColors from "../../styles/appColors";
 import styles from "./postFeedItemStyles";
 import React, { useState } from "react";
 import Post from "../../models/post";
+import { Facebook } from "react-content-loader/native";
+import timeAgoFormatter from "../../../timeAgoFormatter";
 
 type PostFeedItemProps = {
     item: Post | undefined;
+    error:Error | null
 };
 
-export default function PostFeedItem({ item }: PostFeedItemProps) {
-    if (!item) return null;
+export default function PostFeedItem({ item, error }: PostFeedItemProps) {
+    if (!item || error) {
+        return <PostFeedItemSkeleton />;
+    }
+
+    const timeAgo = timeAgoFormatter(item.publishDate);
     const [liked, setLiked] = useState(false);
-    const date = new Date(Date.now() - item?.publishDate.getUTCMilliseconds());
+
     function handleLike() {
         setLiked(!liked);
     }
@@ -27,10 +34,10 @@ export default function PostFeedItem({ item }: PostFeedItemProps) {
 
             <View style={styles.itemContent}>
                 <View style={styles.itemTitle}>
-                    <Text style={styles.titleName}>{item?.user.name}</Text>
+                    <Text style={styles.titleName}>{item.user.name}</Text>
 
-                    <Text style={styles.titleUname}>{item?.user.email}</Text>
-                    <Text style={styles.titleUname}>{item?.publishDate.toTimeString()}</Text>
+                    <Text style={styles.titleUname}>{item.user.email}</Text>
+                    <Text style={styles.titleUname}>{timeAgo}</Text>
                 </View>
                 <Text style={styles.itemContentBody}>{item?.content}</Text>
 
@@ -46,10 +53,20 @@ export default function PostFeedItem({ item }: PostFeedItemProps) {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.contentActionButton}>
                         <FontAwesome name="comment-o" size={20} color={appColors.text100} />
-                        <Text style={styles.contentActionText}>{item?.comments?.length}</Text>
+                        <Text style={styles.contentActionText}>{item.comments?.length}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
         </View>
+    );
+}
+
+function PostFeedItemSkeleton() {
+    return (
+        <Facebook
+            backgroundColor={appColors.bg300}
+            foregroundColor={appColors.primary200}
+            width={Dimensions.get("window").width}
+        />
     );
 }

@@ -16,7 +16,7 @@ class UserRepository extends DatabaseConnection implements IUserRepository {
 
             const newUser = await aux.save();
           
-            const token = jwtMiddleware.createJWT(newUser._id.toString(), '1h');
+            const token = jwtMiddleware.createJWT(newUser._id.toString(), '1d');
 
             const res: IUser = {
                 email: newUser.email,
