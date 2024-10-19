@@ -60,7 +60,7 @@ class UserRepository extends DatabaseConnection implements IUserRepository {
         if (!user) return null;
 
         const res: IUser = {
-            id: user.id,
+            id: user._id,
             name: user.name,
             email: email,
         };
