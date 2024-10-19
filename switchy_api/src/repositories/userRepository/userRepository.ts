@@ -48,6 +48,25 @@ class UserRepository extends DatabaseConnection implements IUserRepository {
             throw new ServerError();
         }
     }
+
+    async getByEmailAndPassword(email: string, password: string) {
+        await this.connect();
+
+        const user = await User.findOne({
+            email: email,
+            password: password,
+        });
+
+        if (!user) return null;
+
+        const res: IUser = {
+            id: user.id,
+            name: user.name,
+            email: email,
+        };
+
+        return res;
+    }
 }
 
 export default new UserRepository();
