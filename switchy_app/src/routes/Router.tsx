@@ -1,14 +1,18 @@
+import CustomTabNavigation from "../components/customTabNavigation/CustomTabNavigation";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import Login from "../screens/login/Login";
-import Home from "../screens/home/Home";
-import Search from "../screens/search/Search";
+import { useTabBarContext } from "../contexts/tabBarContext";
+import { RootTabsParamList } from "./types/navigationTypes";
 import Publish from "../screens/publish/Publish";
+import HomeStackRouter from "./homeStackRouter";
+import Search from "../screens/search/Search";
+import Login from "../screens/login/Login";
 import User from "../screens/user/User";
-import CustomTabNavigation from "../components/customTabNavigation/CustomTabNavigation";
+import { View } from "react-native";
+import React from "react";
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<RootTabsParamList>();
 const Stack = createStackNavigator();
 
 function AuthRouter() {
@@ -22,10 +26,16 @@ function AuthRouter() {
 }
 
 function AppRouter() {
+    const { tabBarVisible } = useTabBarContext();
+
     return (
         <NavigationContainer>
-            <Tab.Navigator screenOptions={{ headerShown: false }} tabBar={CustomTabNavigation} sceneContainerStyle={{paddingTop: 24}}>
-                <Tab.Screen name="Home" component={Home} />
+            <Tab.Navigator
+                screenOptions={{ headerShown: false }}
+                tabBar={tabBarVisible ? CustomTabNavigation : () => <View></View>}
+                sceneContainerStyle={{ paddingTop: 24 }}
+            >
+                <Tab.Screen name="HomeStack" component={HomeStackRouter} />
                 <Tab.Screen name="Search" component={Search} />
                 <Tab.Screen name="Publish" component={Publish} />
                 <Tab.Screen name="User" component={User} />

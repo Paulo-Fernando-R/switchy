@@ -1,5 +1,6 @@
-import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import { Text, View, Image, FlatList, RefreshControl } from "react-native";
+import { HomeNavigationProp } from "../../routes/types/navigationTypes";
+import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
 import { useQuery } from "@tanstack/react-query";
@@ -7,7 +8,11 @@ import HomeController from "./homeController";
 import styles from "./homeStyles";
 import React from "react";
 
-export default function Home() {
+type HomeProps = {
+    navigation: HomeNavigationProp;
+};
+
+export default function Home({ navigation }: HomeProps) {
     const controller = new HomeController();
 
     const { data, error, refetch, isRefetching } = useQuery({
@@ -15,7 +20,10 @@ export default function Home() {
         queryFn: () => controller.getFeedData(),
     });
 
-    //console.log(data, error);
+    function nav() {
+        navigation.navigate("Comments", { postId: "111" });
+    }
+
     return (
         <FlatList
             refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}

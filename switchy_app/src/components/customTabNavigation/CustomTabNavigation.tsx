@@ -7,6 +7,7 @@ import { View, TouchableOpacity, Image } from "react-native";
 import styles from "./customTabNavigationStyles";
 import { ReactNode } from "react";
 
+
 //@ts-ignore
 import homeFill from "../../../assets/icons/homeFill.png";
 //@ts-ignore
@@ -40,12 +41,14 @@ type TabBarItemProps = {
 };
 
 export default function CustomTabNavigation({ state, descriptors, navigation }: CustomTabNavigationProps) {
+    
     const icons = [
         (selected: boolean) => <Image style={styles.image} source={selected ? homeFill : homeOut} />,
         (selected: boolean) => <Image style={styles.image} source={selected ? searchFill : searchOut} />,
         (selected: boolean) => <Image style={styles.image} source={selected ? addFill : addOut} />,
         (selected: boolean) => <Image style={styles.image} source={selected ? userFill : userOut} />,
     ];
+
 
     return (
         <View style={styles.tabBarBox}>
