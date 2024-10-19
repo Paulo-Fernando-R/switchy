@@ -1,14 +1,21 @@
 import emailValidator from 'email-validator';
-import userRepository from '../../../repositories/userRepository/userRepository';
 import jwtMiddleware from '../../../middleware/jwtMiddleware';
 import "dotenv/config";
 import { AuthEmptyFieldsError, AuthInvalidEmailError, AuthInvalidPasswordError, AuthNotFoundError } from '../errors/auth_errors';
+import SignInResponse from '../responses/sign_in_response';
+import IUserRepository from '../../../repositories/userRepository/IuserRepository';
 
 export default class SignInCase {
     private readonly tokenExpires = process.env.TOKEN_EXPIRES!;
     private readonly refreshTokenExpires = process.env.REFRESH_TOKEN_EXPIRES!;
 
-    async execute(email: string, password: string) {
+    private readonly userRepository: IUserRepository;
+
+    constructor(userRepository: IUserRepository) {
+        this.userRepository = userRepository;
+    }
+
+    async execute(email: string, password: string) : Promise<SignInResponse> {
         if (!email || !password) {
             throw new AuthEmptyFieldsError();
         }
@@ -22,7 +29,7 @@ export default class SignInCase {
             throw new AuthInvalidPasswordError();
         }
 
-        const user = await userRepository.getByEmailAndPassword(email, password);
+        const user = await this.userRepository.getByEmailAndPassword(email, password);
         if (user == null) {
             throw new AuthNotFoundError();
         }
@@ -35,7 +42,7 @@ export default class SignInCase {
         const accessToken = jwtMiddleware.createJWT(id, this.tokenExpires);
         const refreshToken = jwtMiddleware.createJWT(id, this.refreshTokenExpires);
 
-        const response = {
+        const response: SignInResponse = {
             access_token: accessToken,
             refresh_token: refreshToken,
             access_token_expires_at_utc: expireTime,
