@@ -1,11 +1,20 @@
 import { NetworkError, UnauthorizedError } from "../../errors/customErrors";
 import Post from "../../models/post";
-import axiosInstance from "../../services/customAxiosClient/customAxiosClient";
+import CustomAxiosClient from "../../services/customAxiosClient/customAxiosClient";
+import ICustomAxiosClient from "../../services/customAxiosClient/IcustomAxiosClient";
+//import axiosInstance from "../../services/customAxiosClient/customAxiosClient";
 import IPostRepository from "./IpostRepository";
 
 export default class PostRepository implements IPostRepository {
+    private axios: ICustomAxiosClient;
+
+    constructor() {
+        this.axios = new CustomAxiosClient();
+    }
+
     async getPostComments(postId: string): Promise<Post[]> {
-        const response = await axiosInstance.get<Post[]>("/Comments/ByPost/" + postId);
+        const response = await this.axios.instance.get<Post[]>("/Comments/ByPost/" + postId);
+
         response.data.map((e) => {
             const aux = new Date(e.publishDate);
             e.publishDate = aux;
@@ -27,7 +36,7 @@ export default class PostRepository implements IPostRepository {
         return response.data;
     }
     async getFeedPosts() {
-        const response = await axiosInstance.get<Post[]>("/Post/GetFeedPosts");
+        const response = await this.axios.instance.get<Post[]>("/Post/GetFeedPosts");
         response.data.map((e) => {
             const aux = new Date(e.publishDate);
             e.publishDate = aux;
@@ -54,7 +63,7 @@ export default class PostRepository implements IPostRepository {
             content: content,
             parentId: parentId,
         };
-        const response = await axiosInstance.post("/Comments/Add", data);
+        const response = await this.axios.instance.post("/Comments/Add", data);
 
         if (!response) {
             throw new NetworkError();

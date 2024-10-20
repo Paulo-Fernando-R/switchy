@@ -15,14 +15,14 @@ export default class GetUserByEmailPasswordCase {
             throw new UserEmptyFieldsError();
         }
 
-        const isValidEmail = emailValidator.validate(email);
-        if (!isValidEmail) {
-            throw new UserInvalidEmailError();
-        }
+        // const isValidEmail = emailValidator.validate(email);
+        // if (!isValidEmail) {
+        //     throw new UserInvalidEmailError();
+        // }
 
-        if (password.length < 8 || password.length > 16) {
-            throw new UserInvalidPasswordError();
-        }
+        // if (password.length < 8 || password.length > 16) {
+        //     throw new UserInvalidPasswordError();
+        // }
 
         const user = await this.userRepository.getByEmailAndPassword(email, password);
         if (user == null) {

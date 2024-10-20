@@ -13,7 +13,7 @@ commentsRoutes.post("/Add", (req, res) => {
     return controller.add(req, res);
 });
 
-commentsRoutes.get("/ByPost/{postId}", (req, res) => {
+commentsRoutes.get("/ByPost/:postId", (req, res) => {
     // #swagger.tags = ['Comments']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
