@@ -22,9 +22,9 @@ export default class GenerateTokenFromUserCase {
         const refreshToken = this.tokenService.create(id, this.refreshTokenExpires);
 
         const response: SignInResponse = {
-            access_token: accessToken,
-            refresh_token: refreshToken,
-            access_token_expires_at_utc: expireTime,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            accessTokenExpiresAtUtc: expireTime,
         };
 
         return response;

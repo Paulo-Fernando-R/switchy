@@ -1,5 +1,5 @@
 export default class SignInResponse {
-    access_token: string = '';
-    refresh_token: string = '';
-    access_token_expires_at_utc: Date = new Date();
+    accessToken: string = '';
+    refreshToken: string = '';
+    accessTokenExpiresAtUtc: Date = new Date();
 }
