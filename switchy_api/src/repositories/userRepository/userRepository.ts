@@ -3,8 +3,16 @@ import DatabaseConnection from "../../database/databaseConnection";
 import jwtMiddleware from "../../middleware/jwtMiddleware";
 import ServerError from "../../errors/serverError";
 import IUserRepository from "./IuserRepository";
+import ITokenService from "../../services/token/itokenService";
+import JwtTokenService from "../../services/token/jwtTokenService";
 
-export default class UserRepository extends DatabaseConnection implements IUserRepository {
+export class UserRepository extends DatabaseConnection implements IUserRepository {
+    private readonly jwt: ITokenService;
+
+    constructor() {
+        super();
+        this.jwt = new JwtTokenService();
+    }
     async createUser(user: IUser) {
         try {
             await this.connect();
@@ -15,8 +23,8 @@ export default class UserRepository extends DatabaseConnection implements IUserR
             });
 
             const newUser = await aux.save();
-          
-            const token = jwtMiddleware.createJWT(newUser._id.toString(), '1d');
+
+            const token = this.jwt.create(newUser._id.toString(), "1d");
 
             const res: IUser = {
                 email: newUser.email,
@@ -67,20 +75,20 @@ export default class UserRepository extends DatabaseConnection implements IUserR
 
     async getByEmail(email: string) {
         await this.connect();
-        
+
         const userFromDataBase = await User.findOne({
-            email: email
+            email: email,
         });
 
-        if(!userFromDataBase){
+        if (!userFromDataBase) {
             return null;
         }
-        
+
         const user: IUser = {
             id: userFromDataBase._id,
             name: userFromDataBase.name,
             email: email,
-        }
+        };
 
         return user;
     }

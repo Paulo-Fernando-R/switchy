@@ -8,7 +8,7 @@ import { AuthEmptyFieldsError, AuthInvalidTokenError } from "../domain/auth/erro
 import ITokenService from "../services/token/itokenService";
 import JwtTokenService from "../services/token/jwtTokenService";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
-import UserRepository from "../repositories/userRepository/userRepository";
+import { UserRepository } from "../repositories/userRepository/userRepository";
 
 export default class LoginController {
     private readonly tokenService: ITokenService;

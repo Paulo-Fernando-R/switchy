@@ -5,7 +5,7 @@ import { PostRepository } from "../repositories/postRepository/postRepository";
 import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
 import { UserError } from "../domain/user/errors/userErrors";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
-import UserRepository from "../repositories/userRepository/userRepository";
+import { UserRepository } from "../repositories/userRepository/userRepository";
 import SaveCommentCase from "../domain/post/cases/saveCommentCase";
 import { PostError } from "../domain/post/errors/postErrors";
 import GetCommentsCase from "../domain/post/cases/getCommentsCase";
