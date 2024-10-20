@@ -14,7 +14,7 @@ commentsRoutes.post("/Comments/Add", jwtMiddleware.veryfyJWT, (req, res) => {
     return controller.add(req, res);
 });
 
-commentsRoutes.get("/Comments/ByPost/{postId}", jwtMiddleware.veryfyJWT, (req, res) => {
+commentsRoutes.get("/Comments/ByPost/:postId", jwtMiddleware.veryfyJWT, (req, res) => {
     // #swagger.tags = ['Comments']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
