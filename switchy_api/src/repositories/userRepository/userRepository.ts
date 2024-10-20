@@ -1,6 +1,5 @@
 import { IUser, User } from "../../models/user";
 import DatabaseConnection from "../../database/databaseConnection";
-import jwtMiddleware from "../../middleware/jwtMiddleware";
 import ServerError from "../../errors/serverError";
 import IUserRepository from "./IuserRepository";
 import ITokenService from "../../services/token/itokenService";
@@ -39,7 +38,7 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
         }
     }
 
-    async getUserById(id: string) {
+    async getById(id: string) {
         await this.connect();
 
         const user = await User.findById(id);
@@ -47,7 +46,8 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
 
         const res: IUser = {
             id: user?._id,
-            email: user?.email!,
+            email: user?.email,
+            userName: user.userName,
             name: user?.name!,
         };
 

@@ -7,12 +7,13 @@ const controller = new UserController();
 userRoutes.post("/NewUser", controller.newUser);
 
 
-userRoutes.get("/GetById", (request: Request, response: Response) => {
-    // #swagger.tags = ['GetById']
+userRoutes.get("/Info", (request: Request, response: Response) => {
+    // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[404] = { description: 'Not Found.' }
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
-    return controller.getUserById(request, response);
+    return controller.getInfo(request, response);
 });
 
 
