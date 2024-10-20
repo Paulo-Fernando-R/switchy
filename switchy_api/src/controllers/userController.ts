@@ -6,46 +6,29 @@ import { StatusCodes } from "../utils/status_codes";
 import { EmailAlreadyTaken, SignUpError } from "../domain/auth/errors/signup_errors";
 import bcrypt from "bcrypt";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
+import SignUpCase from "../domain/user/cases/signUpCase";
+import EncryptServiceBcrypt from "../services/encrypt/encryptService";
+import SignUpRequest from "../domain/user/requests/signUpRequest";
+import { UserError } from "../domain/user/errors/userErrors";
 export default class UserController {
     private userRepository: IUserRepository;
+    private signUpCase: SignUpCase;
+    private encryptService: EncryptServiceBcrypt;
 
     constructor() {
         this.userRepository = new UserRepository();
+        this.encryptService = new EncryptServiceBcrypt();
+        this.signUpCase = new SignUpCase(this.userRepository, this.encryptService);
     }
     async signUp(request: Request, response: Response) {
-        const { name, email, password } = request.body;
-
-        if (!name || !email || !password) {
-            response.status(StatusCodes.Created).send("Missing Required fields.");
-            return;
-        }
         try {
-            const emailAlreadyTaken = await this.userRepository.getByEmail(email);
 
-            if (emailAlreadyTaken != null) {
-                throw new EmailAlreadyTaken("Email already taken.", StatusCodes.BadRequest);
-            }
-
-            let hashedPassword = "";
-            const saltRounds: any = process.env.ENCRYPT_SALT;
-
-            bcrypt.genSalt(saltRounds, (err: any, salt: any) => {
-                bcrypt.hash(password, salt, (err: any, hash: any) => {
-                    hashedPassword = hash;
-                });
-            });
-
-            const user: IUser = {
-                email: email,
-                name: name,
-                password: hashedPassword,
-            };
-
-            const newUser = await this.userRepository.createUser(user);
-
+            const signUpRequest: SignUpRequest = request.body
+            const newUser = await this.signUpCase.execute(signUpRequest);
             response.type("application/json").status(StatusCodes.Created).send(newUser);
+
         } catch (error) {
-            if (error instanceof SignUpError) response.status(error.code).send(error.message);
+            if (error instanceof UserError) response.status(error.statusCode).send(error.message);
         }
     }
     async newUser(req: Request, res: Response) {
