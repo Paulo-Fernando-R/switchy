@@ -32,7 +32,7 @@ export default class GetUserFromTokenCase {
 
         const id = result.userId;
 
-        const user = await this.userRepository.getUserById(id);
+        const user = await this.userRepository.getById(id);
         if (user == null) {
             throw new UserNotFoundError();
         }

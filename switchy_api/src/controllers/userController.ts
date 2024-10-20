@@ -9,7 +9,9 @@ import IUserRepository from "../repositories/userRepository/IuserRepository";
 import SignUpCase from "../domain/user/cases/signUpCase";
 import EncryptServiceBcrypt from "../services/encrypt/encryptService";
 import SignUpRequest from "../domain/user/requests/signUpRequest";
-import { UserError } from "../domain/user/errors/userErrors";
+import { UserError, UserNotFoundError } from "../domain/user/errors/userErrors";
+import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
+
 export default class UserController {
     private userRepository: IUserRepository;
     private signUpCase: SignUpCase;
@@ -20,6 +22,7 @@ export default class UserController {
         this.encryptService = new EncryptServiceBcrypt();
         this.signUpCase = new SignUpCase(this.userRepository, this.encryptService);
     }
+
     async signUp(request: Request, response: Response) {
         try {
 
@@ -32,6 +35,7 @@ export default class UserController {
             else throw error
         }
     }
+
     async newUser(req: Request, res: Response) {
         const { name, email, password } = req.body;
 
@@ -56,14 +60,18 @@ export default class UserController {
         }
     }
 
-    async getUserById(req: Request, res: Response) {
+    async getInfo(req: Request, res: Response) {
         try {
-            const newUser = await this.userRepository.getUserById(req.userId);
+            const userInfo = await new GetUserByIdCase(this.userRepository).execute(req.userId);
 
-            res.type("application/json").status(StatusCodes.Ok).send(newUser);
-        } catch (error) {
-            console.error(error);
-            if (error instanceof ServerError) res.status(error.code).send(error.message);
+            res.type("application/json").status(StatusCodes.Ok).send(userInfo);
+        } catch (ex) {
+            if (ex instanceof UserNotFoundError) {
+                res.status(StatusCodes.NotFound).send();
+                return;
+            }
+
+            throw ex;
         }
     }
 }

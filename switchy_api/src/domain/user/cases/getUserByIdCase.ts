@@ -10,7 +10,7 @@ export default class GetUserByIdCase {
     }
 
     async execute(userId: string): Promise<IUser> {
-        const user = await this.userRepository.getUserById(userId);
+        const user = await this.userRepository.getById(userId);
         if (user == null) {
             throw new UserNotFoundError();
         }
