@@ -1,8 +1,8 @@
 import DatabaseConnection from "../../database/databaseConnection";
 import ServerError from "../../errors/serverError";
 import { IPost, Post } from "../../models/post";
+import { IUser } from "../../models/user";
 import IPostRepository from "./IpostRepository";
-import { User } from "../../models/user";
 import { Types } from "mongoose";
 
 export class PostRepository extends DatabaseConnection implements IPostRepository {
@@ -107,36 +107,36 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         }
     }
 
-    async addCommentPost(parentId: string, content: string, userId: string) {
-        try {
-            await this.connect();
-            const user = await User.findById(userId).exec();
+    async addComment(parentId: string, content: string, user: IUser): Promise<IPost> {
+        await this.connect();
 
-            const newPost = new Post({
-                content: content,
-                parentId: parentId,
-                user: {
-                    email: user?.email,
-                    name: user?.name,
-                    id: new Types.ObjectId(userId),
-                },
-            });
+        const newPost = new Post({
+            content: content,
+            parentId: parentId,
+            user: {
+                email: user?.email,
+                name: user?.name,
+                id: new Types.ObjectId(user.id),
+            },
+        });
 
-            const res = await newPost.save();
+        const res = await newPost.save();
 
-            if (res) {
-                await Post.findByIdAndUpdate(parentId, {
-                    $push: { comments: { postId: res._id.toString() } },
-                });
-                console.log(res);
-                return;
-            }
-            throw new ServerError("unnable to insert");
-        } catch (error) {
-            console.error(error);
-            //@ts-ignore
-            throw new ServerError(error.message ?? "");
-        }
+        const result: IPost = {
+            id: res._id,
+            user: res.user,
+            publishDate: res.publishDate,
+            content: res.content,
+        };
+        return result;
+    }
+
+    async addCommentsToPost(parentId: String, commentId: String): Promise<void> {
+        await this.connect();
+
+        await Post.findByIdAndUpdate(parentId, {
+            $push: { comments: { postId: commentId } },
+        });
     }
 
     async getPostById(id: string) {
