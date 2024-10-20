@@ -1,5 +1,4 @@
 import { Request, Response, Router } from "express";
-import jwtMiddleware from "../middleware/jwtMiddleware";
 import UserController from "../controllers/userController";
 
 const userRoutes = Router();
@@ -15,7 +14,7 @@ userRoutes.post("/signup", (request: Request, response: Response) => {
     return controller.signUp(request, response);
 });
 
-userRoutes.get("/GetById", jwtMiddleware.veryfyJWT, (request: Request, response: Response) => {
+userRoutes.get("/GetById", (request: Request, response: Response) => {
     // #swagger.tags = ['GetById']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }

@@ -36,7 +36,7 @@ export default class PostRepository implements IPostRepository {
         return response.data;
     }
     async getFeedPosts() {
-        const response = await this.axios.instance.get<Post[]>("/GetFeedPosts");
+        const response = await this.axios.instance.get<Post[]>("/Post/GetFeedPosts");
         response.data.map((e) => {
             const aux = new Date(e.publishDate);
             e.publishDate = aux;

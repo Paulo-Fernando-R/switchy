@@ -1,11 +1,10 @@
 import { Router } from "express";
 import PostController from "../controllers/postController";
-import jwtMiddleware from "../middleware/jwtMiddleware";
 
 const postRoutes = Router();
 const controller = new PostController();
 
-postRoutes.post("/CreatePost", jwtMiddleware.veryfyJWT, (req, res) => {
+postRoutes.post("/CreatePost", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -13,7 +12,7 @@ postRoutes.post("/CreatePost", jwtMiddleware.veryfyJWT, (req, res) => {
     return controller.createPost(req, res);
 });
 
-postRoutes.get("/GetFeedPosts", jwtMiddleware.veryfyJWT, (req, res) => {
+postRoutes.get("/GetFeedPosts", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -21,7 +20,7 @@ postRoutes.get("/GetFeedPosts", jwtMiddleware.veryfyJWT, (req, res) => {
     return controller.getFeedPosts(req, res);
 });
 
-postRoutes.get("/GetPostById/:postId", jwtMiddleware.veryfyJWT, (req, res) => {
+postRoutes.get("/GetPostById/:postId", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
