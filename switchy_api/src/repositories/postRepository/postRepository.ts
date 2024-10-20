@@ -9,42 +9,30 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     constructor() {
         super();
     }
-    async getPostComments(id: string): Promise<IPost[]> {
-        try {
-            await this.connect();
 
-            const post = await Post.findById(id).exec();
-            const comments = post?.comments;
+    async getPostComments(ids: Types.ObjectId[]): Promise<IPost[]> {
+        await this.connect();
 
-            if (!comments) {
-                return [];
-            }
+        const res = await Post.find({
+            _id: {
+                $in: ids,
+            },
+        }).exec();
 
-            const res = await Post.find({
-                _id: {
-                    $in: comments?.map((e) => new Types.ObjectId(e.postId)),
-                },
-            }).exec();
+        const posts = res.map((e) => {
+            const aux: IPost = {
+                content: e.content,
+                publishDate: e.publishDate,
+                user: e.user,
+                id: e._id,
+                parentId: e.parentId,
+                comments: e.comments,
+                likes: e.likes,
+            };
+            return aux;
+        });
 
-            const posts = res.map((e) => {
-                const aux: IPost = {
-                    content: e.content,
-                    publishDate: e.publishDate,
-                    user: e.user,
-                    id: e._id,
-                    parentId: e.parentId,
-                    comments: e.comments,
-                    likes: e.likes,
-                };
-                return aux;
-            });
-
-            return posts;
-        } catch (error) {
-            console.error(error);
-            //@ts-ignore
-            throw new ServerError(error.message ?? "");
-        }
+        return posts;
     }
 
     async createPost(post: IPost) {
@@ -164,5 +152,3 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         }
     }
 }
-
-//new PostRepository();
