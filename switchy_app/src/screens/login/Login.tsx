@@ -1,15 +1,27 @@
 import React, { useState } from "react";
 import { Image, ScrollView, Text, View, TouchableOpacity, TouchableHighlight } from "react-native";
-import styles from "./loginStyles";
+import InputDefault from "../../components/inputDefault/InputDefault";
+import { useAuthContext } from "../../contexts/authContext";
+import { useMutation } from "@tanstack/react-query";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
-import InputDefault from "../../components/inputDefault/InputDefault";
+import LoginController from "./loginController";
+import styles from "./loginStyles";
 
 export default function Login() {
+    const controller = new LoginController();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const { setAuth } = useAuthContext();
+
+    const mutation = useMutation({
+        mutationFn: () => controller.signIn(email, password, setAuth),
+    });
+
     return (
         <ScrollView contentContainerStyle={styles.page}>
+            {mutation.isPending && <Text>CARREGANDO</Text>}
             <View style={styles.header}>
                 <Image style={styles.logo} source={logo} />
                 <Text style={styles.headerText}>Switchy</Text>
@@ -19,7 +31,7 @@ export default function Login() {
                 <Text style={styles.title}>Entre em sua conta do Switchy</Text>
                 <InputDefault text={email} setText={setEmail} placeholder="E-mail" />
                 <InputDefault text={password} setText={setPassword} password={true} placeholder="Senha" />
-                <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+                <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={() => mutation.mutate()}>
                     <Text style={styles.buttonText}>Entrar</Text>
                 </TouchableOpacity>
             </View>

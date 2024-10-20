@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useTabBarContext } from "../contexts/tabBarContext";
+import { useAuthContext } from "../contexts/authContext";
 import { RootTabsParamList } from "./types/navigationTypes";
 import Publish from "../screens/publish/Publish";
 import HomeStackRouter from "./homeStackRouter";
@@ -45,8 +46,9 @@ function AppRouter() {
 }
 
 export default function Router() {
+    const { auth } = useAuthContext();
     const isAuth = true;
-    if (isAuth) {
+    if (!auth) {
         return <AuthRouter />;
     }
 
