@@ -5,7 +5,7 @@ import IPostRepository from "./IpostRepository";
 
 export default class PostRepository implements IPostRepository {
     async getPostComments(postId: string): Promise<Post[]> {
-        const response = await axiosInstance.get<Post[]>("/getPostComments/" + postId);
+        const response = await axiosInstance.get<Post[]>("/Comments/ByPost/" + postId);
         response.data.map((e) => {
             const aux = new Date(e.publishDate);
             e.publishDate = aux;
@@ -54,7 +54,7 @@ export default class PostRepository implements IPostRepository {
             content: content,
             parentId: parentId,
         };
-        const response = await axiosInstance.post("/AddCommentPost", data);
+        const response = await axiosInstance.post("/Comments/Add", data);
 
         if (!response) {
             throw new NetworkError();
