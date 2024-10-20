@@ -16,6 +16,7 @@ const stroke100 = "#2C2C3E";
 const bg100 = "#0F0F1A";
 const bg200 = "#1E1F29";
 const bg300 = "#353540";
+const error ='#A32323'
 
 export default {
     primary100,
@@ -32,4 +33,5 @@ export default {
     bg100,
     bg200,
     bg300,
+    error
 };

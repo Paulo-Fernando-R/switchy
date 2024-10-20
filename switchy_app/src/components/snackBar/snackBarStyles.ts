@@ -1,19 +1,44 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+import appColors from "../../styles/appColors";
+import appTexts from "../../styles/appTexts";
 
 const styles = StyleSheet.create({
-    container: {
-        width: 100,
-        height: 100,
+    containerSucess: {
+        width: Dimensions.get('screen').width - 40,
+        height: 50,
+        flexDirection: 'row',
         alignItems: "center",
-        justifyContent: "center",
-        backgroundColor:'red',
+        justifyContent: "flex-start",
+        alignSelf: 'center',
+        backgroundColor:appColors.accent300,
         position: "absolute",
+        zIndex: 100,
+        paddingHorizontal: 20,
+        top: 30,
+        borderRadius: 10,
+        elevation: 2,
+        gap: 8
     },
-    box: {
-        width: 100,
-        height: 80,
-        backgroundColor: "red",
-        margin: 30,
+    text:{
+        ...appTexts.paragraph1Regular,
+        color: appColors.text100,
+        flex: 1
+    },
+    containerError: {
+        width: Dimensions.get('screen').width - 40,
+        height: 50,
+        flexDirection: 'row',
+        alignItems: "center",
+        justifyContent: "flex-start",
+        alignSelf: 'center',
+        backgroundColor:appColors.error,
+        position: "absolute",
+        zIndex: 100,
+        paddingHorizontal: 20,
+        top: 30,
+        borderRadius: 10,
+        elevation: 2,
+        gap: 8
     },
 });
 
