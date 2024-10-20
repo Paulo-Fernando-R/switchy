@@ -1,5 +1,5 @@
 export default interface Auth {
-    accesToken: string;
+    accessToken: string;
     refreshToken: string;
-    accesTokenExpiresAtUtc: Date;
+    accessTokenExpiresAtUtc: Date;
 }
