@@ -45,7 +45,7 @@ function AppRouter() {
 }
 
 export default function Router() {
-    const isAuth = false;
+    const isAuth = true;
     if (isAuth) {
         return <AuthRouter />;
     }
