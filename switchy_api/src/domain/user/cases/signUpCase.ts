@@ -24,7 +24,7 @@ export default class SignUpCase {
     async execute(newUserData: SignUpRequest): Promise<IUser>{
 
 
-        if (fieldsExists(newUserData, signUpRequiredFieldsRule) && !fieldsNotEmpty(newUserData)) {
+        if (!newUserData.name || !newUserData.email || !newUserData.password) {
             throw new UserEmptyFieldsError("Missing required fields", StatusCodes.BadRequest);
         }
 

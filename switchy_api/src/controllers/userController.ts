@@ -29,6 +29,7 @@ export default class UserController {
 
         } catch (error) {
             if (error instanceof UserError) response.status(error.statusCode).send(error.message);
+            else throw error
         }
     }
     async newUser(req: Request, res: Response) {
