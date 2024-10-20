@@ -7,7 +7,7 @@ const controller = new UserController();
 
 userRoutes.post("/NewUser", controller.newUser);
 
-userRoutes.post("/signup", jwtMiddleware.veryfyJWT, (request: Request, response: Response) => {
+userRoutes.post("/signup", (request: Request, response: Response) => {
     // #swagger.tags = ['SignUp']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
