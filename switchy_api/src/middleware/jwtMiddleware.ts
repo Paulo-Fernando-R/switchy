@@ -1,29 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import "dotenv/config";
+import { StatusCodes } from "../utils/status_codes";
+import ITokenService from "../services/token/itokenService";
+import JwtTokenService from "../services/token/jwtTokenService";
 
-class JwtMiddleware {
-    private readonly secret: string;
-
-    constructor() {
-        this.secret = process.env.JWT_SECRET!;
+export function jwtMiddleware(request: Request, response: Response, next: NextFunction) {
+    const token = request.headers["authorization"];
+    if (!token) {
+        response.status(StatusCodes.Unauthorized).end();
+        next();
     }
 
-    veryfyJWT(request: Request, response: Response, next: NextFunction) {
-        const token = request.headers["authorization"];
-        const secret = process.env.JWT_SECRET!;
-        jwt.verify(token!, secret, (err, decoded) => {
-            if (err) {
-                console.log(err);
-                return response.status(401).end("unauthorized");
-            }
+    const tokenService: ITokenService = new JwtTokenService();
 
-            decoded = decoded as JwtPayload;
-            request.userId = decoded!.userId;
-
-            next();
-        });
+    try {
+        const decoded = tokenService.isValid(token!);
+        request.userId = decoded.userId;
+    } catch (ex) {
+        response.status(StatusCodes.Unauthorized).end();
     }
+
+    next();
 }
-
-export default new JwtMiddleware();

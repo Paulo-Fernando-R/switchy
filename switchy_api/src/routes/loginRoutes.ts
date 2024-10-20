@@ -4,7 +4,7 @@ import LoginController from "../controllers/loginController";
 const loginRoutes = Router();
 const controller = new LoginController();
 
-loginRoutes.post("/Login/SignIn", (req, res) => {
+loginRoutes.post("/SignIn", (req, res) => {
     // #swagger.tags = ['Login']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -13,7 +13,7 @@ loginRoutes.post("/Login/SignIn", (req, res) => {
     return controller.signIn(req, res);
 });
 
-loginRoutes.post('/Login/RefreshToken', (req, res) => {
+loginRoutes.post('/RefreshToken', (req, res) => {
     // #swagger.tags = ['Login']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }

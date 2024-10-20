@@ -3,11 +3,13 @@ import userRoutes from "./userRoutes";
 import postRoutes from "./postRoutes";
 import { Router } from "express";
 import commentsRoutes from "./commentsRoutes";
+import { jwtMiddleware } from "../middleware/jwtMiddleware";
 
 const router = Router();
 
-router.use(userRoutes);
-router.use(loginRoutes);
-router.use(postRoutes);
-router.use(commentsRoutes);
+router.use('/Login', loginRoutes);
+router.use('/User', jwtMiddleware, userRoutes);
+router.use('/Post', jwtMiddleware, postRoutes);
+router.use('/Comments', jwtMiddleware, commentsRoutes);
+
 export default router;

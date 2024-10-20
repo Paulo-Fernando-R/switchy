@@ -1,11 +1,10 @@
 import { Router } from "express";
 import CommentsController from "../controllers/commentsController";
-import jwtMiddleware from "../middleware/jwtMiddleware";
 
 const commentsRoutes = Router();
 const controller = new CommentsController();
 
-commentsRoutes.post("/Comments/Add", jwtMiddleware.veryfyJWT, (req, res) => {
+commentsRoutes.post("/Add", (req, res) => {
     // #swagger.tags = ['Comments']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -14,7 +13,7 @@ commentsRoutes.post("/Comments/Add", jwtMiddleware.veryfyJWT, (req, res) => {
     return controller.add(req, res);
 });
 
-commentsRoutes.get("/Comments/ByPost/{postId}", jwtMiddleware.veryfyJWT, (req, res) => {
+commentsRoutes.get("/ByPost/{postId}", (req, res) => {
     // #swagger.tags = ['Comments']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
