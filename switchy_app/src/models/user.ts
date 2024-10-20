@@ -1,8 +1,7 @@
-export default  interface User {
+export default interface User {
     name: string;
     email: string;
+    userName: string;
     password?: string;
-    createdAt?: Date;
-    token?: string;
     id?: string;
 }
