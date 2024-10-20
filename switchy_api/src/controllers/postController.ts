@@ -3,7 +3,6 @@ import {PostRepository} from "../repositories/postRepository/postRepository";
 import { IPost } from "../models/post";
 import { Types } from "mongoose";
 import { StatusCodes } from "../utils/status_codes";
-import ServerError from "../errors/serverError";
 import IPostRepository from "../repositories/postRepository/IpostRepository";
 
 export default class PostController {
@@ -53,44 +52,10 @@ export default class PostController {
         }
     }
 
-    async addCommentPost(req: Request, res: Response) {
-        const { content, parentId } = req.body;
-        const userId = req.userId;
-
-        if (!content) {
-            res.status(StatusCodes.BadRequest).send("content is required");
-            return;
-        }
-
-        if (!parentId) {
-            res.status(StatusCodes.BadRequest).send("parentId is required");
-            return;
-        }
-
-        try {
-            await this.postRepository.addCommentPost(parentId, content, userId);
-
-            res.status(StatusCodes.Ok).send();
-            return;
-        } catch (error) {
-            res.status(StatusCodes.InternalServerError).send(error);
-        }
-    }
     async getPostById(req: Request, res: Response) {
         const { postId } = req.params;
         try {
             const response = await this.postRepository.getPostById(postId);
-            res.status(StatusCodes.Ok).send(response);
-        } catch (error) {
-            res.status(StatusCodes.InternalServerError).send(error);
-        }
-    }
-
-    async getPostComments(req: Request, res:Response){
-        const { postId } = req.params;
-      
-        try {
-            const response = await this.postRepository.getPostComments(postId);
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {
             res.status(StatusCodes.InternalServerError).send(error);
