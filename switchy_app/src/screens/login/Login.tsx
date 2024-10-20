@@ -7,6 +7,8 @@ import { useMutation } from "@tanstack/react-query";
 import logo from "../../../assets/images/logo.png";
 import LoginController from "./loginController";
 import styles from "./loginStyles";
+import SnackBar from "../../components/snackBar/SnackBar";
+
 
 export default function Login() {
     const controller = new LoginController();
@@ -21,7 +23,7 @@ export default function Login() {
 
     return (
         <ScrollView contentContainerStyle={styles.page}>
-            {mutation.isPending && <Text>CARREGANDO</Text>}
+          <SnackBar/>
             <View style={styles.header}>
                 <Image style={styles.logo} source={logo} />
                 <Text style={styles.headerText}>Switchy</Text>

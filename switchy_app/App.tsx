@@ -15,7 +15,7 @@ import StorageTypeEnum from "./src/enums/storageTypeEnum";
 export default function App() {
     TimeAgo.addLocale(br);
     const storage = new StorageService<Auth>(StorageTypeEnum.auth);
-   // storage.removeItem()
+    //storage.removeItem()
     const stored = storage.getItem();
 
     const [tabBarVisible, setTabBarVisible] = useState(true);
