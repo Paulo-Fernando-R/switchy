@@ -10,4 +10,6 @@ export default class HomeController {
     async getFeedData() {
         return await this.repository.getFeedPosts();
     }
+
+   
 }
