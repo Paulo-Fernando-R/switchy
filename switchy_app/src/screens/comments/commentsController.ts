@@ -2,12 +2,15 @@ import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import IPostRepository from "../../repositories/postRepository/IpostRepository";
 import PostRepository from "../../repositories/postRepository/postRepository";
 import Post from "../../models/post";
+import CreateCommentCase from "../../cases/createCommentCase/createCommentCase";
+import ICreateCommentCase from "../../cases/createCommentCase/IcreateCommentCase";
 
 export default class CommentsController {
     private readonly repository: IPostRepository;
-
+    private readonly createCommentCase: ICreateCommentCase;
     constructor() {
         this.repository = new PostRepository();
+        this.createCommentCase = new CreateCommentCase();
     }
 
     async getComments(id: string) {
@@ -22,14 +25,10 @@ export default class CommentsController {
         refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<Post[], Error>>,
         setContent: React.Dispatch<React.SetStateAction<string>>
     ) {
-        if (content.length < 3) {
-            return;
-        }
+        await this.createCommentCase.execute(content, parentId);
+        refetch();
+        setContent("");
 
-        try {
-            await this.repository.createPost(content, parentId);
-            refetch();
-            setContent("");
-        } catch (error) {}
+        return true
     }
 }

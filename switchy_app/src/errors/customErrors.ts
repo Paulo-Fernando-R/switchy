@@ -53,3 +53,12 @@ export class NetworkError extends CustomError {
         this.message = message ? message : "Service unavailable";
     }
 }
+
+export class MissingData extends CustomError {
+    constructor(code?: number, message?: string, screenMessage?: string) {
+        super(code, message, screenMessage);
+        this.code = code ? code : 0;
+        this.screenMessage = screenMessage ? screenMessage : "Dados faltando";
+        this.message = message ? message : "Missing data";
+    }
+}

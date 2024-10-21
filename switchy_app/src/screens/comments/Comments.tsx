@@ -2,7 +2,7 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "./commentsStyles";
 import { HomeNavigationProp } from "../../routes/types/navigationTypes";
 import { CommentsRouteProp } from "../../routes/types/navigationTypes";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BackButton from "../../components/backButton/BackButton";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import { FlatList } from "react-native-gesture-handler";
@@ -10,6 +10,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import appColors from "../../styles/appColors";
 import CommentsController from "./commentsController";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import SnackBar from "../../components/snackBar/SnackBar";
 
 type CommentsProps = {
     route: CommentsRouteProp;
@@ -19,6 +20,7 @@ type CommentsProps = {
 export default function Comments({ route, navigation }: CommentsProps) {
     const controller = new CommentsController();
     const [content, setContent] = useState("");
+    const [snackBar, setSnackBar] = useState(false);
     const { post } = route.params;
     function goBack() {
         navigation.navigate("Home");
@@ -31,10 +33,33 @@ export default function Comments({ route, navigation }: CommentsProps) {
 
     const mutation = useMutation({
         mutationFn: () => controller.createComment(content, post.id!, refetch, setContent),
+        onError: () => {
+            setSnackBar(true);
+        },
+        onSuccess: () => {
+            setSnackBar(true);
+        },
     });
 
     return (
         <View style={styles.page}>
+            {mutation.isError && (
+                <SnackBar.Error
+                    message={mutation.error?.message!}
+                    setVisible={setSnackBar}
+                    visible={snackBar}
+                    autoDismissible={true}
+                />
+            )}
+            {mutation.isSuccess && (
+                <SnackBar.Sucess
+                    message={"Comentário publicado"}
+                    setVisible={setSnackBar}
+                    visible={snackBar}
+                    autoDismissible={true}
+                />
+            )}
+
             <View style={styles.header}>
                 <BackButton goBack={goBack} />
             </View>
