@@ -1,6 +1,25 @@
 const swaggerAutogen = require('swagger-autogen')()
-const port = process.env.PORT
 const outputFile = './swagger_output.json'
 const endpointsFiles = ['./src/routes/routes.ts']
 
-swaggerAutogen(outputFile, endpointsFiles, {host: `localhost:3333`})
+const doc = {
+    info: {
+        title: 'Switchy API',
+    },
+    host: `localhost:3333`,
+    securityDefinitions: {
+        bearerAuth: {
+            type: 'apiKey',
+            name: 'Authorization',
+            scheme: 'bearer',
+            in: 'header',
+        },
+    },
+    security: [
+        {
+            bearerAuth: [],
+        },
+    ],
+}
+
+swaggerAutogen(outputFile, endpointsFiles, doc)

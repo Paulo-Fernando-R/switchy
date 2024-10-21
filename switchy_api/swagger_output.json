@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
+    "title": "Switchy API",
     "version": "1.0.0",
-    "title": "REST API",
     "description": ""
   },
   "host": "localhost:3333",
@@ -10,6 +10,14 @@
   "schemes": [
     "http"
   ],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "scheme": "bearer",
+      "in": "header"
+    }
+  },
   "paths": {
     "/Login/SignIn": {
       "post": {
@@ -341,5 +349,10 @@
         }
       }
     }
-  }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
 }
