@@ -2,8 +2,9 @@ import { BadRequestError, InternalServerError, NetworkError, NotFoundError } fro
 import Auth from "../../models/auth";
 import ICustomAxiosClient from "../../services/customAxiosClient/IcustomAxiosClient";
 import CustomAxiosClient from "../../services/customAxiosClient/customAxiosClient";
-
-export default class AuthRepository {
+import IAuthRepository from "./IauthRepository";
+import baseAxios from "axios";
+export default class AuthRepository implements IAuthRepository {
     private axios: ICustomAxiosClient;
 
     constructor() {

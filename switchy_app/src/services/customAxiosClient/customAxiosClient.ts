@@ -5,6 +5,9 @@ import StorageService from "../storageService/storageService";
 import StorageTypeEnum from "../../enums/storageTypeEnum";
 import IStorageService from "../storageService/IstorageService";
 import Auth from "../../models/auth";
+import IAuthRepository from "../../repositories/authRepository/IauthRepository";
+import AuthRepository from "../../repositories/authRepository/authRepository";
+import RefreshTokenService from "../refreshTokenService/refreshTokenService";
 
 const tempToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzEwMDkzNGY4MTNmY2I5MjA3YmU0YjUiLCJpYXQiOjE3Mjk1MjQ3MTMsImV4cCI6MTcyOTYxMTExM30.WwKXgMqkeB8iIFW7gwPgu9tbdHxKaeu7VbgQZSGE4C4";
@@ -17,7 +20,7 @@ export default class CustomAxiosClient implements ICustomAxiosClient {
         this.instance = axios.create({
             baseURL: process.env.EXPO_PUBLIC_API_URL,
             headers: {
-                Authorization: this.getToken(), 
+                Authorization: this.getTokenFromStorage()?.accessToken,
             },
         });
 
@@ -25,15 +28,44 @@ export default class CustomAxiosClient implements ICustomAxiosClient {
         this.instance.interceptors.response.use(this.resInterceptor());
     }
 
-    private getToken() {
+    getTokenFromStorage() {
         const res = this.storage.getItem();
-        return res?.accessToken;
+        return res;
+    }
+    private async refreshToken(token: string) {
+        try {
+            const res = await new RefreshTokenService().execute(token);
+            this.storage.setItem(res);
+            return res;
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+    }
+
+    private validateToken(date?: Date) {
+        if (!date) {
+            return false;
+        }
+        const now = Date.now();
+
+        if (now > date.getTime()) {
+            return false;
+        }
+
+        return true;
     }
 
     private resInterceptor() {
-        const interceptor = (response: AxiosResponse) => {
+        const interceptor = async (response: AxiosResponse) => {
             if (response.status === 401) {
-                //todo
+                const res = this.getTokenFromStorage();
+                if (!this.validateToken(res?.accessTokenExpiresAtUtc)) {
+                    this.storage.removeItem();
+                    return response;
+                }
+
+                await this.refreshToken(res?.refreshToken!);
             }
             return response;
         };
@@ -44,6 +76,7 @@ export default class CustomAxiosClient implements ICustomAxiosClient {
     private reqInterceptor() {
         const interceptor = async (config: InternalAxiosRequestConfig<AxiosResponse>) => {
             config.validateStatus = () => true;
+
             return config;
         };
 
