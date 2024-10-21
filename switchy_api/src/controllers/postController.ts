@@ -4,14 +4,20 @@ import { StatusCodes } from "../utils/status_codes";
 import IPostRepository from "../repositories/postRepository/IpostRepository";
 import CreatePostCase from "../domain/post/cases/createPostCase";
 import { PostEmptyValueError, UnableCreatePostError } from "../domain/post/errors/postErrors";
+import GetFeedPostsCase from "../domain/post/cases/getFeedPostsCase";
+import getPostByIdCase from "../domain/post/cases/getPostByIdCase";
 
 export default class PostController {
     postRepository: IPostRepository;
     createPostCase: CreatePostCase;
+    getFeedPostsCase: GetFeedPostsCase;
+    getPostByIdCase: getPostByIdCase;
 
     constructor() {
         this.postRepository = new PostRepository();
         this.createPostCase = new CreatePostCase();
+        this.getFeedPostsCase = new GetFeedPostsCase();
+        this.getPostByIdCase = new getPostByIdCase();
     }
     async createPost(req: Request, res: Response) {
         const { content, parentId } = req.body;
@@ -33,7 +39,7 @@ export default class PostController {
         const userId = req.userId;
 
         try {
-            const response = await this.postRepository.getFeedPosts(userId);
+            const response = await this.getFeedPostsCase.execute(userId);
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {
             res.status(StatusCodes.InternalServerError).send(error);
@@ -42,11 +48,13 @@ export default class PostController {
 
     async getPostById(req: Request, res: Response) {
         const { postId } = req.params;
+
         try {
-            const response = await this.postRepository.getPostById(postId);
+            const response = await this.getPostByIdCase.execute(postId);
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {
             res.status(StatusCodes.InternalServerError).send(error);
         }
+       
     }
 }
