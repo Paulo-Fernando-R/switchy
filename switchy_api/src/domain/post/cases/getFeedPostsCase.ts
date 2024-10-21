@@ -1,20 +1,21 @@
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
-import { PostRepository } from "../../../repositories/postRepository/postRepository";
 import { UnableGetPostError } from "../errors/postErrors";
 
 export default class GetFeedPostsCase {
-    postRepository: IPostRepository;
+    private readonly postRepository: IPostRepository;
 
-    constructor() {
-        this.postRepository = new PostRepository();
+    constructor(_postRepository: IPostRepository) {
+        this.postRepository = _postRepository;
     }
 
     async execute(userId: string) {
         try {
+           
             const response = await this.postRepository.getFeedPosts(userId);
 
             return response;
         } catch (error) {
+            console.error(error);
             throw new UnableGetPostError();
         }
     }

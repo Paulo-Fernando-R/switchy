@@ -1,12 +1,11 @@
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
-import { PostRepository } from "../../../repositories/postRepository/postRepository";
 import { UnableGetPostError } from "../errors/postErrors";
 
 export default class getPostByIdCase {
-    postRepository: IPostRepository;
+    private readonly postRepository: IPostRepository;
 
-    constructor() {
-        this.postRepository = new PostRepository();
+    constructor(_postRepository: IPostRepository) {
+        this.postRepository = _postRepository;
     }
 
     async execute(postId: string) {
@@ -14,6 +13,7 @@ export default class getPostByIdCase {
             const response = await this.postRepository.getPostById(postId);
             return response;
         } catch (error) {
+            console.error(error);
             throw new UnableGetPostError();
         }
     }
