@@ -6,6 +6,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import appColors from "../../styles/appColors";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Portal } from "react-native-portalize";
 
 type SnackBarProps = {
     visible: boolean;
@@ -13,7 +14,6 @@ type SnackBarProps = {
     message: string;
     autoDismissible?: boolean;
     autoDismissTime?: number;
-    
 };
 
 const SnackBar = {
@@ -44,21 +44,23 @@ function Sucess({ visible, setVisible, autoDismissible, autoDismissTime, message
     }
 
     return (
-        visible && (
-            <Animated.View entering={FadeInUp} exiting={FadeOutUp} style={styles.containerSucess}>
-                <FontAwesome5 name="check-circle" size={20} color={appColors.text100} />
-                <Text numberOfLines={1} style={styles.text}>
-                   {message}
-                </Text>
-                <TouchableOpacity activeOpacity={0.7} onPress={close}>
-                    <AntDesign name="close" size={20} color={appColors.text100} />
-                </TouchableOpacity>
-            </Animated.View>
-        )
+        <Portal>
+            {visible && (
+                <Animated.View entering={FadeInUp} exiting={FadeOutUp} style={styles.containerSucess}>
+                    <FontAwesome5 name="check-circle" size={20} color={appColors.text100} />
+                    <Text numberOfLines={1} style={styles.text}>
+                        {message}
+                    </Text>
+                    <TouchableOpacity activeOpacity={0.7} onPress={close}>
+                        <AntDesign name="close" size={20} color={appColors.text100} />
+                    </TouchableOpacity>
+                </Animated.View>
+            )}
+        </Portal>
     );
 }
 
-function Error({ visible, setVisible, autoDismissible, autoDismissTime , message}: SnackBarProps) {
+function Error({ visible, setVisible, autoDismissible, autoDismissTime, message }: SnackBarProps) {
     async function close() {
         setVisible(false);
     }
@@ -79,16 +81,18 @@ function Error({ visible, setVisible, autoDismissible, autoDismissTime , message
     }
 
     return (
-        visible && (
-            <Animated.View entering={FadeInUp} exiting={FadeOutUp} style={styles.containerError}>
-                <MaterialIcons name="error-outline" size={20} color={appColors.text100} />
-                <Text numberOfLines={1} style={styles.text}>
-                  {message}
-                </Text>
-                <TouchableOpacity activeOpacity={0.7} onPress={close}>
-                    <AntDesign name="close" size={20} color={appColors.text100} />
-                </TouchableOpacity>
-            </Animated.View>
-        )
+        <Portal>
+            {visible && (
+                <Animated.View entering={FadeInUp} exiting={FadeOutUp} style={styles.containerError}>
+                    <MaterialIcons name="error-outline" size={20} color={appColors.text100} />
+                    <Text numberOfLines={1} style={styles.text}>
+                        {message}
+                    </Text>
+                    <TouchableOpacity activeOpacity={0.7} onPress={close}>
+                        <AntDesign name="close" size={20} color={appColors.text100} />
+                    </TouchableOpacity>
+                </Animated.View>
+            )}
+        </Portal>
     );
 }

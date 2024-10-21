@@ -2,7 +2,6 @@ import { InternalServerError, NetworkError, UnauthorizedError } from "../../erro
 import Post from "../../models/post";
 import CustomAxiosClient from "../../services/customAxiosClient/customAxiosClient";
 import ICustomAxiosClient from "../../services/customAxiosClient/IcustomAxiosClient";
-//import axiosInstance from "../../services/customAxiosClient/customAxiosClient";
 import IPostRepository from "./IpostRepository";
 
 export default class PostRepository implements IPostRepository {

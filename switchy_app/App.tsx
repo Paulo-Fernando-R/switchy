@@ -11,6 +11,7 @@ import StorageService from "./src/services/storageService/storageService";
 import { useState } from "react";
 import Auth from "./src/models/auth";
 import StorageTypeEnum from "./src/enums/storageTypeEnum";
+import { Host } from "react-native-portalize";
 
 export default function App() {
     TimeAgo.addLocale(br);
@@ -27,7 +28,9 @@ export default function App() {
             <AuthContext.Provider value={{ auth: auth, setAuth: changeAuth }}>
                 <TabBarContext.Provider value={{ tabBarVisible: tabBarVisible, setTabBarVisible: changeState }}>
                     <StatusBar backgroundColor={appColors.bg100} style="light" />
-                    <Router />
+                    <Host>
+                        <Router />
+                    </Host>
                 </TabBarContext.Provider>
             </AuthContext.Provider>
         </QueryClientProvider>
