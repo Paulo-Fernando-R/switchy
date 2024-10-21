@@ -9,4 +9,5 @@ export default interface IPostRepository {
     addCommentsToPost(parentId: String, commentId: String): Promise<void>;
     getPostById(id: string): Promise<IPost>;
     getPostComments(ids: Types.ObjectId[]): Promise<IPost[]>;
+    addLikeToPost(postId: string, userId:string): Promise<void>;
 }
