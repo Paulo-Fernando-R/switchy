@@ -10,24 +10,17 @@ import AddLikeToPostCase from "../domain/post/cases/addLikeToPostCase";
 
 export default class PostController {
     postRepository: IPostRepository;
-    createPostCase: CreatePostCase;
-    getFeedPostsCase: GetFeedPostsCase;
-    getPostByIdCase: getPostByIdCase;
-    addLikeToPostCase: AddLikeToPostCase;
 
     constructor() {
         this.postRepository = new PostRepository();
-        this.createPostCase = new CreatePostCase();
-        this.getFeedPostsCase = new GetFeedPostsCase();
-        this.getPostByIdCase = new getPostByIdCase();
-        this.addLikeToPostCase = new AddLikeToPostCase();
     }
     async createPost(req: Request, res: Response) {
         const { content, parentId } = req.body;
         const userId = req.userId;
 
         try {
-            await this.createPostCase.execute(parentId, content, userId);
+            await new CreatePostCase(this.postRepository).execute(parentId, content, userId);
+            res.status(StatusCodes.Ok).send();
         } catch (error) {
             if (error instanceof PostEmptyValueError) {
                 res.status(StatusCodes.BadRequest).send("content is required");
@@ -42,9 +35,11 @@ export default class PostController {
         const userId = req.userId;
 
         try {
-            const response = await this.getFeedPostsCase.execute(userId);
+            const response = await new GetFeedPostsCase(this.postRepository).execute(userId);
+           
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {
+           
             res.status(StatusCodes.InternalServerError).send(error);
         }
     }
@@ -53,7 +48,7 @@ export default class PostController {
         const { postId } = req.params;
 
         try {
-            const response = await this.getPostByIdCase.execute(postId);
+            const response = await new getPostByIdCase(this.postRepository).execute(postId);
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {
             res.status(StatusCodes.InternalServerError).send(error);
@@ -65,7 +60,7 @@ export default class PostController {
         const userId = req.userId;
 
         try {
-            await this.addLikeToPostCase.execute(postId, userId);
+            await new AddLikeToPostCase(this.postRepository).execute(postId, userId);
             res.status(StatusCodes.Ok).send();
         } catch (error) {
             if (error instanceof PostEmptyValueError) {

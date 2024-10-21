@@ -1,14 +1,13 @@
 import { Types } from "mongoose";
 import { IPost } from "../../../models/post";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
-import { PostRepository } from "../../../repositories/postRepository/postRepository";
 import { PostEmptyValueError, UnableCreatePostError } from "../errors/postErrors";
 
 export default class CreatePostCase {
-    postRepository: IPostRepository;
+    private readonly postRepository: IPostRepository;
 
-    constructor() {
-        this.postRepository = new PostRepository();
+    constructor(_postRepository: IPostRepository) {
+        this.postRepository = _postRepository;
     }
 
     async execute(parentId: string, content: string, userId: string) {
@@ -34,6 +33,7 @@ export default class CreatePostCase {
             await this.postRepository.createPost(post);
            
         } catch (error) {
+            console.error(error);
             throw new UnableCreatePostError();
         }
     }

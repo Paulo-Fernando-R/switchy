@@ -1,12 +1,11 @@
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
-import { PostRepository } from "../../../repositories/postRepository/postRepository";
 import { AddLikeToPostError, PostEmptyValueError } from "../errors/postErrors";
 
 export default class AddLikeToPostCase {
     private readonly postRepository: IPostRepository;
 
-    constructor() {
-        this.postRepository = new PostRepository();
+    constructor(_postRepository: IPostRepository) {
+        this.postRepository = _postRepository;
     }
 
     async execute(postId: string, userId: string) {
@@ -17,6 +16,7 @@ export default class AddLikeToPostCase {
         try {
             await this.postRepository.addLikeToPost(postId, userId);
         } catch (error) {
+            console.error(error);
             throw new AddLikeToPostError();
         }
     }
