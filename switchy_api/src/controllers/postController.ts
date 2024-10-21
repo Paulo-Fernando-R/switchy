@@ -1,43 +1,31 @@
 import { Request, Response } from "express";
-import {PostRepository} from "../repositories/postRepository/postRepository";
-import { IPost } from "../models/post";
-import { Types } from "mongoose";
+import { PostRepository } from "../repositories/postRepository/postRepository";
 import { StatusCodes } from "../utils/status_codes";
 import IPostRepository from "../repositories/postRepository/IpostRepository";
+import CreatePostCase from "../domain/post/cases/createPostCase";
+import { PostEmptyValueError, UnableCreatePostError } from "../domain/post/errors/postErrors";
 
 export default class PostController {
-    postRepository: IPostRepository
+    postRepository: IPostRepository;
+    createPostCase: CreatePostCase;
 
-    constructor(){
+    constructor() {
         this.postRepository = new PostRepository();
+        this.createPostCase = new CreatePostCase();
     }
     async createPost(req: Request, res: Response) {
         const { content, parentId } = req.body;
         const userId = req.userId;
 
-        if (!content) {
-            res.status(StatusCodes.BadRequest).send("content is required");
-            return;
-        }
-
-        const post: IPost = {
-            user: {
-                email: "email",
-                name: "name",
-                id: new Types.ObjectId(userId as string),
-            },
-            comments: [],
-            likes: [],
-            content: content,
-            publishDate: new Date(Date.now()),
-            parentId: parentId ? parentId : null,
-        };
         try {
-            await this.postRepository.createPost(post);
-            res.status(StatusCodes.Ok).send();
+            await this.createPostCase.execute(parentId, content, userId);
         } catch (error) {
-            //@ts-ignore
-            res.status(StatusCodes.InternalServerError).send(error.message);
+            if (error instanceof PostEmptyValueError) {
+                res.status(StatusCodes.BadRequest).send("content is required");
+            }
+            if (error instanceof UnableCreatePostError) {
+                res.status(StatusCodes.InternalServerError).send();
+            }
         }
     }
 
