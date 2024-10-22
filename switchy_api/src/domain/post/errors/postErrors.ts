@@ -5,5 +5,3 @@ export class PostEmptyValueError extends PostError {}
 export class UnableCreatePostError extends PostError {}
 
 export class UnableGetPostError extends PostError {}
-
-export class AddLikeToPostError extends PostError{}

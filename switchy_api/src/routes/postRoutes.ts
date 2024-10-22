@@ -28,12 +28,13 @@ postRoutes.get("/GetPostById/:postId", (req, res) => {
     return controller.getPostById(req, res);
 });
 
-postRoutes.post("/AddLikeToPost", (req, res) => {
+postRoutes.put("/Like", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[401] = { description: 'Unauthorized.' }
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
-    return controller.AddLikeToPost(req, res);
+    return controller.putLike(req, res);
 });
 
 export default postRoutes;

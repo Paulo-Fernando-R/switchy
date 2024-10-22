@@ -9,10 +9,17 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     constructor() {
         super();
     }
-    async addLikeToPost(postId: string, userId: string ): Promise<void> {
+
+    async addLike(postId: string, userId: string): Promise<void> {
         await this.connect();
-        console.log(userId)
         await Post.findByIdAndUpdate(postId, {
+            $push: { likes: { userId: userId } },
+        });
+    }
+
+    async removeLike(postId: string, userId: string): Promise<void> {
+        await this.connect();
+        await Post.findByIdAndDelete(postId, {
             $push: { likes: { userId: userId } },
         });
     }
