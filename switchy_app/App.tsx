@@ -10,20 +10,32 @@ import Auth from "./src/models/auth";
 import StorageTypeEnum from "./src/enums/storageTypeEnum";
 import NestContext from "./src/contexts/NestContext";
 import React from "react";
+import User from "./src/models/user";
 
 export default function App() {
     TimeAgo.addLocale(br);
-    const storage = new StorageService<Auth>(StorageTypeEnum.auth);
+    const authStorage = new StorageService<Auth>(StorageTypeEnum.auth);
+    const userStorage = new StorageService<User>(StorageTypeEnum.user);
     //storage.removeItem()
-    const stored = storage.getItem();
+    const storedAuth = authStorage.getItem();
+    const storedUser = userStorage.getItem();
 
     const [tabBarVisible, setTabBarVisible] = useState(true);
-    const [auth, setAuth] = useState<Auth | null>(stored);
+    const [auth, setAuth] = useState<Auth | null>(storedAuth);
+    const [user, setUser] = useState<User | null>(storedUser);
     const changeState = (isVisible: boolean) => setTabBarVisible(isVisible);
     const changeAuth = (auth: Auth) => setAuth(auth);
+    const changeUser = (user: User) => setUser(user);
 
     return (
-        <NestContext auth={auth} changeAuth={changeAuth} changeState={changeState} tabBarVisible={tabBarVisible}>
+        <NestContext
+            auth={auth}
+            changeAuth={changeAuth}
+            changeState={changeState}
+            tabBarVisible={tabBarVisible}
+            changeUser={changeUser}
+            user={user}
+        >
             <StatusBar backgroundColor={appColors.bg100} style="light" />
             <Router />
         </NestContext>
