@@ -13,7 +13,8 @@ import { HomeNavigationProp } from "../../routes/types/navigationTypes";
 import { useMutation } from "@tanstack/react-query";
 import PostFeedItemController from "./postFeedItemController";
 import SnackBar from "../snackBar/SnackBar";
-import { CustomError } from "../../errors/customErrors";
+import { useUserContext } from "../../contexts/userContext";
+
 type PostFeedItemProps = {
     item: Post | undefined;
     error?: Error | null;
@@ -21,23 +22,14 @@ type PostFeedItemProps = {
 };
 
 export default function PostFeedItem({ item, error, navigation }: PostFeedItemProps) {
-    const controller = new PostFeedItemController();
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
-
-    const timeAgo = timeAgoFormatter(item.publishDate);
-    const [liked, setLiked] = useState(false);
-    const [showSnackBar, setShowSnackBar] = useState(false);
-
-    function navigate() {
-        navigation?.navigate("Comments", { post: item! });
-    }
-
+    
+    const controller = new PostFeedItemController();
     const {
         data,
         mutate,
-        isError,
         error: qError,
     } = useMutation({
         mutationFn: () => controller.handleLike(item.id!, setLiked),
@@ -46,24 +38,18 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
         },
     });
 
-    function handleLike() {
-        setLiked(!liked);
+    const { user } = useUserContext();
+    const timeAgo = timeAgoFormatter(item.publishDate);
+    const [liked, setLiked] = useState(controller.getInitialLike(item, user));
+    const [showSnackBar, setShowSnackBar] = useState(false);
+    const msg = controller.getErrorMessage(qError);
+    function navigate() {
+        navigation?.navigate("Comments", { post: item! });
     }
 
-    const msg = () => {
-        if (qError && "screenMessage" in qError) {
-            return (qError.screenMessage as string) ?? "";
-        }
-        return "";
-    };
     return (
         <View style={styles.listItem}>
-            <SnackBar.Error
-                message={msg()}
-                setVisible={setShowSnackBar}
-                visible={showSnackBar}
-                autoDismissible={true}
-            />
+            <SnackBar.Error message={msg} setVisible={setShowSnackBar} visible={showSnackBar} autoDismissible={true} />
             <View style={styles.itemAvatar}>
                 <Image style={styles.avatarIcon} source={avatar} />
             </View>
