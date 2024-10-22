@@ -9,21 +9,25 @@ import ITokenService from "../services/token/itokenService";
 import JwtTokenService from "../services/token/jwtTokenService";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
 import { UserRepository } from "../repositories/userRepository/userRepository";
+import IEncryptService from "../services/encrypt/iencryptService";
+import EncryptServiceBcrypt from "../services/encrypt/encryptService";
 
 export default class LoginController {
     private readonly tokenService: ITokenService;
     private readonly userRepository: IUserRepository;
+    private readonly encryptService: IEncryptService;
     
     constructor() {
         this.tokenService = new JwtTokenService();
         this.userRepository = new UserRepository();
+        this.encryptService = new EncryptServiceBcrypt();
     }
 
     async signIn(req: Request, res: Response) {
         const { email, password} = req.body;
 
         try {
-            const user = await new GetUserByEmailPasswordCase(this.userRepository).execute(email, password);
+            const user = await new GetUserByEmailPasswordCase(this.userRepository, this.encryptService).execute(email, password);
             const response = await new GenerateTokenFromUserCase(this.tokenService).execute(user);
 
             res.type("application/json").status(StatusCodes.Ok).send(response);
