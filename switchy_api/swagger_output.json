@@ -61,7 +61,7 @@
     "/Login/SignUp": {
       "post": {
         "tags": [
-          "SignUp"
+          "Login"
         ],
         "description": "",
         "responses": {

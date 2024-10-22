@@ -16,7 +16,7 @@ loginRoutes.post("/SignIn", (req, res) => {
 });
 
 loginRoutes.post("/SignUp", (request, response) => {
-    // #swagger.tags = ['SignUp']
+    // #swagger.tags = ['Login']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
