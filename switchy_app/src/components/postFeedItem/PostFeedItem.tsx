@@ -1,19 +1,19 @@
 import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
+import { HomeNavigationProp } from "../../routes/types/navigationTypes";
+import PostFeedItemController from "./postFeedItemController";
+import { useUserContext } from "../../contexts/userContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import timeAgoFormatter from "../../../timeAgoFormatter";
+import { Facebook } from "react-content-loader/native";
 //@ts-ignore
 import avatar from "../../../assets/icons/avatar.png";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useMutation } from "@tanstack/react-query";
 import appColors from "../../styles/appColors";
+import SnackBar from "../snackBar/SnackBar";
 import styles from "./postFeedItemStyles";
 import React, { useState } from "react";
 import Post from "../../models/post";
-import { Facebook } from "react-content-loader/native";
-import timeAgoFormatter from "../../../timeAgoFormatter";
-import { HomeNavigationProp } from "../../routes/types/navigationTypes";
-import { useMutation } from "@tanstack/react-query";
-import PostFeedItemController from "./postFeedItemController";
-import SnackBar from "../snackBar/SnackBar";
-import { useUserContext } from "../../contexts/userContext";
 
 type PostFeedItemProps = {
     item: Post | undefined;
@@ -25,7 +25,7 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
-    
+
     const controller = new PostFeedItemController();
     const {
         data,
