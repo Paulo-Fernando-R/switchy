@@ -29,16 +29,3 @@ export default function App() {
         </NestContext>
     );
 }
-
-// return (
-//     <QueryClientProvider client={new QueryClient()}>
-//         <AuthContext.Provider value={{ auth: auth, setAuth: changeAuth }}>
-//             <TabBarContext.Provider value={{ tabBarVisible: tabBarVisible, setTabBarVisible: changeState }}>
-//                 <StatusBar backgroundColor={appColors.bg100} style="light" />
-//                 <Host>
-//                     <Router />
-//                 </Host>
-//             </TabBarContext.Provider>
-//         </AuthContext.Provider>
-//     </QueryClientProvider>
-// );

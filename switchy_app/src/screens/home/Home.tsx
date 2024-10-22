@@ -17,7 +17,7 @@ export default function Home({ navigation }: HomeProps) {
 
     const { data, error, refetch, isRefetching } = useQuery({
         queryKey: ["Feeds"],
-        queryFn: () => controller.getFeedData(),
+        queryFn: () => controller.getAppData(),
     });
 
     return (

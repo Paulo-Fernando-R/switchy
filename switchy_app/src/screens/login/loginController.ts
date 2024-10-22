@@ -11,7 +11,6 @@ export default class LoginController {
 
     async signIn(email: string, password: string, setAuth: (value: Auth) => void) {
         const res = await this.signIncase.execute(email, password);
-
         setAuth(res);
         return res;
     }
