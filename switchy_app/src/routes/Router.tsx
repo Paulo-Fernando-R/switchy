@@ -47,8 +47,19 @@ function AppRouter() {
 
 export default function Router() {
     const { auth } = useAuthContext();
-    const isAuth = true;
-    if (!auth) {
+
+    const isAuth = () => {
+        if (!auth) {
+            return false;
+        }
+        // if (Date.now() > auth.accessTokenExpiresAtUtc.getTime()) {
+        //     return false;
+        // }
+
+        return true;
+    };
+
+    if (!isAuth()) {
         return <AuthRouter />;
     }
 

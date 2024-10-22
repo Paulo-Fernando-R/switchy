@@ -39,34 +39,18 @@ export default class CustomAxiosClient implements ICustomAxiosClient {
             return res;
         } catch (error) {
             console.error(error);
+            this.storage.removeItem();
             return;
         }
     }
 
-    private validateToken(date?: Date) {
-        if (!date) {
-            return false;
-        }
-        const now = Date.now();
-
-        if (now > date.getTime()) {
-            return false;
-        }
-
-        return true;
-    }
 
     private resInterceptor() {
         const interceptor = async (response: AxiosResponse) => {
-            if (response.status === 401) {
-                const res = this.getTokenFromStorage();
-                if (!this.validateToken(res?.accessTokenExpiresAtUtc)) {
-                    this.storage.removeItem();
-                    return response;
-                }
+            if (response.status !== 401) return response;
 
-                await this.refreshToken(res?.refreshToken!);
-            }
+            const res = this.getTokenFromStorage();
+            if (res) await this.refreshToken(res?.refreshToken);
             return response;
         };
 
