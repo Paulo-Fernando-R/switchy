@@ -32,7 +32,7 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
         mutate,
         error: qError,
     } = useMutation({
-        mutationFn: () => controller.handleLike(item.id!, setLiked),
+        mutationFn: () => controller.handleLike(item.id!, setLiked, !liked),
         onError: () => {
             setShowSnackBar(true);
         },

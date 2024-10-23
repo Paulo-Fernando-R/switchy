@@ -19,8 +19,8 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
 
     async removeLike(postId: string, userId: string): Promise<void> {
         await this.connect();
-        await Post.findByIdAndDelete(postId, {
-            $push: { likes: { userId: userId } },
+        await Post.findByIdAndUpdate(postId, {
+            $pull: { likes: { userId: userId } },
         });
     }
 

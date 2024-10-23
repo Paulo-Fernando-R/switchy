@@ -10,8 +10,8 @@ export default class PostFeedItemController {
         this.repository = new PostRepository();
     }
 
-    async addLike(postId: string) {
-        await this.repository.addLike(postId);
+    async putLike(postId: string, value: boolean) {
+        await this.repository.addLike(postId, value);
     }
 
     async getById(postId: string) {
@@ -35,12 +35,12 @@ export default class PostFeedItemController {
         return "";
     }
 
-    async handleLike(postId: string, setLiked: React.Dispatch<React.SetStateAction<boolean>>) {
+    async handleLike(postId: string, setLiked: React.Dispatch<React.SetStateAction<boolean>>, liked: boolean) {
         try {
-            await this.addLike(postId);
+            await this.putLike(postId, liked);
             const response = await this.getById(postId);
 
-            setLiked(true);
+            setLiked(liked);
             return response;
         } catch (error) {
             console.error(error);

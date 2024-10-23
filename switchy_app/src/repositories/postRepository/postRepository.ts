@@ -10,12 +10,13 @@ export default class PostRepository implements IPostRepository {
     constructor() {
         this.axios = new CustomAxiosClient();
     }
-    async addLike(postId: string): Promise<void> {
+    async addLike(postId: string, value:boolean): Promise<void> {
         const data = {
             postId: postId,
+            value: value
         };
-        const response = await this.axios.instance.post<Post[]>("/Post/AddLikeToPost", data);
-
+        const response = await this.axios.instance.put<Post[]>("/Post/Like", data);
+       
         if (!response) {
             throw new NetworkError();
         }
