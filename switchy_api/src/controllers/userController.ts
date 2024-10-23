@@ -25,14 +25,14 @@ export default class UserController {
 
     async signUp(request: Request, response: Response) {
         try {
-
-            const signUpRequest: SignUpRequest = request.body
+            const { name, email, password, userName } = request.body;
+            const signUpRequest = { name, email, password, userName } as SignUpRequest;
+            
             const newUser = await this.signUpCase.execute(signUpRequest);
             response.type("application/json").status(StatusCodes.Created).send(newUser);
-
         } catch (error) {
             if (error instanceof UserError) response.status(error.statusCode).send(error.message);
-            else throw error
+            else throw error;
         }
     }
 

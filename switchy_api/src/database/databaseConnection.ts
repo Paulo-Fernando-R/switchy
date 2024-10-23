@@ -8,6 +8,7 @@ export default class DatabaseConnection {
         this.url = process.env.DB_URL!;
 
         this._dbName = process.env.DB_NAME!;
+      
     }
 
     async connect() {
@@ -15,6 +16,7 @@ export default class DatabaseConnection {
             await connect(this.url, { family: 4, dbName: this._dbName});
             console.warn("Connected to MongoDB");
         } catch (error) {
+            //!NECESSÁRIO TRATAR ESSA EXCESSÃO NOS REPS E CTRLS
             throw new Error(`Cannot connect to database: ${error}`);
         }
     }

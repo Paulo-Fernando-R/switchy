@@ -64,6 +64,29 @@
           "Login"
         ],
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "userName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Ok."
