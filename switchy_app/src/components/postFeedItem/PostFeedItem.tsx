@@ -25,8 +25,13 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
-
     const controller = new PostFeedItemController();
+
+    const { user } = useUserContext();
+    const timeAgo = timeAgoFormatter(item.publishDate);
+    const [liked, setLiked] = useState(controller.getInitialLike(item, user));
+    const [showSnackBar, setShowSnackBar] = useState(false);
+    
     const {
         data,
         mutate,
@@ -38,13 +43,10 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
         },
     });
 
-    const { user } = useUserContext();
-    const timeAgo = timeAgoFormatter(item.publishDate);
-    const [liked, setLiked] = useState(controller.getInitialLike(item, user));
-    const [showSnackBar, setShowSnackBar] = useState(false);
     const msg = controller.getErrorMessage(qError);
+
     function navigate() {
-        navigation?.navigate("Comments", { post: item! });
+        navigation?.navigate("Comments", { post: data ? data : item! });
     }
 
     return (

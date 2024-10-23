@@ -6,7 +6,9 @@ import logo from "../../../assets/images/logo.png";
 import { useQuery } from "@tanstack/react-query";
 import HomeController from "./homeController";
 import styles from "./homeStyles";
-import React from "react";
+import React, { useCallback } from "react";
+import { useRef } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 type HomeProps = {
     navigation: HomeNavigationProp;
@@ -14,11 +16,17 @@ type HomeProps = {
 
 export default function Home({ navigation }: HomeProps) {
     const controller = new HomeController();
-
+    const ref = useRef(0);
     const { data, error, refetch, isRefetching } = useQuery({
-        queryKey: ["Feeds"],
+        queryKey: ["Feed" + ref.current],
         queryFn: () => controller.getAppData(),
     });
+
+    useFocusEffect(
+        useCallback(() => {
+            ref.current += 1;
+        }, [])
+    );
 
     return (
         <FlatList
