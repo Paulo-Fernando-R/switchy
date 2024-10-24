@@ -10,13 +10,13 @@ export default class PostRepository implements IPostRepository {
     constructor() {
         this.axios = new CustomAxiosClient();
     }
-    async addLike(postId: string, value:boolean): Promise<void> {
+    async addLike(postId: string, value: boolean): Promise<void> {
         const data = {
             postId: postId,
-            value: value
+            value: value,
         };
         const response = await this.axios.instance.put<Post[]>("/Post/Like", data);
-       
+
         if (!response) {
             throw new NetworkError();
         }
@@ -33,12 +33,6 @@ export default class PostRepository implements IPostRepository {
     async getPostComments(postId: string): Promise<Post[]> {
         const response = await this.axios.instance.get<Post[]>("/Comments/ByPost/" + postId);
 
-        response.data.map((e) => {
-            const aux = new Date(e.publishDate);
-            e.publishDate = aux;
-            return e;
-        });
-
         if (!response) {
             throw new NetworkError();
         }
@@ -51,15 +45,16 @@ export default class PostRepository implements IPostRepository {
             throw new Error();
         }
 
-        return response.data;
+        const aux = response.data.map((e) => {
+            const aux = new Date(e.publishDate);
+            e.publishDate = aux;
+            return e;
+        });
+
+        return aux;
     }
     async getFeedPosts() {
         const response = await this.axios.instance.get<Post[]>("/Post/GetFeedPosts");
-        response.data.map((e) => {
-            const aux = new Date(e.publishDate);
-            e.publishDate = aux;
-            return e;
-        });
 
         if (!response) {
             throw new NetworkError();
@@ -73,7 +68,13 @@ export default class PostRepository implements IPostRepository {
             throw new Error();
         }
 
-        return response.data;
+        const aux = response.data.map((e) => {
+            const aux = new Date(e.publishDate);
+            e.publishDate = aux;
+            return e;
+        });
+
+        return aux;
     }
 
     async createPost(content: string, parentId: string) {
@@ -110,6 +111,7 @@ export default class PostRepository implements IPostRepository {
         if (response.status !== 200) {
             throw new InternalServerError();
         }
+        response.data.publishDate = new Date(response.data.publishDate);
 
         return response.data;
     }
