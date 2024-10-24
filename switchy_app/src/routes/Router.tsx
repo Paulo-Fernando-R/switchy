@@ -6,6 +6,7 @@ import { useTabBarContext } from "../contexts/tabBarContext";
 import { useAuthContext } from "../contexts/authContext";
 import { RootTabsParamList } from "./types/navigationTypes";
 import Publish from "../screens/publish/Publish";
+import SearchStackRouter from "./searchStackRouter";
 import HomeStackRouter from "./homeStackRouter";
 import Search from "../screens/search/Search";
 import Login from "../screens/login/Login";
@@ -37,7 +38,7 @@ function AppRouter() {
                 sceneContainerStyle={{ paddingTop: 24 }}
             >
                 <Tab.Screen name="HomeStack" component={HomeStackRouter} />
-                <Tab.Screen name="Search" component={Search} />
+                <Tab.Screen name="SearchStack" component={SearchStackRouter} />
                 <Tab.Screen name="Publish" component={Publish} />
                 <Tab.Screen name="User" component={User} />
             </Tab.Navigator>
