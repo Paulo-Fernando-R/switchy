@@ -3,16 +3,16 @@ import { View, Text, FlatList } from "react-native";
 import styles from "./searchProfileStyles";
 import BackButton from "../../components/backButton/BackButton";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
-import { RootTabsSearchNavigationProp, RootTabsSearchRouteProp } from "../../routes/types/navigationTypes";
+import { SearchNavigationProp } from "../../routes/types/navigationTypes";
 import ButtonDefault from "../../components/buttonDefault/ButtonDefault";
 import appColors from "../../styles/appColors";
 type SearchProfileProps = {
-    navigation: RootTabsSearchNavigationProp;
+    navigation: SearchNavigationProp;
 };
 
 export default function SearchProfile({ navigation }: SearchProfileProps) {
     function goBack() {
-        navigation.navigation.goBack();
+        navigation.goBack();
     }
     return (
         <View style={styles.page}>

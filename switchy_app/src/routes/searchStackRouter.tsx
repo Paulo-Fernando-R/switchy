@@ -7,7 +7,7 @@ const Stack = createStackNavigator<SearchStackParamList>();
 
 export default function SearchStackRouter({ navigation, route }: RootTabsHomeNavigationProp) {
     return (
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="SearchProfile">
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Search">
             <Stack.Screen name="Search" component={Search} />
             <Stack.Group screenOptions={{ presentation: "modal" }}>
                 <Stack.Screen name="SearchProfile" component={SearchProfile} initialParams={{ userId: undefined }} />
