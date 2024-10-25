@@ -6,4 +6,5 @@ export default interface IPostRepository{
     createPost(content: string, parentId: string): Promise<void>
     addLike(postId:string, value:boolean):Promise<void>
     getPostById(postId: string): Promise<Post>
+    getUserPosts(userId: string): Promise<Post[]>
 }

@@ -3,17 +3,28 @@ import { View, Text, FlatList } from "react-native";
 import styles from "./searchProfileStyles";
 import BackButton from "../../components/backButton/BackButton";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
-import { SearchNavigationProp } from "../../routes/types/navigationTypes";
+import { SearchNavigationProp, SearchProfileRouteProp } from "../../routes/types/navigationTypes";
 import ButtonDefault from "../../components/buttonDefault/ButtonDefault";
 import appColors from "../../styles/appColors";
+import { useQuery } from "@tanstack/react-query";
+import SearchProfileController from "./searchProfileController";
 type SearchProfileProps = {
     navigation: SearchNavigationProp;
+    route: SearchProfileRouteProp;
 };
 
-export default function SearchProfile({ navigation }: SearchProfileProps) {
+export default function SearchProfile({ navigation, route }: SearchProfileProps) {
+    const { userId } = route.params;
+    const controller = new SearchProfileController();
     function goBack() {
         navigation.goBack();
     }
+
+    const { data } = useQuery({
+        queryKey: ["SearchProfile" + userId],
+        queryFn: () => controller.getPosts(userId),
+    });
+
     return (
         <View style={styles.page}>
             <View style={styles.header}>
@@ -38,7 +49,7 @@ export default function SearchProfile({ navigation }: SearchProfileProps) {
 
             <Text style={styles.subtitle}>Publicações</Text>
 
-            <FlatList contentContainerStyle={styles.list} data={[1, 2, 3, 4]} renderItem={() => <PostFeedItem />} />
+            <FlatList contentContainerStyle={styles.list} data={data} renderItem={({item}) => <PostFeedItem item={item}  />} />
         </View>
     );
 }
