@@ -1,14 +1,14 @@
 import { Text, View, Image, FlatList, RefreshControl } from "react-native";
 import { HomeNavigationProp } from "../../routes/types/navigationTypes";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
+import { useFocusEffect } from "@react-navigation/native";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
 import { useQuery } from "@tanstack/react-query";
 import HomeController from "./homeController";
-import styles from "./homeStyles";
 import React, { useCallback } from "react";
+import styles from "./homeStyles";
 import { useRef } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 
 type HomeProps = {
     navigation: HomeNavigationProp;

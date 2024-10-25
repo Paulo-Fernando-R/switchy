@@ -1,13 +1,15 @@
-import React from "react";
-import { View, Text, FlatList } from "react-native";
-import styles from "./searchProfileStyles";
-import BackButton from "../../components/backButton/BackButton";
-import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import { SearchNavigationProp, SearchProfileRouteProp } from "../../routes/types/navigationTypes";
 import ButtonDefault from "../../components/buttonDefault/ButtonDefault";
-import appColors from "../../styles/appColors";
-import { useQuery } from "@tanstack/react-query";
+import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
+import BackButton from "../../components/backButton/BackButton";
 import SearchProfileController from "./searchProfileController";
+import { useFocusEffect } from "@react-navigation/native";
+import { View, Text, FlatList } from "react-native";
+import React, { useCallback, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import appColors from "../../styles/appColors";
+import styles from "./searchProfileStyles";
+
 type SearchProfileProps = {
     navigation: SearchNavigationProp;
     route: SearchProfileRouteProp;
@@ -16,14 +18,21 @@ type SearchProfileProps = {
 export default function SearchProfile({ navigation, route }: SearchProfileProps) {
     const { userId } = route.params;
     const controller = new SearchProfileController();
+    const ref = useRef(0);
     function goBack() {
         navigation.goBack();
     }
 
-    const { data } = useQuery({
-        queryKey: ["SearchProfile" + userId],
+    const { data, error } = useQuery({
+        queryKey: ["SearchProfile" + ref.current],
         queryFn: () => controller.getPosts(userId),
     });
+
+    useFocusEffect(
+        useCallback(() => {
+            ref.current += 1;
+        }, [])
+    );
 
     return (
         <View style={styles.page}>
@@ -49,7 +58,11 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
 
             <Text style={styles.subtitle}>Publicações</Text>
 
-            <FlatList contentContainerStyle={styles.list} data={data} renderItem={({item}) => <PostFeedItem item={item}  />} />
+            <FlatList
+                contentContainerStyle={styles.list}
+                data={data}
+                renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} error={error} />}
+            />
         </View>
     );
 }

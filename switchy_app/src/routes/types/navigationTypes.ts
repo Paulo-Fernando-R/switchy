@@ -21,11 +21,15 @@ export type SearchStackParamList = {
     SearchProfile: {
         userId: string;
     };
+    Comments: {
+        post: Post;
+    };
 };
 
 export type SearchNavigationProp = StackNavigationProp<SearchStackParamList, "Search">;
 export type SearchRouteProp = RouteProp<SearchStackParamList, "Search">;
 export type SearchProfileRouteProp = RouteProp<SearchStackParamList, "SearchProfile">;
+export type SearchCommentsRouteProp = RouteProp<SearchStackParamList, "Comments">;
 
 //!ROOT
 export type RootTabsParamList = {

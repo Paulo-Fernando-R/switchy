@@ -1,5 +1,5 @@
 import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
-import { HomeNavigationProp } from "../../routes/types/navigationTypes";
+import { HomeNavigationProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
 import PostFeedItemController from "./postFeedItemController";
 import { useUserContext } from "../../contexts/userContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -18,7 +18,7 @@ import Post from "../../models/post";
 type PostFeedItemProps = {
     item: Post | undefined;
     error?: Error | null;
-    navigation?: HomeNavigationProp | undefined;
+    navigation?: HomeNavigationProp | SearchNavigationProp | undefined;
 };
 
 export default function PostFeedItem({ item, error, navigation }: PostFeedItemProps) {
@@ -31,7 +31,7 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
     const timeAgo = timeAgoFormatter(item.publishDate);
     const [liked, setLiked] = useState(controller.getInitialLike(item, user));
     const [showSnackBar, setShowSnackBar] = useState(false);
-    
+
     const {
         data,
         mutate,
@@ -46,6 +46,7 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
     const msg = controller.getErrorMessage(qError);
 
     function navigate() {
+        //@ts-ignore
         navigation?.navigate("Comments", { post: data ? data : item! });
     }
 

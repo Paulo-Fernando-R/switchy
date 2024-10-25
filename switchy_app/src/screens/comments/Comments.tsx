@@ -1,6 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "./commentsStyles";
-import { HomeNavigationProp } from "../../routes/types/navigationTypes";
+import { HomeNavigationProp, SearchCommentsRouteProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
 import { CommentsRouteProp } from "../../routes/types/navigationTypes";
 import React, { useEffect, useState } from "react";
 import BackButton from "../../components/backButton/BackButton";
@@ -13,8 +13,8 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import SnackBar from "../../components/snackBar/SnackBar";
 
 type CommentsProps = {
-    route: CommentsRouteProp;
-    navigation: HomeNavigationProp;
+    route: CommentsRouteProp | SearchCommentsRouteProp;
+    navigation: HomeNavigationProp | SearchNavigationProp;
 };
 
 export default function Comments({ route, navigation }: CommentsProps) {
@@ -23,7 +23,7 @@ export default function Comments({ route, navigation }: CommentsProps) {
     const [snackBar, setSnackBar] = useState(false);
     const { post } = route.params;
     function goBack() {
-        navigation.navigate("Home");
+        navigation.goBack();
     }
 
     const { data, error, refetch } = useQuery({
