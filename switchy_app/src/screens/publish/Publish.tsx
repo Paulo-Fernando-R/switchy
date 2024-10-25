@@ -4,9 +4,12 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import appColors from "../../styles/appColors";
 import ButtonDefault from "../../components/buttonDefault/ButtonDefault";
 import styles from "./publishStyles";
+import useKeyboard from "../../hooks/useKeyboard";
+import KeyboardStateEnum from "../../enums/keyboardStateEnum";
 
 export default function Publish() {
     const [text, setText] = useState("");
+    const keyBoard = useKeyboard();
     return (
         <View style={styles.page}>
             <View style={styles.header}>
@@ -34,7 +37,9 @@ export default function Publish() {
                 />
                 <Text style={styles.userName}>{text.length}/512</Text>
             </ScrollView>
-            <Text style={styles.bottom}>Qualquer pessoa poderá ver e responder</Text>
+            <Text style={[styles.bottomClose, { paddingBottom: keyBoard === KeyboardStateEnum.hidden ? 95 : 20 }]}>
+                Qualquer pessoa poderá ver e responder
+            </Text>
         </View>
     );
 }

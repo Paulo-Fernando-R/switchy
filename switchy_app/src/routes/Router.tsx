@@ -5,13 +5,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useTabBarContext } from "../contexts/tabBarContext";
 import { useAuthContext } from "../contexts/authContext";
 import { RootTabsParamList } from "./types/navigationTypes";
-import Publish from "../screens/publish/Publish";
+import KeyboardStateEnum from "../enums/keyboardStateEnum";
 import SearchStackRouter from "./searchStackRouter";
+import React, { useEffect, useState } from "react";
+import Publish from "../screens/publish/Publish";
 import HomeStackRouter from "./homeStackRouter";
+import useKeyboard from "../hooks/useKeyboard";
 import Login from "../screens/login/Login";
 import User from "../screens/user/User";
 import { View } from "react-native";
-import React from "react";
 
 const Tab = createBottomTabNavigator<RootTabsParamList>();
 const Stack = createStackNavigator();
@@ -28,12 +30,21 @@ function AuthRouter() {
 
 function AppRouter() {
     const { tabBarVisible } = useTabBarContext();
+    const keyboard = useKeyboard();
+
+    const handleBar = () => {
+        if (!tabBarVisible || keyboard === KeyboardStateEnum.show) {
+            return false;
+        }
+
+        return true;
+    };
 
     return (
         <NavigationContainer>
             <Tab.Navigator
                 screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}
-                tabBar={tabBarVisible ? CustomTabNavigation : () => <View></View>}
+                tabBar={handleBar() ? CustomTabNavigation : () => <View></View>}
                 sceneContainerStyle={{ paddingTop: 24 }}
             >
                 <Tab.Screen name="HomeStack" component={HomeStackRouter} />
