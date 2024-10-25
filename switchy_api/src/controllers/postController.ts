@@ -11,11 +11,11 @@ import GetUserPostsCase from "../domain/post/cases/getUserPostsCase";
 
 export default class PostController {
     postRepository: IPostRepository;
-    getUserPostsCase: GetFeedPostsCase;
+    getUserPostsCase: GetUserPostsCase;
 
     constructor() {
         this.postRepository = new PostRepository();
-        this.getUserPostsCase = new GetFeedPostsCase(this.postRepository);
+        this.getUserPostsCase = new GetUserPostsCase(this.postRepository);
     }
     async createPost(req: Request, res: Response) {
         const { content, parentId } = req.body;
@@ -72,9 +72,9 @@ export default class PostController {
     }
 
     async getUserPosts(req: Request, res: Response) {
-        const id = req.userId;
+        const { userId } = req.params;
         try {
-            const list = await this.getUserPostsCase.execute(id);
+            const list = await this.getUserPostsCase.execute(userId);
             res.status(StatusCodes.Ok).send(list);
         } catch (error) {
             res.status(StatusCodes.InternalServerError).send(error);

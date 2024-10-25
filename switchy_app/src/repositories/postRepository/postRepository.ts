@@ -115,4 +115,27 @@ export default class PostRepository implements IPostRepository {
 
         return response.data;
     }
+
+    async getUserPosts(userId: string) {
+        const response = await this.axios.instance.get<Post[]>("/Post/GetPostsByUserId/" + userId);
+
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 401) {
+            throw new UnauthorizedError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
+
+        const list = response.data.map((e) => {
+            e.publishDate = new Date(e.publishDate);
+            return e;
+        });
+
+        return list;
+    }
 }

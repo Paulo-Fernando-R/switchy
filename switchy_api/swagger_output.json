@@ -339,12 +339,20 @@
         }
       }
     },
-    "/Post/GetUserPosts": {
+    "/Post/GetPostsByUserId/{userId}": {
       "get": {
         "tags": [
           "Post"
         ],
         "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Ok."

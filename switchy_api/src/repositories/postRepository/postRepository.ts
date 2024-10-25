@@ -11,11 +11,12 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     }
 
     async getUserPosts(userId: string) {
+        console.log("NESSA MERDA")
         try {
             await this.connect();
-            const list = await Post.find({ "user.id": new Types.ObjectId(userId) }).exec();
+            const list = await Post.find({ "user.id": new Types.ObjectId(userId) });
 
-            console.log(list);
+           // console.log(list);
 
             const res: IPost[] = list.map((e) => {
                 return {

@@ -37,7 +37,7 @@ postRoutes.put("/Like", (req, res) => {
     return controller.putLike(req, res);
 });
 
-postRoutes.get("/GetUserPosts", (req, res) => {
+postRoutes.get("/GetPostsByUserId/:userId", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
