@@ -11,23 +11,26 @@ import EncryptServiceBcrypt from "../services/encrypt/encryptService";
 import SignUpRequest from "../domain/user/requests/signUpRequest";
 import { UserError, UserNotFoundError } from "../domain/user/errors/userErrors";
 import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
+import SearchUserCase from "../domain/user/cases/searchUserCase";
 
 export default class UserController {
     private userRepository: IUserRepository;
     private signUpCase: SignUpCase;
     private encryptService: EncryptServiceBcrypt;
+    private searchUserCase: SearchUserCase;
 
     constructor() {
         this.userRepository = new UserRepository();
         this.encryptService = new EncryptServiceBcrypt();
         this.signUpCase = new SignUpCase(this.userRepository, this.encryptService);
+        this.searchUserCase = new SearchUserCase(this.userRepository, this.encryptService);
     }
 
     async signUp(request: Request, response: Response) {
         try {
             const { name, email, password, userName } = request.body;
             const signUpRequest = { name, email, password, userName } as SignUpRequest;
-            
+
             const newUser = await this.signUpCase.execute(signUpRequest);
             response.type("application/json").status(StatusCodes.Created).send(newUser);
         } catch (error) {
@@ -72,6 +75,17 @@ export default class UserController {
             }
 
             throw ex;
+        }
+    }
+
+    async searchUser(req: Request, res: Response) {
+        const { query } = req.params;
+        try {
+            const userInfo = await this.searchUserCase.execute(query);
+
+            res.type("application/json").status(StatusCodes.Ok).send(userInfo);
+        } catch (ex) {
+            res.status(StatusCodes.InternalServerError).send();
         }
     }
 }

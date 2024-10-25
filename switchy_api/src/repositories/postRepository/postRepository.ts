@@ -10,6 +10,32 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         super();
     }
 
+    async getUserPosts(userId: string) {
+        try {
+            await this.connect();
+            const list = await Post.find({ "user.id": new Types.ObjectId(userId) }).exec();
+
+            console.log(list);
+
+            const res: IPost[] = list.map((e) => {
+                return {
+                    content: e.content,
+                    publishDate: e.publishDate,
+                    user: e.user,
+                    id: e._id,
+                    parentId: e.parentId,
+                    comments: e.comments,
+                    likes: e.likes,
+                };
+            });
+            return res;
+        } catch (error) {
+            console.error(error);
+            //@ts-ignore
+            throw new ServerError(error.message ?? "");
+        }
+    }
+
     async addLike(postId: string, userId: string): Promise<void> {
         await this.connect();
         await Post.findByIdAndUpdate(postId, {

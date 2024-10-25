@@ -7,12 +7,15 @@ import { PostEmptyValueError, UnableCreatePostError } from "../domain/post/error
 import GetFeedPostsCase from "../domain/post/cases/getFeedPostsCase";
 import getPostByIdCase from "../domain/post/cases/getPostByIdCase";
 import UpdateLikeOfPostCase from "../domain/post/cases/updateLikeOfPostCase";
+import GetUserPostsCase from "../domain/post/cases/getUserPostsCase";
 
 export default class PostController {
     postRepository: IPostRepository;
+    getUserPostsCase: GetFeedPostsCase;
 
     constructor() {
         this.postRepository = new PostRepository();
+        this.getUserPostsCase = new GetFeedPostsCase(this.postRepository);
     }
     async createPost(req: Request, res: Response) {
         const { content, parentId } = req.body;
@@ -36,10 +39,9 @@ export default class PostController {
 
         try {
             const response = await new GetFeedPostsCase(this.postRepository).execute(userId);
-           
+
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {
-           
             res.status(StatusCodes.InternalServerError).send(error);
         }
     }
@@ -66,6 +68,16 @@ export default class PostController {
             if (error instanceof PostEmptyValueError) {
                 res.status(StatusCodes.BadRequest).send("postId is required");
             }
+        }
+    }
+
+    async getUserPosts(req: Request, res: Response) {
+        const id = req.userId;
+        try {
+            const list = await this.getUserPostsCase.execute(id);
+            res.status(StatusCodes.Ok).send(list);
+        } catch (error) {
+            res.status(StatusCodes.InternalServerError).send(error);
         }
     }
 }

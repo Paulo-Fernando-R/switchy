@@ -5,4 +5,5 @@ export default interface IUserRepository {
     getById(id: string): Promise<IUser | null>
     getByEmailAndPassword(email: string, password: string): Promise<IUser | null>;
     getByEmail(email: string): Promise<IUser | null>
+    searchUser(query: string): Promise<IUser[]>
 }

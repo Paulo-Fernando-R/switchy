@@ -92,4 +92,27 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
 
         return user;
     }
+
+    async searchUser(query: string) {
+        await this.connect();
+
+        const res = await User.find({
+            $or: [
+                { name: { $regex: query, $options: "i" } },
+                { userName: { $regex: query, $options: "i" } },
+                { email: { $regex: query, $options: "i" } },
+            ],
+        });
+
+        const userList: IUser[] = res.map((e) => {
+            return {
+                email: e.email,
+                name: e.name,
+                id: e._id,
+                userName: e.userName,
+            };
+        });
+
+        return userList;
+    }
 }
