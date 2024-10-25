@@ -13,6 +13,8 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         gap: 16,
         paddingBottom: 30,
+        paddingHorizontal: 20,
+        paddingTop: 12,
     },
     logo: {
         width: 48,
@@ -76,6 +78,20 @@ const styles = StyleSheet.create({
         ...appTexts.paragraph2Regular,
         color: appColors.text300,
     },
+
+    emptyList:{
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 8,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        flex: 1
+    },
+    emptyText:{
+        ...appTexts.paragraph1Regular,
+        color: appColors.text400,
+        textAlign: 'center'
+    }
 });
 
 export default styles;

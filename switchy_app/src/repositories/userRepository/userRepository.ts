@@ -12,7 +12,29 @@ export default class UserRepository {
 
     async getUserInfo() {
         const response = await this.axios.instance.get<User>("/User/Info");
-        console.log(response.status)
+
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 400) {
+            throw new BadRequestError();
+        }
+
+        if (response.status === 404) {
+            throw new NotFoundError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
+
+        return response.data;
+    }
+
+    async searchUser(query: string) {
+        const response = await this.axios.instance.get<User[]>("/User/Search/" + query);
+
         if (!response) {
             throw new NetworkError();
         }
