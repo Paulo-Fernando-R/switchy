@@ -3,7 +3,7 @@ import type { TextStyle } from "react-native";
 
 const title1SemiBold: TextStyle = {
     fontFamily: "Roboto",
-    fontWeight: "semibold",
+    fontWeight: "bold",
     fontSize: 24,
     color: appColors.text100,
 };
