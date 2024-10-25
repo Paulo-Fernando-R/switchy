@@ -8,7 +8,6 @@ import { RootTabsParamList } from "./types/navigationTypes";
 import Publish from "../screens/publish/Publish";
 import SearchStackRouter from "./searchStackRouter";
 import HomeStackRouter from "./homeStackRouter";
-import Search from "../screens/search/Search";
 import Login from "../screens/login/Login";
 import User from "../screens/user/User";
 import { View } from "react-native";
@@ -33,7 +32,7 @@ function AppRouter() {
     return (
         <NavigationContainer>
             <Tab.Navigator
-                screenOptions={{ headerShown: false }}
+                screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}
                 tabBar={tabBarVisible ? CustomTabNavigation : () => <View></View>}
                 sceneContainerStyle={{ paddingTop: 24 }}
             >

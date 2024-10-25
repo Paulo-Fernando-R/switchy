@@ -1,4 +1,4 @@
-import { RootTabsHomeNavigationProp, SearchStackParamList } from "./types/navigationTypes";
+import { RootTabsHomeNavigationProp, RootTabsSearchNavigationProp, SearchStackParamList } from "./types/navigationTypes";
 import { createStackNavigator } from "@react-navigation/stack";
 import Search from "../screens/search/Search";
 import SearchProfile from "../screens/searchProfile/SearchProfile";
@@ -9,7 +9,7 @@ import { useTabBarContext } from "../contexts/tabBarContext";
 
 const Stack = createStackNavigator<SearchStackParamList>();
 
-export default function SearchStackRouter({ navigation, route }: RootTabsHomeNavigationProp) {
+export default function SearchStackRouter({ navigation, route }: RootTabsSearchNavigationProp) {
    
     const { setTabBarVisible } = useTabBarContext();
 
