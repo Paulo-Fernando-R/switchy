@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 
     userInfo: {
         paddingHorizontal: 20,
-        paddingBottom: 16 ,
+        paddingBottom: 16,
         gap: 8,
         borderBottomColor: appColors.stroke100,
         borderBottomWidth: 1,
@@ -51,39 +51,6 @@ const styles = StyleSheet.create({
         paddingTop: 12,
         paddingHorizontal: 20,
         paddingBottom: 80,
-    },
-
-
-
-
-
-
-
-
-
-    mainPost: {
-        paddingHorizontal: 20,
-    },
-    title: {
-        ...appTexts.paragraph2Regular,
-        color: appColors.text300,
-        paddingLeft: 20,
-        paddingTop: 8,
-    },
-
-    inputBox: {
-        flexDirection: "row",
-        marginHorizontal: 20,
-        backgroundColor: appColors.bg200,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        alignItems: "center",
-        borderRadius: 16,
-    },
-    input: {
-        flex: 1,
-        ...appTexts.paragraph2Regular,
-        color: appColors.text300,
     },
 });
 

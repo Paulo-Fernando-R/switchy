@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View, Text, FlatList } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import styles from "./searchProfileStyles";
 import BackButton from "../../components/backButton/BackButton";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
