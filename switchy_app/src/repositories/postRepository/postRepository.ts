@@ -77,7 +77,7 @@ export default class PostRepository implements IPostRepository {
         return aux;
     }
 
-    async createPost(content: string, parentId: string) {
+    async createPost(content: string, parentId?: string) {
         const data = {
             content: content,
             parentId: parentId,
