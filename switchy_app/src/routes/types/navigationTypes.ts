@@ -46,3 +46,8 @@ export type RootTabsHomeRouteProp = RouteProp<RootTabsParamList, "HomeStack">;
 //!SEARCH TAB NAV
 export type RootTabsSearchNavigationProp = BottomTabScreenProps<RootTabsParamList, "SearchStack">;
 export type RootTabsSearchRouteProp = RouteProp<RootTabsParamList, "SearchStack">;
+
+//!PUBLISH TAB NAV
+export type RootTabsPublishNavigationProp = BottomTabScreenProps<RootTabsParamList, "Publish">;
+export type RootTabsPublishRouteProp = RouteProp<RootTabsParamList, "Publish">;
+
