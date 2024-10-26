@@ -16,16 +16,17 @@ type HomeProps = {
 
 export default function Home({ navigation }: HomeProps) {
     const controller = new HomeController();
-    const ref = useRef(0);
+   // const ref = useRef(0);
     const { data, error, refetch, isRefetching } = useQuery({
-        queryKey: ["Feed" + ref.current],
+        queryKey: ["Feed"],
         queryFn: () => controller.getAppData(),
     });
 
     useFocusEffect(
         useCallback(() => {
-            ref.current += 1;
-            console.log(ref.current);
+            //ref.current += 1;
+           // console.log(ref.current);
+            refetch()
         }, [])
     );
 
