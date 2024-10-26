@@ -25,6 +25,7 @@ export default function Home({ navigation }: HomeProps) {
     useFocusEffect(
         useCallback(() => {
             ref.current += 1;
+            console.log(ref.current);
         }, [])
     );
 
@@ -34,7 +35,7 @@ export default function Home({ navigation }: HomeProps) {
             ListHeaderComponent={() => <Header />}
             style={styles.page}
             contentContainerStyle={styles.list}
-            data={data}
+            data={data?.sort((a, b) => (a.publishDate.getTime() > b.publishDate.getTime() ? -1 : 1))}
             renderItem={({ item, index }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
         />
     );

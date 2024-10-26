@@ -7,11 +7,18 @@ type ButtonDefaultProps = {
     text: string;
     textColor: string;
     backgroundColor: string;
+    action: () => void;
+    disabled?: boolean;
 };
 
-export default function ButtonDefault({ text, textColor, backgroundColor }: ButtonDefaultProps) {
+export default function ButtonDefault({ text, textColor, backgroundColor, action, disabled }: ButtonDefaultProps) {
     return (
-        <TouchableOpacity activeOpacity={0.8} style={[styles.button, { backgroundColor: backgroundColor }]}>
+        <TouchableOpacity
+        disabled={disabled}
+            onPress={action}
+            activeOpacity={0.8}
+            style={[styles.button, { backgroundColor: backgroundColor }]}
+        >
             <Text style={[styles.buttonText, { color: textColor }]}>{text}</Text>
         </TouchableOpacity>
     );

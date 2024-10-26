@@ -8,24 +8,57 @@ import useKeyboard from "../../hooks/useKeyboard";
 import KeyboardStateEnum from "../../enums/keyboardStateEnum";
 import { useUserContext } from "../../contexts/userContext";
 import { RootTabsPublishNavigationProp } from "../../routes/types/navigationTypes";
+import { useMutation } from "@tanstack/react-query";
+import PublishController from "./publishController";
+import SnackBar from "../../components/snackBar/SnackBar";
 
 export default function Publish({ navigation, route }: RootTabsPublishNavigationProp) {
+    const controller = new PublishController();
     const [text, setText] = useState("");
     const keyBoard = useKeyboard();
     const { user } = useUserContext();
+    const [snackBar, setSnackBar] = useState(false);
 
     function navigate() {
         navigation.navigate("HomeStack", { screen: "Home" });
     }
 
+    const mutation = useMutation({
+        mutationFn: () => controller.createPost(text),
+        onError: () => controller.handleError(setSnackBar),
+        onSuccess: () => controller.handleSucess(setSnackBar, navigate, setText),
+    });
+
     return (
         <View style={styles.page}>
+            {mutation.isError && (
+                <SnackBar.Error
+                    message={mutation.error?.message!}
+                    setVisible={setSnackBar}
+                    visible={snackBar}
+                    autoDismissible={true}
+                />
+            )}
+            {mutation.isSuccess && (
+                <SnackBar.Sucess
+                    message={"Publicado com sucesso"}
+                    setVisible={setSnackBar}
+                    visible={snackBar}
+                    autoDismissible={true}
+                />
+            )}
             <View style={styles.header}>
                 <TouchableOpacity activeOpacity={0.8} onPress={navigate}>
                     <AntDesign name="close" size={24} color={appColors.text200} />
                 </TouchableOpacity>
 
-                <ButtonDefault backgroundColor={appColors.accent300} textColor={appColors.text100} text="Publicar" />
+                <ButtonDefault
+                    disabled={mutation.isPending}
+                    action={() => mutation.mutate()}
+                    backgroundColor={appColors.accent300}
+                    textColor={appColors.text100}
+                    text="Publicar"
+                />
             </View>
             <View style={styles.titleBox}>
                 <Text style={styles.name}>{user?.name}</Text>

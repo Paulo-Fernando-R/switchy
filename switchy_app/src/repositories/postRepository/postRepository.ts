@@ -1,4 +1,4 @@
-import { InternalServerError, NetworkError, UnauthorizedError } from "../../errors/customErrors";
+import { InternalServerError, NetworkError, UnauthorizedError,  } from "../../errors/customErrors";
 import ICustomAxiosClient from "../../services/customAxiosClient/IcustomAxiosClient";
 import CustomAxiosClient from "../../services/customAxiosClient/customAxiosClient";
 import IPostRepository from "./IpostRepository";
@@ -77,11 +77,32 @@ export default class PostRepository implements IPostRepository {
         return aux;
     }
 
-    async createPost(content: string, parentId?: string) {
+    async newPost(content: string) {
+        const data = {
+            content: content,
+        };
+
+        const response = await this.axios.instance.post("/Post/CreatePost", data);
+
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 401) {
+            throw new UnauthorizedError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
+    }
+
+    async createPost(content: string, parentId: string) {
         const data = {
             content: content,
             parentId: parentId,
         };
+
         const response = await this.axios.instance.post("/Comments/Add", data);
 
         if (!response) {
