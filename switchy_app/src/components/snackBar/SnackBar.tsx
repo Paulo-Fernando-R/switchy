@@ -32,7 +32,8 @@ function Sucess({ visible, setVisible, autoDismissible, autoDismissTime, message
         await new Promise((resolve) => {
             setTimeout(
                 () => {
-                    resolve(setVisible(false));
+                    setVisible(false)
+                    resolve(true);
                 },
                 autoDismissTime ? autoDismissTime : 5000
             );

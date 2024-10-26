@@ -12,7 +12,15 @@ export default class PublishController {
     ) {
         setText("");
         setSnackBar(true);
+        await new Promise((resolve) => {
+             setTimeout(() => {
+                navigate()
+                resolve(true)
+             }, 2000);
+        })
+       
         navigate();
+        
     }
 
     async handleError(setSnackBar: React.Dispatch<React.SetStateAction<boolean>>) {

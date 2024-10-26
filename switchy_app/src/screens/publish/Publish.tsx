@@ -17,7 +17,8 @@ export default function Publish({ navigation, route }: RootTabsPublishNavigation
     const [text, setText] = useState("");
     const keyBoard = useKeyboard();
     const { user } = useUserContext();
-    const [snackBar, setSnackBar] = useState(false);
+    const [snackBarError, setSnackBarError] = useState(false);
+    const [snackBarSucess, setSnackBarSucess] = useState(false);
 
     function navigate() {
         navigation.navigate("HomeStack", { screen: "Home" });
@@ -25,26 +26,27 @@ export default function Publish({ navigation, route }: RootTabsPublishNavigation
 
     const mutation = useMutation({
         mutationFn: () => controller.createPost(text),
-        onError: () => controller.handleError(setSnackBar),
-        onSuccess: () => controller.handleSucess(setSnackBar, navigate, setText),
+        onError: () => controller.handleError(setSnackBarError),
+        onSuccess: () => controller.handleSucess(setSnackBarSucess, navigate, setText),
     });
 
     return (
         <View style={styles.page}>
-            {mutation.isError && (
+            {snackBarError && (
                 <SnackBar.Error
                     message={mutation.error?.message!}
-                    setVisible={setSnackBar}
-                    visible={snackBar}
+                    setVisible={setSnackBarError}
+                    visible={snackBarError}
                     autoDismissible={true}
                 />
             )}
-            {mutation.isSuccess && (
+            {snackBarSucess && (
                 <SnackBar.Sucess
                     message={"Publicado com sucesso"}
-                    setVisible={setSnackBar}
-                    visible={snackBar}
+                    setVisible={setSnackBarSucess}
+                    visible={snackBarSucess}
                     autoDismissible={true}
+                    autoDismissTime={2000}
                 />
             )}
             <View style={styles.header}>
