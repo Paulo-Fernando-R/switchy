@@ -62,9 +62,9 @@ export default function Router() {
         if (!auth) {
             return false;
         }
-        // if (Date.now() > auth.accessTokenExpiresAtUtc.getTime()) {
-        //     return false;
-        // }
+        if (Date.now() > new Date(auth.accessTokenExpiresAtUtc).getTime()) {
+            return false;
+        }
 
         return true;
     };

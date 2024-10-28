@@ -16,7 +16,7 @@ export default function App() {
     TimeAgo.addLocale(br);
     const authStorage = new StorageService<Auth>(StorageTypeEnum.auth);
     const userStorage = new StorageService<User>(StorageTypeEnum.user);
-    //storage.removeItem()
+    //authStorage.removeItem()
     const storedAuth = authStorage.getItem();
     const storedUser = userStorage.getItem();
 
