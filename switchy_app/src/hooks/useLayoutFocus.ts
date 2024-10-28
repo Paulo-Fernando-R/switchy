@@ -6,7 +6,8 @@ import Post from "../models/post";
 const useLayoutFocus = (refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<Post[], Error>>) => {
     useFocusEffect(
         useCallback(() => {
-            refetch();
+            refetch({});
+            console.log('focus')
         }, [])
     );
 };

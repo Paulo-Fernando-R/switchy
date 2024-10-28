@@ -36,10 +36,10 @@ export default class PostFeedItemController {
     }
 
     async handleLike(postId: string, setLiked: React.Dispatch<React.SetStateAction<boolean>>, liked: boolean) {
+       
         try {
             await this.putLike(postId, liked);
             const response = await this.getById(postId);
-
             setLiked(liked);
             return response;
         } catch (error) {

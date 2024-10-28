@@ -8,12 +8,13 @@ import { Facebook } from "react-content-loader/native";
 //@ts-ignore
 import avatar from "../../../assets/icons/avatar.png";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import appColors from "../../styles/appColors";
 import SnackBar from "../snackBar/SnackBar";
 import styles from "./postFeedItemStyles";
 import React, { useState } from "react";
 import Post from "../../models/post";
+import useLayoutFocus from "../../hooks/useLayoutFocus";
 
 type PostFeedItemProps = {
     item?: Post | undefined;
@@ -37,12 +38,16 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
         mutate,
         error: qError,
     } = useMutation({
-        mutationFn: () => controller.handleLike(item.id!, setLiked, !liked),
+        mutationKey:['Post'+item.id],
+        mutationFn: (state: boolean) => {
+            return controller.handleLike(item.id!, setLiked, state);
+        },
         onError: () => {
             setShowSnackBar(true);
         },
     });
 
+   
     const msg = controller.getErrorMessage(qError);
 
     function navigate() {
@@ -67,15 +72,21 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
                 <Text style={styles.itemContentBody}>{data ? data.content : item?.content}</Text>
 
                 <View style={styles.itemContentActions}>
-                    <TouchableOpacity style={styles.contentActionButton} onPress={() => mutate()}>
-                        {liked ? (
+                    {liked? (
+                        <TouchableOpacity style={styles.contentActionButton} onPress={() => mutate(false)}>
                             <AntDesign name="heart" size={20} color={appColors.text100} />
-                        ) : (
+                            <Text style={styles.contentActionText}>
+                                {data ? data.likes?.length : item.likes?.length}
+                            </Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity style={styles.contentActionButton} onPress={() => mutate(true)}>
                             <AntDesign name="hearto" size={20} color={appColors.text100} />
-                        )}
-
-                        <Text style={styles.contentActionText}>{data ? data.likes?.length : item.likes?.length}</Text>
-                    </TouchableOpacity>
+                            <Text style={styles.contentActionText}>
+                                {data ? data.likes?.length : item.likes?.length}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
 
                     {navigation ? (
                         <TouchableOpacity style={styles.contentActionButton} onPress={navigate}>
