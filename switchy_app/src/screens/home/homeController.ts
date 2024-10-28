@@ -6,11 +6,11 @@ import PostRepository from "../../repositories/postRepository/postRepository";
 export default class HomeController {
     private readonly repository: IPostRepository;
     private readonly getUserDataCase: IgetUserDataCase;
-    placeholderData: number[];
+    placeholderData: any[];
     constructor() {
         this.repository = new PostRepository();
         this.getUserDataCase = new GetUserDataCase();
-        this.placeholderData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        this.placeholderData = [null, null, null, null, null, null, null, null];
     }
 
     async getFeedData() {
