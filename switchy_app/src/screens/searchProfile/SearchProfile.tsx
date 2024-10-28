@@ -18,17 +18,15 @@ type SearchProfileProps = {
 export default function SearchProfile({ navigation, route }: SearchProfileProps) {
     const { userId } = route.params;
     const controller = new SearchProfileController();
-
+    const ref = useLayoutFocus();
     function goBack() {
         navigation.goBack();
     }
 
     const { data, error, refetch, isLoading } = useQuery({
-        queryKey: ["SearchProfile"],
+        queryKey: ["SearchProfile" + ref],
         queryFn: () => controller.getPosts(userId),
     });
-
-    useLayoutFocus(refetch);
 
     return (
         <View style={styles.page}>

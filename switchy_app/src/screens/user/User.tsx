@@ -28,16 +28,16 @@ export default function Profile({ navigation, route }: ProfileProps) {
     const { user } = useUserContext();
     const controller = new UserController();
 
+    const ref = useLayoutFocus();
+
     const { data, error, isLoading, refetch } = useQuery({
-        queryKey: ["Profile"],
+        queryKey: ["Profile" + ref],
         queryFn: () => controller.getPosts(user?.id!),
     });
 
     function navigate() {
         navigation.navigate("ProfileEdit");
     }
-
-    useLayoutFocus(refetch);
 
     return (
         <View style={styles.page}>

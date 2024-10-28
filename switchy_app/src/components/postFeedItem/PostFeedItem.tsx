@@ -8,13 +8,12 @@ import { Facebook } from "react-content-loader/native";
 //@ts-ignore
 import avatar from "../../../assets/icons/avatar.png";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import appColors from "../../styles/appColors";
 import SnackBar from "../snackBar/SnackBar";
 import styles from "./postFeedItemStyles";
 import React, { useState } from "react";
 import Post from "../../models/post";
-import useLayoutFocus from "../../hooks/useLayoutFocus";
 
 type PostFeedItemProps = {
     item?: Post | undefined;
@@ -37,8 +36,9 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
         data,
         mutate,
         error: qError,
+        isPending,
     } = useMutation({
-        mutationKey:['Post'+item.id],
+        mutationKey: ["Post" + item.id],
         mutationFn: (state: boolean) => {
             return controller.handleLike(item.id!, setLiked, state);
         },
@@ -47,7 +47,6 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
         },
     });
 
-   
     const msg = controller.getErrorMessage(qError);
 
     function navigate() {
@@ -72,15 +71,23 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
                 <Text style={styles.itemContentBody}>{data ? data.content : item?.content}</Text>
 
                 <View style={styles.itemContentActions}>
-                    {liked? (
-                        <TouchableOpacity style={styles.contentActionButton} onPress={() => mutate(false)}>
+                    {liked ? (
+                        <TouchableOpacity
+                            disabled={isPending}
+                            style={styles.contentActionButton}
+                            onPress={() => mutate(false)}
+                        >
                             <AntDesign name="heart" size={20} color={appColors.text100} />
                             <Text style={styles.contentActionText}>
                                 {data ? data.likes?.length : item.likes?.length}
                             </Text>
                         </TouchableOpacity>
                     ) : (
-                        <TouchableOpacity style={styles.contentActionButton} onPress={() => mutate(true)}>
+                        <TouchableOpacity
+                            disabled={isPending}
+                            style={styles.contentActionButton}
+                            onPress={() => mutate(true)}
+                        >
                             <AntDesign name="hearto" size={20} color={appColors.text100} />
                             <Text style={styles.contentActionText}>
                                 {data ? data.likes?.length : item.likes?.length}

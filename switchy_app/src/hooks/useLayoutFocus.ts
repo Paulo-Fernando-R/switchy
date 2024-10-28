@@ -3,13 +3,16 @@ import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { useCallback, useRef } from "react";
 import Post from "../models/post";
 
-const useLayoutFocus = (refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<Post[], Error>>) => {
+const useLayoutFocus = () => {
+    const ref = useRef(0)
     useFocusEffect(
         useCallback(() => {
-            refetch({});
+            ref.current++
+            //refetch();
             console.log('focus')
         }, [])
     );
+    return ref.current
 };
 
 export default useLayoutFocus;

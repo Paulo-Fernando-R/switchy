@@ -15,25 +15,12 @@ type HomeProps = {
 
 export default function Home({ navigation }: HomeProps) {
     const controller = new HomeController();
-
+    const ref = useLayoutFocus();
     const { data, error, refetch, isRefetching, isLoading } = useQuery({
-        queryKey: ["Feed"],
+        queryKey: ["Feed" + ref],
         queryFn: () => controller.getAppData(),
-        placeholderData: controller.placeholderData
+        placeholderData: controller.placeholderData,
     });
-    useLayoutFocus(refetch);
-
-    // if (isLoading) {
-    //     return (
-    //         <FlatList
-    //             ListHeaderComponent={() => <Header />}
-    //             style={styles.page}
-    //             contentContainerStyle={styles.list}
-    //             data={controller.placeholderData}
-    //             renderItem={() => <PostFeedItem />}
-    //         />
-    //     );
-    // }
 
     return (
         <FlatList
