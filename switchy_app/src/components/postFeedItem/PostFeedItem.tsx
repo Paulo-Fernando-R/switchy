@@ -16,7 +16,7 @@ import React, { useState } from "react";
 import Post from "../../models/post";
 
 type PostFeedItemProps = {
-    item: Post | undefined;
+    item?: Post | undefined;
     error?: Error | null;
     navigation?: HomeNavigationProp | SearchNavigationProp | undefined;
 };
