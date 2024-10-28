@@ -42,7 +42,7 @@ export default function Profile({ navigation, route }: ProfileProps) {
                 <FlatList
                     contentContainerStyle={styles.list}
                     data={data}
-                    renderItem={({ item }) => <PostFeedItem item={item} error={error} />}
+                    renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
                 />
             ) : (
                 <FlatList

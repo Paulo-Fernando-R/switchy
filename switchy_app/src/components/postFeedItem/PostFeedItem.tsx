@@ -1,5 +1,5 @@
 import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
-import { HomeNavigationProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
+import { HomeNavigationProp, ProfileNavigationProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
 import PostFeedItemController from "./postFeedItemController";
 import { useUserContext } from "../../contexts/userContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -18,7 +18,7 @@ import Post from "../../models/post";
 type PostFeedItemProps = {
     item?: Post | undefined;
     error?: Error | null;
-    navigation?: HomeNavigationProp | SearchNavigationProp | undefined;
+    navigation?: HomeNavigationProp | SearchNavigationProp | ProfileNavigationProp | undefined;
 };
 
 export default function PostFeedItem({ item, error, navigation }: PostFeedItemProps) {
