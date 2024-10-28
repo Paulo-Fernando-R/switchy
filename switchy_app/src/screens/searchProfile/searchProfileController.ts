@@ -3,9 +3,10 @@ import PostRepository from "../../repositories/postRepository/postRepository";
 
 export default class SearchProfileController {
     private repository: IPostRepository;
-
+    placeholderData: number[]
     constructor() {
         this.repository = new PostRepository();
+        this.placeholderData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     }
     async getPosts(userId: string) {
         const posts = await this.repository.getUserPosts(userId);

@@ -71,7 +71,7 @@ function Header({ user }: UserHeaderProps) {
                     </TouchableOpacity>
                 </View>
 
-                <Text style={styles.userName}>@{user.userName}</Text>
+                <Text style={styles.userName}>@{user.email}</Text>
                 <Text style={styles.bio}>
                     necessário adicionar ao tipo de usuario no back e front Lorem ipsum dolor sit amet, consectetur
                     adipiscing elit. Donec sed felis id risus consequat tincidunt.

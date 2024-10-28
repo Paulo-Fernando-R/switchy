@@ -16,11 +16,23 @@ type HomeProps = {
 export default function Home({ navigation }: HomeProps) {
     const controller = new HomeController();
 
-    const { data, error, refetch, isRefetching } = useQuery({
+    const { data, error, refetch, isRefetching, isLoading } = useQuery({
         queryKey: ["Feed"],
         queryFn: () => controller.getAppData(),
     });
     useLayoutFocus(refetch);
+
+    if (isLoading) {
+        return (
+            <FlatList
+                ListHeaderComponent={() => <Header />}
+                style={styles.page}
+                contentContainerStyle={styles.list}
+                data={controller.placeholderData}
+                renderItem={() => <PostFeedItem />}
+            />
+        );
+    }
 
     return (
         <FlatList
@@ -28,7 +40,7 @@ export default function Home({ navigation }: HomeProps) {
             ListHeaderComponent={() => <Header />}
             style={styles.page}
             contentContainerStyle={styles.list}
-            data={data?.sort((a, b) => (a.publishDate.getTime() > b.publishDate.getTime() ? -1 : 1))}
+            data={data}
             renderItem={({ item, index }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
         />
     );
