@@ -51,7 +51,7 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
     }
 
     return (
-        <View style={styles.listItem}>
+        <View style={styles.listItem} >
             <SnackBar.Error message={msg} setVisible={setShowSnackBar} visible={showSnackBar} autoDismissible={true} />
             <View style={styles.itemAvatar}>
                 <Image style={styles.avatarIcon} source={avatar} />

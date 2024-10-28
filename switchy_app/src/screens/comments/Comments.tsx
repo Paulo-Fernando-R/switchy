@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, LogBox } from "react-native";
 import styles from "./commentsStyles";
 import { HomeNavigationProp, SearchCommentsRouteProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
 import { CommentsRouteProp } from "../../routes/types/navigationTypes";
@@ -11,6 +11,8 @@ import appColors from "../../styles/appColors";
 import CommentsController from "./commentsController";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import SnackBar from "../../components/snackBar/SnackBar";
+
+LogBox.ignoreLogs(["Non-serializable values were found in the navigation state"]);
 
 type CommentsProps = {
     route: CommentsRouteProp | SearchCommentsRouteProp;
