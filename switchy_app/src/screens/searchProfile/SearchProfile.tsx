@@ -26,6 +26,7 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
     const { data, error, refetch, isLoading } = useQuery({
         queryKey: ["SearchProfile" + ref],
         queryFn: () => controller.getPosts(userId),
+        placeholderData: controller.placeholderData,
     });
 
     return (
@@ -52,19 +53,11 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
 
             <Text style={styles.subtitle}>Publicações</Text>
 
-            {isLoading ? (
-                <FlatList
-                    contentContainerStyle={styles.list}
-                    data={controller.placeholderData}
-                    renderItem={() => <PostFeedItem />}
-                />
-            ) : (
-                <FlatList
-                    contentContainerStyle={styles.list}
-                    data={data}
-                    renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} error={error} />}
-                />
-            )}
+            <FlatList
+                contentContainerStyle={styles.list}
+                data={data}
+                renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} error={error} />}
+            />
         </View>
     );
 }

@@ -33,6 +33,7 @@ export default function Profile({ navigation, route }: ProfileProps) {
     const { data, error, isLoading, refetch } = useQuery({
         queryKey: ["Profile" + ref],
         queryFn: () => controller.getPosts(user?.id!),
+        placeholderData: controller.placeholderData,
     });
 
     function navigate() {
@@ -44,19 +45,13 @@ export default function Profile({ navigation, route }: ProfileProps) {
             <Header user={user!} navigate={navigate} />
             <Text style={styles.subtitle}>Publicações</Text>
 
-            {!isLoading ? (
+           
                 <FlatList
                     contentContainerStyle={styles.list}
                     data={data}
                     renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
                 />
-            ) : (
-                <FlatList
-                    contentContainerStyle={styles.list}
-                    data={controller.placeholderData}
-                    renderItem={() => <PostFeedItem />}
-                />
-            )}
+          
         </View>
     );
 }
