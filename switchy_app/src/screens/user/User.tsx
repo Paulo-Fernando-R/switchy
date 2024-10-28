@@ -16,6 +16,7 @@ import React from "react";
 
 type UserHeaderProps = {
     user: User;
+    navigate: () => void;
 };
 
 type ProfileProps = {
@@ -31,11 +32,16 @@ export default function Profile({ navigation, route }: ProfileProps) {
         queryKey: ["Profile"],
         queryFn: () => controller.getPosts(user?.id!),
     });
+
+    function navigate() {
+        navigation.navigate("ProfileEdit");
+    }
+
     useLayoutFocus(refetch);
 
     return (
         <View style={styles.page}>
-            <Header user={user!} />
+            <Header user={user!} navigate={navigate} />
             <Text style={styles.subtitle}>Publicações</Text>
 
             {!isLoading ? (
@@ -55,7 +61,7 @@ export default function Profile({ navigation, route }: ProfileProps) {
     );
 }
 
-function Header({ user }: UserHeaderProps) {
+function Header({ user, navigate }: UserHeaderProps) {
     return (
         <View>
             <View style={styles.header}>
@@ -66,7 +72,7 @@ function Header({ user }: UserHeaderProps) {
             <View style={styles.profileBox}>
                 <View style={styles.nameBox}>
                     <Text style={styles.name}>{user.name}</Text>
-                    <TouchableOpacity activeOpacity={0.5}>
+                    <TouchableOpacity activeOpacity={0.5} onPress={navigate}>
                         <Feather name="edit-3" size={20} color={appColors.accent300} />
                     </TouchableOpacity>
                 </View>

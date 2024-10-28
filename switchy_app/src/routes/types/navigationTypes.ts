@@ -34,9 +34,7 @@ export type SearchCommentsRouteProp = RouteProp<SearchStackParamList, "Comments"
 //!PROFILE
 export type ProfileStackParamList = {
     Profile: undefined;
-    ProfileEdit: {
-        // userId: string;
-    };
+    ProfileEdit: undefined;
     Comments: {
         post: Post;
     };
