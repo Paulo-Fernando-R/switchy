@@ -1,14 +1,13 @@
 import { Text, View, Image, FlatList, RefreshControl } from "react-native";
 import { HomeNavigationProp } from "../../routes/types/navigationTypes";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
-import { useFocusEffect } from "@react-navigation/native";
+import useLayoutFocus from "../../hooks/useLayoutFocus";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
 import { useQuery } from "@tanstack/react-query";
 import HomeController from "./homeController";
-import React, { useCallback } from "react";
+import React from "react";
 import styles from "./homeStyles";
-import { useRef } from "react";
 
 type HomeProps = {
     navigation: HomeNavigationProp;
@@ -16,19 +15,12 @@ type HomeProps = {
 
 export default function Home({ navigation }: HomeProps) {
     const controller = new HomeController();
-   // const ref = useRef(0);
+
     const { data, error, refetch, isRefetching } = useQuery({
         queryKey: ["Feed"],
         queryFn: () => controller.getAppData(),
     });
-
-    useFocusEffect(
-        useCallback(() => {
-            //ref.current += 1;
-           // console.log(ref.current);
-            refetch()
-        }, [])
-    );
+    useLayoutFocus(refetch);
 
     return (
         <FlatList

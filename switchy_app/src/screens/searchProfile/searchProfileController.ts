@@ -10,6 +10,6 @@ export default class SearchProfileController {
     async getPosts(userId: string) {
         const posts = await this.repository.getUserPosts(userId);
 
-        return posts;
+        return posts.sort((a, b) => (a.publishDate.getTime() < b.publishDate.getTime() ? 1 : -1));
     }
 }

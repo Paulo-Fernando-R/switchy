@@ -1,14 +1,15 @@
 import { ProfileNavigationProp, ProfileRouteProp } from "../../routes/types/navigationTypes";
 import { Text, View, Image, FlatList, TouchableOpacity } from "react-native";
+import ButtonDefault from "../../components/buttonDefault/ButtonDefault";
+import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
+import { useUserContext } from "../../contexts/userContext";
+import useLayoutFocus from "../../hooks/useLayoutFocus";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
-import ButtonDefault from "../../components/buttonDefault/ButtonDefault";
-import appColors from "../../styles/appColors";
-import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import Feather from "@expo/vector-icons/Feather";
-import { useUserContext } from "../../contexts/userContext";
-import UserController from "./userController";
 import { useQuery } from "@tanstack/react-query";
+import appColors from "../../styles/appColors";
+import UserController from "./userController";
 import User from "../../models/user";
 import styles from "./userStyles";
 import React from "react";
@@ -26,10 +27,11 @@ export default function Profile({ navigation, route }: ProfileProps) {
     const { user } = useUserContext();
     const controller = new UserController();
 
-    const { data, error, isLoading } = useQuery({
+    const { data, error, isLoading, refetch } = useQuery({
         queryKey: ["Profile"],
         queryFn: () => controller.getPosts(user?.id!),
     });
+    useLayoutFocus(refetch);
 
     return (
         <View style={styles.page}>

@@ -3,12 +3,12 @@ import ButtonDefault from "../../components/buttonDefault/ButtonDefault";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import BackButton from "../../components/backButton/BackButton";
 import SearchProfileController from "./searchProfileController";
-import { useFocusEffect } from "@react-navigation/native";
+import useLayoutFocus from "../../hooks/useLayoutFocus";
 import { View, Text, FlatList } from "react-native";
-import React, { useCallback, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import appColors from "../../styles/appColors";
 import styles from "./searchProfileStyles";
+import React from "react";
 
 type SearchProfileProps = {
     navigation: SearchNavigationProp;
@@ -18,21 +18,17 @@ type SearchProfileProps = {
 export default function SearchProfile({ navigation, route }: SearchProfileProps) {
     const { userId } = route.params;
     const controller = new SearchProfileController();
-    const ref = useRef(0);
+
     function goBack() {
         navigation.goBack();
     }
 
-    const { data, error } = useQuery({
-        queryKey: ["SearchProfile" + ref.current],
+    const { data, error, refetch } = useQuery({
+        queryKey: ["SearchProfile"],
         queryFn: () => controller.getPosts(userId),
     });
 
-    useFocusEffect(
-        useCallback(() => {
-            ref.current += 1;
-        }, [])
-    );
+    useLayoutFocus(refetch);
 
     return (
         <View style={styles.page}>
