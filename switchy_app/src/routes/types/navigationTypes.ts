@@ -31,12 +31,28 @@ export type SearchRouteProp = RouteProp<SearchStackParamList, "Search">;
 export type SearchProfileRouteProp = RouteProp<SearchStackParamList, "SearchProfile">;
 export type SearchCommentsRouteProp = RouteProp<SearchStackParamList, "Comments">;
 
+//!PROFILE
+export type ProfileStackParamList = {
+    Profile: undefined;
+    ProfileEdit: {
+        // userId: string;
+    };
+    Comments: {
+        post: Post;
+    };
+};
+
+export type ProfileNavigationProp = StackNavigationProp<ProfileStackParamList, "Profile">;
+export type ProfileRouteProp = RouteProp<ProfileStackParamList, "Profile">;
+export type ProfileEditRouteProp = RouteProp<ProfileStackParamList, "ProfileEdit">;
+export type ProfileCommentsRouteProp = RouteProp<ProfileStackParamList, "Comments">;
+
 //!ROOT
 export type RootTabsParamList = {
     HomeStack: NavigatorScreenParams<HomeStackParamList>;
     SearchStack: NavigatorScreenParams<SearchStackParamList>;
     Publish: undefined;
-    User: undefined;
+    ProfileStack: NavigatorScreenParams<ProfileStackParamList>;
 };
 
 //!HOME TAB NAV
@@ -51,3 +67,6 @@ export type RootTabsSearchRouteProp = RouteProp<RootTabsParamList, "SearchStack"
 export type RootTabsPublishNavigationProp = BottomTabScreenProps<RootTabsParamList, "Publish">;
 export type RootTabsPublishRouteProp = RouteProp<RootTabsParamList, "Publish">;
 
+//!Profile TAB NAV
+export type RootTabsProfileNavigationProp = BottomTabScreenProps<RootTabsParamList, "ProfileStack">;
+export type RootTabsProfileRouteProp = RouteProp<RootTabsParamList, "ProfileStack">;

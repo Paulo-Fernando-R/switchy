@@ -6,14 +6,14 @@ import { useTabBarContext } from "../contexts/tabBarContext";
 import { useAuthContext } from "../contexts/authContext";
 import { RootTabsParamList } from "./types/navigationTypes";
 import KeyboardStateEnum from "../enums/keyboardStateEnum";
+import ProfileStackRouter from "./profileStackRouter";
 import SearchStackRouter from "./searchStackRouter";
-import React, { useEffect, useState } from "react";
 import Publish from "../screens/publish/Publish";
 import HomeStackRouter from "./homeStackRouter";
 import useKeyboard from "../hooks/useKeyboard";
 import Login from "../screens/login/Login";
-import User from "../screens/user/User";
 import { View } from "react-native";
+import React from "react";
 
 const Tab = createBottomTabNavigator<RootTabsParamList>();
 const Stack = createStackNavigator();
@@ -36,7 +36,6 @@ function AppRouter() {
         if (!tabBarVisible || keyboard === KeyboardStateEnum.show) {
             return false;
         }
-
         return true;
     };
 
@@ -50,7 +49,7 @@ function AppRouter() {
                 <Tab.Screen name="HomeStack" component={HomeStackRouter} />
                 <Tab.Screen name="SearchStack" component={SearchStackRouter} />
                 <Tab.Screen name="Publish" component={Publish} />
-                <Tab.Screen name="User" component={User} />
+                <Tab.Screen name="ProfileStack" component={ProfileStackRouter} />
             </Tab.Navigator>
         </NavigationContainer>
     );

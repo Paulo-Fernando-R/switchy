@@ -1,14 +1,14 @@
-import { HomeStackParamList, RootTabsHomeNavigationProp } from "./types/navigationTypes";
+import { ProfileStackParamList, RootTabsProfileNavigationProp } from "./types/navigationTypes";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useTabBarContext } from "../contexts/tabBarContext";
-import Comments from "../screens/comments/Comments";
 import { useLayoutEffect } from "react";
-import Home from "../screens/home/Home";
+import Comments from "../screens/comments/Comments";
+import User from "../screens/user/User";
 
-const Stack = createStackNavigator<HomeStackParamList>();
+const Stack = createStackNavigator<ProfileStackParamList>();
 
-export default function HomeStackRouter({ navigation, route }: RootTabsHomeNavigationProp) {
+export default function ProfileStackRouter({ navigation, route }: RootTabsProfileNavigationProp) {
     const { setTabBarVisible } = useTabBarContext();
 
     useLayoutEffect(() => {
@@ -22,7 +22,7 @@ export default function HomeStackRouter({ navigation, route }: RootTabsHomeNavig
 
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Profile" component={User} />
             <Stack.Group screenOptions={{ presentation: "modal" }}>
                 <Stack.Screen name="Comments" component={Comments} initialParams={{ post: undefined }} />
             </Stack.Group>
