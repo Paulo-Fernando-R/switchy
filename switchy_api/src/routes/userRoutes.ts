@@ -24,4 +24,13 @@ userRoutes.get("/Search/:query", (request: Request, response: Response) => {
     return controller.searchUser(request, response);
 });
 
+userRoutes.put('/Update', (request: Request, response: Response) => {
+    // #swagger.tags = ['User']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[404] = { description: 'Not Found.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+    return controller.update(request, response);
+});
+
 export default userRoutes;
