@@ -8,15 +8,19 @@ export interface IUser {
     createdAt?: Date;
     token?: string;
     id?: Types.ObjectId;
+    following?: { userId: string }[];
+    followers?: { userId: string }[];
 }
 
 export const userSchema = new Schema<IUser>({
     id: { type: Schema.Types.ObjectId, ref: "id", required: false },
     name: { type: String, required: true },
     email: { type: String, required: true },
-    userName: { type: String, required: false, },
+    userName: { type: String, required: false },
     password: { type: String, required: false },
     createdAt: { type: Number, default: Date.now() },
+    following: [{ userId: { type: Types.ObjectId, required: false, defalt: [] } }],
+    followers: [{ userId: { type: Types.ObjectId, required: false, defalt: [] } }],
 });
 
 export const User = model<IUser>("User", userSchema);

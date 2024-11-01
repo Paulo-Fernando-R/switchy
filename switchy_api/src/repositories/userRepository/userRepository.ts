@@ -19,6 +19,7 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
                 email: user.email,
                 name: user.name,
                 password: user.password,
+                userName: user.userName,
             });
 
             const newUser = await aux.save();

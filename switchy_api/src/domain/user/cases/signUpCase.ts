@@ -9,40 +9,34 @@ import IEncryptService from "../../../services/encrypt/iencryptService";
 import SignUpRequest from "../requests/signUpRequest";
 
 export default class SignUpCase {
-    
     private readonly userRepository: IUserRepository;
     private readonly encryptService: IEncryptService;
 
-    constructor(
-        userRepository: IUserRepository,
-        encryptService: IEncryptService
-    ){
+    constructor(userRepository: IUserRepository, encryptService: IEncryptService) {
         this.userRepository = userRepository;
-        this.encryptService = encryptService
+        this.encryptService = encryptService;
     }
 
-    async execute(newUserData: SignUpRequest): Promise<IUser>{
-
-
+    async execute(newUserData: SignUpRequest): Promise<IUser> {
         if (!newUserData.name || !newUserData.email || !newUserData.password) {
             throw new UserEmptyFieldsError("Missing required fields", StatusCodes.BadRequest);
         }
 
         const emailAlreadyTaken = await this.userRepository.getByEmail(newUserData.email);
-        
+
         if (emailAlreadyTaken != null) {
             throw new UserInvalidEmailError("Email already taken.", StatusCodes.BadRequest);
         }
-        
+
         newUserData.password = await this.encryptService.hashPassword(newUserData.password);
-            
+
         const user: IUser = {
             email: newUserData.email,
             name: newUserData.name,
             password: newUserData.password,
+            userName: newUserData.userName,
         };
-        
-        return await this.userRepository.createUser(user);
 
+        return await this.userRepository.createUser(user);
     }
 }
