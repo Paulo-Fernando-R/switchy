@@ -116,4 +116,10 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
 
         return userList;
     }
+
+    async update(userId: string, name: string, email: string, password: string, userName: string): Promise<void> {
+        await User.findByIdAndUpdate(userId, {
+            // TODO:
+        });
+    }
 }
