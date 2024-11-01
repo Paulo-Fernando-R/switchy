@@ -2,7 +2,8 @@ import { Types } from "mongoose";
 import { IPost } from "../../../models/post";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { PostEmptyValueError, UnableCreatePostError } from "../errors/postErrors";
-
+import GetUserByIdCase from "../../user/cases/getUserByIdCase";
+import { UserRepository } from "../../../repositories/userRepository/userRepository";
 export default class CreatePostCase {
     private readonly postRepository: IPostRepository;
 
@@ -14,11 +15,16 @@ export default class CreatePostCase {
         if (!content) {
             throw new PostEmptyValueError();
         }
+        const user = await new GetUserByIdCase(new UserRepository()).execute(userId);
 
+        if (!user) {
+            throw new UnableCreatePostError();
+        }
         const post: IPost = {
             user: {
-                email: "email",
-                name: "name",
+                email: user.email,
+                name: user.name,
+                userName: user.userName,
                 id: new Types.ObjectId(userId as string),
             },
             comments: [],
@@ -31,7 +37,6 @@ export default class CreatePostCase {
 
         try {
             await this.postRepository.createPost(post);
-           
         } catch (error) {
             console.error(error);
             throw new UnableCreatePostError();

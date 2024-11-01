@@ -11,12 +11,12 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     }
 
     async getUserPosts(userId: string) {
-        console.log("NESSA MERDA")
+        console.log("NESSA MERDA");
         try {
             await this.connect();
             const list = await Post.find({ "user.id": new Types.ObjectId(userId) });
 
-           // console.log(list);
+            // console.log(list);
 
             const res: IPost[] = list.map((e) => {
                 return {
@@ -160,7 +160,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         return result;
     }
 
-    async addCommentsToPost(parentId: String, commentId: String): Promise<void> {
+    async addCommentsToPost(parentId: string, commentId: string): Promise<void> {
         await this.connect();
 
         await Post.findByIdAndUpdate(parentId, {
@@ -172,7 +172,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         try {
             await this.connect();
             const post = await Post.findById(id).exec();
-            console.log(post?.user);
+          //  console.log(post?.user);
             const res: IPost = {
                 id: post?._id,
                 content: post?.content ?? "",
