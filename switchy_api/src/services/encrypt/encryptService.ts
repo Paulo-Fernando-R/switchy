@@ -8,17 +8,18 @@ export default class EncryptServiceBcrypt implements IEncryptService {
 
     }
 
-    hashPassword(password: string): any {
-        const saltRounds: any = process.env.ENCRYPT_SALT;
-        bcrypt.genSalt(saltRounds, (err: any, salt: any) => {
-            bcrypt.hash(password, salt, (err: any, hash: any) => {
-                return Promise.resolve(hash);
-            });
-        });
+    async hashPassword(password: string): Promise<string> {
+
+        let hashedPassword = '';
+
+        const saltRounds: number = parseInt(process.env.ENCRYPT_SALT || '10', 10);
+
+        hashedPassword = await bcrypt.hash(password, saltRounds);
+    
+        return hashedPassword;
     }
 
-    comparePassword(password: string): Promise<boolean> {
-        // TODO: Implement password validation
-        return Promise.resolve(true);
+    async comparePassword(password: string, hashedPassword: string): Promise<boolean> {
+        return await bcrypt.compare(password, hashedPassword);
     }
 }
