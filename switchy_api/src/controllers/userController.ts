@@ -116,15 +116,13 @@ export default class UserController {
     }
     async changePassword(req: Request, res: Response) {
         const { oldPassword, newPassword } = req.body;
-
         try {
-
             this.changeUserPasswordCase.execute(req.userId, oldPassword, newPassword);
-
             return res.type("application/json").status(StatusCodes.Ok).send();
         } catch (ex) {
-            if (ex instanceof UserNotFoundError) {
-                return res.status(StatusCodes.NotFound).send();
+            if (ex instanceof UserError) {
+                res.status(StatusCodes.BadRequest).send(ex.message);
+                return;
             }
 
             throw ex;

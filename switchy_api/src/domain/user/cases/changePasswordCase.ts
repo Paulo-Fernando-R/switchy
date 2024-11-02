@@ -30,7 +30,7 @@ export default class ChangeUserPasswordCase {
         const isOldPasswordCorrect = await this.encryptService.comparePassword(oldPassword, user.password);
 
         if(!isOldPasswordCorrect){
-            throw new UserInvalidPasswordError();
+            throw new UserInvalidPasswordError('Incorrect user password.');
         }
 
         newPassword = await this.encryptService.hashPassword(newPassword);
