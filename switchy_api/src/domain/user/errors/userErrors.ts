@@ -13,3 +13,7 @@ export class UserNotFoundError extends UserError {}
 export class UserInvalidEmailError extends UserError {}
 
 export class UserInvalidPasswordError extends UserError {}
+
+export class SamePasswordError extends UserError {}
+
+

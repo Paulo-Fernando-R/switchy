@@ -12,7 +12,7 @@ export function jwtMiddleware(request: Request, response: Response, next: NextFu
     }
 
     const tokenService: ITokenService = new JwtTokenService();
-    token = token!.replace("Bearer ", "");
+    token = token.split(' ')[1];
 
     try {
         const decoded = tokenService.isValid(token!);

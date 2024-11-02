@@ -55,48 +55,50 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
         return res;
     }
 
+    
     async getByEmailAndPassword(email: string, password: string) {
         await this.connect();
-
+        
         const user = await User.findOne({
             email: email,
             password: password,
         });
-
+        
         if (!user) return null;
-
+        
         const res: IUser = {
             id: user._id,
             name: user.name,
             email: email,
         };
-
+        
         return res;
     }
-
+    
     async getByEmail(email: string) {
         await this.connect();
-
+        
         const userFromDataBase = await User.findOne({
             email: email,
         });
-
+        
         if (!userFromDataBase) {
             return null;
         }
-
+        
         const user: IUser = {
             id: userFromDataBase._id,
             name: userFromDataBase.name,
             email: email,
+            password: userFromDataBase.password
         };
-
+        
         return user;
     }
-
+    
     async searchUser(query: string) {
         await this.connect();
-
+        
         const res = await User.find({
             $or: [
                 { name: { $regex: query, $options: "i" } },
@@ -104,7 +106,7 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
                 { email: { $regex: query, $options: "i" } },
             ],
         });
-
+        
         const userList: IUser[] = res.map((e) => {
             return {
                 email: e.email,
@@ -113,13 +115,35 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
                 userName: e.userName,
             };
         });
-
+        
         return userList;
     }
-
+    
     async update(userId: string, name: string, email: string, password: string, userName: string): Promise<void> {
         await User.findByIdAndUpdate(userId, {
             // TODO:
         });
+    }
+    
+    async getByIdWithPassword(id: string) {
+        await this.connect();
+    
+        const user = await User.findById(id);
+        if (user == null) return null;
+    
+        const res: IUser = {
+            id: user?._id,
+            email: user?.email,
+            password: user?.password,
+            userName: user.userName,
+            name: user?.name!,
+        };
+    
+        return res;
+    }
+    async changePasswordById(userId: string, newPassword: string): Promise<void>{
+        await this.connect();
+        
+        await User.findByIdAndUpdate(userId, {password: newPassword});
     }
 }

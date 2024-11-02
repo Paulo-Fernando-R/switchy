@@ -11,6 +11,7 @@ import { UserError, UserNotFoundError } from "../domain/user/errors/userErrors";
 import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
 import SearchUserCase from "../domain/user/cases/searchUserCase";
 import UpdateUserCase from "../domain/user/cases/updateUserCase";
+import ChangeUserPasswordCase from "../domain/user/cases/ChangePasswordCase";
 
 export default class UserController {
     private userRepository: IUserRepository;
@@ -19,6 +20,8 @@ export default class UserController {
     private searchUserCase: SearchUserCase;
     private getUserByIdCase: GetUserByIdCase;
     private updateUserCase: UpdateUserCase;
+    private changeUserPasswordCase: ChangeUserPasswordCase;
+
 
     constructor() {
         this.userRepository = new UserRepository();
@@ -27,6 +30,8 @@ export default class UserController {
         this.searchUserCase = new SearchUserCase(this.userRepository, this.encryptService);
         this.getUserByIdCase = new GetUserByIdCase(this.userRepository);
         this.updateUserCase = new UpdateUserCase(this.userRepository);
+        this.changeUserPasswordCase = new  ChangeUserPasswordCase(this.userRepository, this.encryptService);
+
     }
 
     async signUp(request: Request, response: Response) {
@@ -99,6 +104,22 @@ export default class UserController {
         try {
             this.getUserByIdCase.execute(userId);
             this.updateUserCase.execute(userId, name, email, password, userName);
+
+            return res.type("application/json").status(StatusCodes.Ok).send();
+        } catch (ex) {
+            if (ex instanceof UserNotFoundError) {
+                return res.status(StatusCodes.NotFound).send();
+            }
+
+            throw ex;
+        }
+    }
+    async changePassword(req: Request, res: Response) {
+        const { oldPassword, newPassword } = req.body;
+
+        try {
+
+            this.changeUserPasswordCase.execute(req.userId, oldPassword, newPassword);
 
             return res.type("application/json").status(StatusCodes.Ok).send();
         } catch (ex) {
