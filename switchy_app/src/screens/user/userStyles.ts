@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 10,
         paddingBottom: 30,
-      
+
         paddingTop: 12,
     },
     logo: {
@@ -25,51 +25,45 @@ const styles = StyleSheet.create({
         color: appColors.accent200,
     },
 
-
-    profileBox:{
+    profileBox: {
         gap: 8,
-        paddingHorizontal: 20, 
-        paddingBottom: 12
+        paddingHorizontal: 20,
+        paddingBottom: 12,
     },
-    nameBox:{
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'baseline',
-        gap: 8
+    nameBox: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "baseline",
+        gap: 8,
     },
-    name:{
+    name: {
         ...appTexts.title1SemiBold,
-        color: appColors.text100
+        color: appColors.text100,
     },
-    userName:{
+    userName: {
         ...appTexts.paragraph1Regular,
-        color: appColors.text200
+        color: appColors.text200,
     },
-    bio:{
+    bio: {
         ...appTexts.paragraph2Regular,
-        color: appColors.text300
+        color: appColors.text300,
     },
-    follow:{
+    follow: {
         ...appTexts.paragraph3Regular,
-        color: appColors.text300
+        color: appColors.text300,
     },
-    buttons:{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+    buttons: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        gap: 20
     },
 
-    subtitle:{
+    subtitle: {
         ...appTexts.paragraph1Regular,
         color: appColors.text200,
         paddingHorizontal: 20,
-        paddingVertical: 8
+        paddingVertical: 8,
     },
-
-
-
-
-
-
 
     list: {
         gap: 8,

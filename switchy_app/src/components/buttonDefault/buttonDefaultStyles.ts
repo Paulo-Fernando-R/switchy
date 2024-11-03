@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignSelf: "baseline",
         borderRadius: 10,
+        borderWidth: 1,
     },
     buttonText: {
         ...appTexts.paragraph1Regular,

@@ -37,6 +37,7 @@ export default function Profile({ navigation, route }: ProfileProps) {
     });
 
     function navigate() {
+        console.log("navigate");
         navigation.navigate("ProfileEdit");
     }
 
@@ -55,7 +56,6 @@ export default function Profile({ navigation, route }: ProfileProps) {
 }
 
 function Header({ user, navigate }: UserHeaderProps) {
-
     return (
         <View>
             <View style={styles.header}>
@@ -67,7 +67,7 @@ function Header({ user, navigate }: UserHeaderProps) {
                 <View style={styles.nameBox}>
                     <Text style={styles.name}>{user.name}</Text>
                     <TouchableOpacity activeOpacity={0.5} onPress={navigate}>
-                        <Feather name="edit-3" size={20} color={appColors.accent300} />
+                        <Feather name="edit-3" size={20} color={appColors.text300} />
                     </TouchableOpacity>
                 </View>
 
@@ -76,21 +76,10 @@ function Header({ user, navigate }: UserHeaderProps) {
                     necessário adicionar ao tipo de usuario no back e front Lorem ipsum dolor sit amet, consectetur
                     adipiscing elit. Donec sed felis id risus consequat tincidunt.
                 </Text>
-                <Text style={styles.follow}>{user.followers?.length} Seguidores</Text>
+              
                 <View style={styles.buttons}>
-                    <ButtonDefault
-                        text="Editar perfil"
-                        backgroundColor={appColors.accent200}
-                        textColor={appColors.text400}
-                        action={() => {}}
-                    />
-
-                    <ButtonDefault
-                        text="Editar perfil"
-                        backgroundColor={appColors.error}
-                        textColor={appColors.text100}
-                        action={() => {}}
-                    />
+                    <Text style={styles.follow}>{user.followers?.length} Seguidores</Text>
+                    <Text style={styles.follow}>{user.following?.length} Seguindo</Text>
                 </View>
             </View>
         </View>
