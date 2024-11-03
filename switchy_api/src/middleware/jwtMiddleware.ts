@@ -6,21 +6,26 @@ import JwtTokenService from "../services/token/jwtTokenService";
 
 export function jwtMiddleware(request: Request, response: Response, next: NextFunction) {
     let token = request.headers["authorization"];
+
     if (!token) {
         response.status(StatusCodes.Unauthorized).end();
         return;
     }
 
     const tokenService: ITokenService = new JwtTokenService();
-    token = token.split(' ')[1];
+    const reg = new RegExp(/Bearer/i);
+    if (reg.test(token)) {
+        token = token.split(" ")[1];
+    }
 
     try {
-        const decoded = tokenService.isValid(token!);
+        const decoded = tokenService.isValid(token);
+
         request.userId = decoded.userId;
         next();
     } catch (ex) {
+        console.log(ex);
         response.status(StatusCodes.Unauthorized).end();
         return;
     }
-
 }

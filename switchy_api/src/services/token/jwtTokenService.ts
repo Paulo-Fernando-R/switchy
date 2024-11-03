@@ -17,11 +17,15 @@ export default class JwtTokenService implements ITokenService {
     }
 
     create(userId: string, expiration: string): string {
-        const token = jwt.sign({ 
-            userId: userId 
-        }, this.secret, {
-            expiresIn: expiration,
-        });
+        const token = jwt.sign(
+            {
+                userId: userId,
+            },
+            this.secret,
+            {
+                expiresIn: expiration,
+            }
+        );
 
         return token;
     }
