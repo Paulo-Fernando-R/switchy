@@ -65,7 +65,7 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
                 <View style={styles.itemTitle}>
                     <Text style={styles.titleName}>{data ? data.user.name : item.user.name}</Text>
 
-                    <Text style={styles.titleUname}>{data ? data.user.email : item.user.email}</Text>
+                    <Text style={styles.titleUname}>@{data ? data.user.userName : item.user.userName}</Text>
                     <Text style={styles.titleUname}>{timeAgo}</Text>
                 </View>
                 <Text style={styles.itemContentBody}>{data ? data.content : item?.content}</Text>
