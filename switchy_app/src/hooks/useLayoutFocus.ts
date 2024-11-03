@@ -9,7 +9,7 @@ const useLayoutFocus = () => {
         useCallback(() => {
             ref.current++
             //refetch();
-            console.log('focus')
+            console.log('focus' + ref.current)
         }, [])
     );
     return ref.current

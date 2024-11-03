@@ -24,8 +24,8 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
     }
 
     const { data, error, refetch, isLoading } = useQuery({
-        queryKey: ["SearchProfile" + ref],
-        queryFn: () => controller.getPosts(userId),
+        queryKey: ["SearchProfile" + userId + ref],
+        queryFn: () => controller.getScreenData(userId),
         placeholderData: controller.placeholderData,
     });
 
@@ -37,17 +37,17 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
 
             <View style={styles.userInfo}>
                 <Text numberOfLines={1} style={styles.name}>
-                    Matheus
+                    {data?.userData.name}
                 </Text>
                 <Text numberOfLines={1} style={styles.userName}>
-                    @matheus
+                    @{data?.userData.userName}
                 </Text>
                 <Text style={styles.bio}>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed felis id risus consequat
                     tincidunt.
                 </Text>
 
-                <Text style={styles.follow}>100 Seguidores</Text>
+                <Text style={styles.follow}>{data?.userData.followers?.length} Seguidores</Text>
                 <ButtonDefault text="Seguir" backgroundColor={appColors.accent200} textColor={appColors.text400} />
             </View>
 
@@ -55,7 +55,7 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
 
             <FlatList
                 contentContainerStyle={styles.list}
-                data={data}
+                data={data?.posts}
                 renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} error={error} />}
             />
         </View>

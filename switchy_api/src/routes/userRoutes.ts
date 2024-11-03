@@ -15,6 +15,15 @@ userRoutes.get("/Info", (request: Request, response: Response) => {
     return controller.getInfo(request, response);
 });
 
+userRoutes.get("/Info/:userId", (request: Request, response: Response) => {
+    // #swagger.tags = ['User']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[404] = { description: 'Not Found.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+    return controller.getInfoById(request, response);
+});
+
 userRoutes.get("/Search/:query", (request: Request, response: Response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }

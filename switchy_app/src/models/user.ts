@@ -4,4 +4,6 @@ export default interface User {
     userName: string;
     password?: string;
     id?: string;
+    followers?: { userId: string }[];
+    following?: { userId: string }[];
 }

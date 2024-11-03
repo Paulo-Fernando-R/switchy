@@ -22,7 +22,6 @@ export default class UserController {
     private updateUserCase: UpdateUserCase;
     private changeUserPasswordCase: ChangeUserPasswordCase;
 
-
     constructor() {
         this.userRepository = new UserRepository();
         this.encryptService = new EncryptServiceBcrypt();
@@ -30,8 +29,7 @@ export default class UserController {
         this.searchUserCase = new SearchUserCase(this.userRepository, this.encryptService);
         this.getUserByIdCase = new GetUserByIdCase(this.userRepository);
         this.updateUserCase = new UpdateUserCase(this.userRepository);
-        this.changeUserPasswordCase = new  ChangeUserPasswordCase(this.userRepository, this.encryptService);
-
+        this.changeUserPasswordCase = new ChangeUserPasswordCase(this.userRepository, this.encryptService);
     }
 
     async signUp(request: Request, response: Response) {
@@ -74,6 +72,23 @@ export default class UserController {
     async getInfo(req: Request, res: Response) {
         try {
             const userInfo = await new GetUserByIdCase(this.userRepository).execute(req.userId);
+
+            res.type("application/json").status(StatusCodes.Ok).send(userInfo);
+        } catch (ex) {
+            if (ex instanceof UserNotFoundError) {
+                res.status(StatusCodes.NotFound).send();
+                return;
+            }
+
+            throw ex;
+        }
+    }
+
+    async getInfoById(req: Request, res: Response) {
+        const { userId } = req.params;
+      
+        try {
+            const userInfo = await new GetUserByIdCase(this.userRepository).execute(userId);
 
             res.type("application/json").status(StatusCodes.Ok).send(userInfo);
         } catch (ex) {

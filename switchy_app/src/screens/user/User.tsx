@@ -45,18 +45,17 @@ export default function Profile({ navigation, route }: ProfileProps) {
             <Header user={user!} navigate={navigate} />
             <Text style={styles.subtitle}>Publicações</Text>
 
-           
-                <FlatList
-                    contentContainerStyle={styles.list}
-                    data={data}
-                    renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
-                />
-          
+            <FlatList
+                contentContainerStyle={styles.list}
+                data={data}
+                renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
+            />
         </View>
     );
 }
 
 function Header({ user, navigate }: UserHeaderProps) {
+    console.log(user)
     return (
         <View>
             <View style={styles.header}>
@@ -72,12 +71,12 @@ function Header({ user, navigate }: UserHeaderProps) {
                     </TouchableOpacity>
                 </View>
 
-                <Text style={styles.userName}>@{user.email}</Text>
+                <Text style={styles.userName}>@{user.userName}</Text>
                 <Text style={styles.bio}>
                     necessário adicionar ao tipo de usuario no back e front Lorem ipsum dolor sit amet, consectetur
                     adipiscing elit. Donec sed felis id risus consequat tincidunt.
                 </Text>
-                <Text style={styles.follow}>100 Seguidores</Text>
+                <Text style={styles.follow}>{user.followers?.length} Seguidores</Text>
                 <View style={styles.buttons}>
                     <ButtonDefault
                         text="Editar perfil"

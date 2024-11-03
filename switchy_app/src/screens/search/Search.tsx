@@ -82,7 +82,7 @@ function ListItem({ navigate, user }: ListItemProps) {
                     {user.name}
                 </Text>
                 <Text numberOfLines={1} style={styles.userName}>
-                    {user.email}
+                    @{user.userName}
                 </Text>
             </View>
         </TouchableOpacity>

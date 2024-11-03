@@ -20,7 +20,10 @@ export default function Home({ navigation }: HomeProps) {
         queryKey: ["Feed" + ref],
         queryFn: () => controller.getAppData(),
         placeholderData: controller.placeholderData,
+        refetchOnWindowFocus: true
     });
+
+    //console.log(data[0])
 
     return (
         <FlatList

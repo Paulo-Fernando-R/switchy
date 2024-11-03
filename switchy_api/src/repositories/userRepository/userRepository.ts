@@ -50,6 +50,9 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
             email: user?.email,
             userName: user.userName,
             name: user?.name!,
+            followers: user?.followers,
+            following: user?.following,
+            
         };
 
         return res;
