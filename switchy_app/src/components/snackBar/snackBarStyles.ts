@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         zIndex: 100,
         paddingHorizontal: 20,
-        top: 30,
+        top: 40,
         borderRadius: 10,
         elevation: 2,
         gap: 8
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         zIndex: 100,
         paddingHorizontal: 20,
-        top: 30,
+        top: 40,
         borderRadius: 10,
         elevation: 2,
         gap: 8
