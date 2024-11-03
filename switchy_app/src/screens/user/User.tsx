@@ -55,7 +55,7 @@ export default function Profile({ navigation, route }: ProfileProps) {
 }
 
 function Header({ user, navigate }: UserHeaderProps) {
-    console.log(user)
+
     return (
         <View>
             <View style={styles.header}>
