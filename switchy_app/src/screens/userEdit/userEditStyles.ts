@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     page: {
         flex: 1,
         backgroundColor: appColors.bg100,
-        paddingTop: 12,
+        paddingTop: 20,
         gap: 12,
         paddingBottom: 20,
         
@@ -15,6 +15,13 @@ const styles = StyleSheet.create({
     header: {
         paddingHorizontal: 20,
         paddingBottom: 30,
+    },
+
+    formTitle:{
+        ...appTexts.title2Medium,
+        color: appColors.accent200,
+        paddingVertical: 8,
+        paddingHorizontal: 4
     },
 
     form:{

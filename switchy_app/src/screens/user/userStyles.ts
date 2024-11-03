@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         gap: 10,
         paddingBottom: 30,
 
-        paddingTop: 12,
+        paddingTop: 20,
     },
     logo: {
         width: 48,
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 
     list: {
         gap: 8,
-        paddingTop: 12,
+        paddingTop: 16,
         paddingHorizontal: 20,
         paddingBottom: 80,
     },

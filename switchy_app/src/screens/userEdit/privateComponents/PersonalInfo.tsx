@@ -2,7 +2,7 @@ import styles from "../userEditStyles";
 import { useForm, Controller } from "react-hook-form";
 import React from "react";
 import InputDefault from "../../../components/inputDefault/InputDefault";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import ButtonLarge from "../../../components/buttonLarge/ButtonLarge";
 import appColors from "../../../styles/appColors";
 
@@ -29,6 +29,7 @@ export default function PersonalInfo() {
 
     return (
         <View style={styles.form}>
+            <Text style={styles.formTitle}>Atualizar dados pessoais</Text>
             <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (

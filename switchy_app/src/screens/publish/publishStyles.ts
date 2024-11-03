@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         paddingBottom: 30,
         paddingHorizontal: 20,
-        paddingTop: 12,
+        paddingTop: 20,
     },
 
     titleBox: {

@@ -48,7 +48,7 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
                 </Text>
 
                 <Text style={styles.follow}>{data?.userData.followers?.length} Seguidores</Text>
-                <ButtonDefault text="Seguir" backgroundColor={appColors.accent200} textColor={appColors.text400} />
+                <ButtonDefault text="Seguir" backgroundColor={appColors.accent200} textColor={appColors.accent200} />
             </View>
 
             <Text style={styles.subtitle}>Publicações</Text>

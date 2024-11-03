@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     page: {
         flex: 1,
         backgroundColor: appColors.bg100,
-        paddingTop: 12,
+        paddingTop: 20,
         gap: 8,
         paddingBottom: 20
     },
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     },
     list:{
         gap: 8,
-        paddingTop: 12,
+        paddingTop: 16,
         paddingHorizontal: 40,
         paddingBottom:20
     },
