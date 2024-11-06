@@ -19,12 +19,17 @@ export default class UserEditController {
         this.storageService = new StorageService(StorageTypeEnum.user);
     }
 
-    async updateUserInfo(user: User, reset: UseFormReset<UserInfoFormData>, isValid: boolean) {
+    async updateUserInfo(
+        user: User,
+        reset: UseFormReset<UserInfoFormData>,
+        isValid: boolean,
+        setUser: (user: User) => void
+    ) {
         await this.editUserCase.execute(user, isValid);
-        reset();
+        reset({ description: "", name: "", userName: "", email: "" }, { keepDefaultValues: false, keepValues: false });
 
         const current = this.storageService.getItem();
-        this.setNewStoredUser(current, user);
+        this.setNewStoredUser(current, user, setUser);
 
         return user;
     }
@@ -38,7 +43,7 @@ export default class UserEditController {
         return await this.changePasswordCase.execute(oldPassword, newPassword, isValid);
     }
 
-    setNewStoredUser(current: User | null, update: User) {
+    setNewStoredUser(current: User | null, update: User, setUser: (user: User) => void) {
         if (!current) {
             return;
         }
@@ -60,5 +65,7 @@ export default class UserEditController {
         }
 
         this.storageService.setItem(current);
+
+        setUser(current);
     }
 }

@@ -8,6 +8,7 @@ import appColors from "../../../styles/appColors";
 import UserEditController from "../userEditController";
 import { useMutation } from "@tanstack/react-query";
 import SnackBar from "../../../components/snackBar/SnackBar";
+import { useUserContext } from "../../../contexts/userContext";
 
 export type UserInfoFormData = {
     name: string;
@@ -18,7 +19,7 @@ export type UserInfoFormData = {
 
 export default function PersonalInfo() {
     const controller = new UserEditController();
-
+    const { user, setUser } = useUserContext();
     const [snackError, setSnackError] = React.useState(false);
     const [snackSuccess, setSnackSuccess] = React.useState(false);
 
@@ -27,7 +28,16 @@ export default function PersonalInfo() {
         control,
         reset,
         formState: { errors },
-    } = useForm<UserInfoFormData>();
+    } = useForm<UserInfoFormData>({
+        defaultValues: {
+            name: user?.name!,
+            userName: user?.userName!,
+            email: user?.email!,
+            description: user?.description!,
+        },
+
+        shouldFocusError: true,
+    });
 
     const { isValid } = useFormState({ control });
 
@@ -40,7 +50,8 @@ export default function PersonalInfo() {
                 description: data.description,
             },
             reset,
-            isValid
+            isValid,
+            setUser
         );
     });
 
