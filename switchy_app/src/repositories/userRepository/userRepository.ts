@@ -1,4 +1,10 @@
-import { BadRequestError, InternalServerError, NetworkError, NotFoundError } from "../../errors/customErrors";
+import {
+    BadRequestError,
+    InternalServerError,
+    NetworkError,
+    NotFoundError,
+    UnauthorizedError,
+} from "../../errors/customErrors";
 import User from "../../models/user";
 import CustomAxiosClient from "../../services/customAxiosClient/customAxiosClient";
 import ICustomAxiosClient from "../../services/customAxiosClient/IcustomAxiosClient";
@@ -74,5 +80,29 @@ export default class UserRepository {
         }
 
         return response.data;
+    }
+
+    async updateUser(user: User) {
+        const response = await this.axios.instance.put<User[]>("/User/Update");
+ 
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 400) {
+            throw new BadRequestError();
+        }
+
+        if (response.status === 401) {
+            throw new UnauthorizedError();
+        }
+
+        if (response.status === 404) {
+            throw new NotFoundError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
     }
 }

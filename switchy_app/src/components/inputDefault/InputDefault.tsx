@@ -9,6 +9,7 @@ type InputDefaultProps = {
     text: string;
     setText: React.Dispatch<React.SetStateAction<string>>;
     password?: boolean | undefined;
+    multiline?: boolean | undefined;
 };
 
 type IconProps = {
@@ -16,7 +17,7 @@ type IconProps = {
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function InputDefault({ placeholder, setText, text, password }: InputDefaultProps) {
+export default function InputDefault({ placeholder, setText, text, password, multiline }: InputDefaultProps) {
     const [visible, setVisible] = useState(false);
 
     return (
@@ -28,6 +29,7 @@ export default function InputDefault({ placeholder, setText, text, password }: I
                 placeholder={placeholder}
                 placeholderTextColor={appColors.text300}
                 secureTextEntry={password ? !visible : false}
+                multiline={multiline}
             />
             {password ? <Icon setVisible={setVisible} visible={visible} /> : null}
         </View>

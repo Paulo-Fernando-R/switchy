@@ -6,4 +6,5 @@ export default interface User {
     id?: string;
     followers?: { userId: string }[];
     following?: { userId: string }[];
+    description?: string;
 }

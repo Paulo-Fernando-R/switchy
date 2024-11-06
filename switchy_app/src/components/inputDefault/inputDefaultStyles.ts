@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         backgroundColor: appColors.bg300,
         width: '100%',
         borderRadius: 16,
-        height: 48,
+        minHeight: 48,
         alignItems: 'center'
     },
     input:{
