@@ -12,6 +12,7 @@ import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
 import SearchUserCase from "../domain/user/cases/searchUserCase";
 import UpdateUserCase from "../domain/user/cases/updateUserCase";
 import ChangeUserPasswordCase from "../domain/user/cases/ChangePasswordCase";
+import FollowUserCase from "../domain/user/cases/followUserCase";
 
 export default class UserController {
     private userRepository: IUserRepository;
@@ -21,6 +22,7 @@ export default class UserController {
     private getUserByIdCase: GetUserByIdCase;
     private updateUserCase: UpdateUserCase;
     private changeUserPasswordCase: ChangeUserPasswordCase;
+    private followUserCase: FollowUserCase;
 
     constructor() {
         this.userRepository = new UserRepository();
@@ -30,6 +32,7 @@ export default class UserController {
         this.getUserByIdCase = new GetUserByIdCase(this.userRepository);
         this.updateUserCase = new UpdateUserCase(this.userRepository);
         this.changeUserPasswordCase = new ChangeUserPasswordCase(this.userRepository, this.encryptService);
+        this.followUserCase = new FollowUserCase(this.userRepository);
     }
 
     async signUp(request: Request, response: Response) {
@@ -129,6 +132,7 @@ export default class UserController {
             throw ex;
         }
     }
+
     async changePassword(req: Request, res: Response) {
         const { oldPassword, newPassword } = req.body;
         try {
@@ -149,6 +153,26 @@ export default class UserController {
             if (ex instanceof UserError) {
                 res.status(StatusCodes.BadRequest).send(ex.message);
                 return;
+            }
+
+            throw ex;
+        }
+    }
+
+    async follow(req: Request, res: Response) {
+        const { userId } = req.body;
+        const id = req.userId;
+
+        try {
+            await this.getUserByIdCase.execute(userId);
+            await this.getUserByIdCase.execute(id);
+
+            this.followUserCase.execute(id, userId);
+    
+            return res.type('application/json').status(StatusCodes.Ok).send();
+        } catch (ex) {
+            if (ex instanceof UserNotFoundError) {
+                return res.status(StatusCodes.NotFound).send();
             }
 
             throw ex;

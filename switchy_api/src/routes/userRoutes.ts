@@ -43,12 +43,21 @@ userRoutes.put('/Update', (request: Request, response: Response) => {
 });
 
 userRoutes.post('/Password/Change', (request: Request, response: Response) => {
-    // #swagger.tags = ['PasswordChange']
+    // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
     // #swagger.responses[404] = { description: 'Not Found.' }
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     return controller.changePassword(request, response);
-})
+});
+
+userRoutes.post('/Follow', (request: Request, response: Response) => {
+    // #swagger.tags = ['User']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[404] = { description: 'Not Found.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+    return controller.follow(request, response);
+});
 
 export default userRoutes;

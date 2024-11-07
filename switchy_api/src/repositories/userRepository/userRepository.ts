@@ -144,9 +144,26 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
     
         return res;
     }
+
     async changePasswordById(userId: string, newPassword: string): Promise<void>{
         await this.connect();
         
         await User.findByIdAndUpdate(userId, {password: newPassword});
+    }
+
+    async addFollow(userId: string, userToFollow: string): Promise<void> {
+        await this.connect();
+
+        await User.findByIdAndUpdate(userToFollow, {
+            $push: { followers: { userId: userId } },
+        });
+    }
+
+    async addFollowing(userId: string, userToFollow: string): Promise<void> {
+        await this.connect();
+
+        await User.findByIdAndUpdate(userId, {
+            $push: { followers: { userId: userToFollow } },
+        });
     }
 }

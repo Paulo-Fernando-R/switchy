@@ -296,7 +296,7 @@
     "/User/Password/Change": {
       "post": {
         "tags": [
-          "PasswordChange"
+          "User"
         ],
         "description": "",
         "parameters": [
@@ -310,6 +310,42 @@
                   "example": "any"
                 },
                 "newPassword": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok."
+          },
+          "400": {
+            "description": "Bad Request."
+          },
+          "404": {
+            "description": "Not Found."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
+    },
+    "/User/Follow": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
                   "example": "any"
                 }
               }
