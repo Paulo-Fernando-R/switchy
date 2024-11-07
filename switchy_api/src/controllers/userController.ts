@@ -7,7 +7,7 @@ import IUserRepository from "../repositories/userRepository/IuserRepository";
 import SignUpCase from "../domain/user/cases/signUpCase";
 import EncryptServiceBcrypt from "../services/encrypt/encryptService";
 import SignUpRequest from "../domain/user/requests/signUpRequest";
-import { UserError, UserNotFoundError } from "../domain/user/errors/userErrors";
+import { SamePasswordError, UserEmptyFieldsError, UserError, UserNotFoundError } from "../domain/user/errors/userErrors";
 import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
 import SearchUserCase from "../domain/user/cases/searchUserCase";
 import UpdateUserCase from "../domain/user/cases/updateUserCase";
@@ -132,9 +132,20 @@ export default class UserController {
     async changePassword(req: Request, res: Response) {
         const { oldPassword, newPassword } = req.body;
         try {
-            this.changeUserPasswordCase.execute(req.userId, oldPassword, newPassword);
+            await this.changeUserPasswordCase.execute(req.userId, oldPassword, newPassword);
             return res.type("application/json").status(StatusCodes.Ok).send();
         } catch (ex) {
+
+            if(ex  instanceof UserEmptyFieldsError) {
+                res.status(StatusCodes.BadRequest).send('Missing required fields.');
+                return;
+            }
+
+            if(ex instanceof SamePasswordError){
+                res.status(StatusCodes.BadRequest).send('New password cannot be the same as previous.');
+                return;
+            }
+
             if (ex instanceof UserError) {
                 res.status(StatusCodes.BadRequest).send(ex.message);
                 return;
