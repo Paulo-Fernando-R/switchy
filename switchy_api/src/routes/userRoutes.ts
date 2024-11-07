@@ -60,4 +60,13 @@ userRoutes.post('/Follow', (request: Request, response: Response) => {
     return controller.follow(request, response);
 });
 
+userRoutes.delete('/Unfollow', (request: Request, response: Response) => {
+    // #swagger.tags = ['User']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[404] = { description: 'Not Found.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+    return controller.unfollow(request, response);
+});
+
 export default userRoutes;

@@ -178,4 +178,24 @@ export default class UserController {
             throw ex;
         }
     }
+
+    async unfollow(req: Request, res: Response) {
+        const { userId } = req.body;
+        const id = req.userId;
+
+        try {
+            await this.getUserByIdCase.execute(userId);
+            await this.getUserByIdCase.execute(id);
+
+            // TODO: Not Implemented
+
+            return res.type('application/json').status(StatusCodes.Ok).send();
+        } catch (ex) {
+            if (ex instanceof UserNotFoundError) {
+                return res.status(StatusCodes.NotFound).send();
+            }
+
+            throw ex;
+        }
+    }
 }
