@@ -18,6 +18,7 @@ export default class EditUserCase implements IEditUserCase {
             }
             await this.repository.updateUser(user);
         } catch (error) {
+            console.error(error);
             if (error instanceof CustomError) {
                 throw new Error(error.screenMessage);
             }
