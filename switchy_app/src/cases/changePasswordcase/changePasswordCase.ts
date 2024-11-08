@@ -18,6 +18,7 @@ export default class ChangePasswordCase implements IChangePasswordCase {
 
             await this.repository.changePassword(oldPassword, newPassword);
         } catch (error) {
+            console.error(error);
             if (error instanceof CustomError) {
                 throw new Error(error.screenMessage);
             }
