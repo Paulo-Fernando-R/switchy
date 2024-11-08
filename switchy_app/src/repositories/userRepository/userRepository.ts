@@ -113,13 +113,71 @@ export default class UserRepository {
         };
 
         const response = await this.axios.instance.post("/User/Password/Change", data);
-       
+
         if (!response) {
             throw new NetworkError();
         }
 
         if (response.status === 400) {
             throw new BadRequestError(400, "", "Senha incorreta");
+        }
+
+        if (response.status === 401) {
+            throw new UnauthorizedError();
+        }
+
+        if (response.status === 404) {
+            throw new NotFoundError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
+    }
+
+    async followUser(userId: string) {
+        const data = {
+            userId: userId,
+        };
+
+        const response = await this.axios.instance.post("/User/Follow", data);
+
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 400) {
+            throw new BadRequestError();
+        }
+
+        if (response.status === 401) {
+            throw new UnauthorizedError();
+        }
+
+        if (response.status === 404) {
+            throw new NotFoundError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
+    }
+    async unFollowUser(userId: string) {
+        const data = {
+            userId: userId,
+        };
+
+        const response = await this.axios.instance("/User/UnFollow", {
+            data: data,
+            method: "DELETE",
+        });
+
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 400) {
+            throw new BadRequestError();
         }
 
         if (response.status === 401) {

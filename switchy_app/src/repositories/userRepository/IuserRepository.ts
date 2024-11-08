@@ -6,4 +6,6 @@ export default interface IUserRepository {
     getUserById(userId: string): Promise<User>;
     updateUser(user: User): Promise<void>;
     changePassword(oldPassword: string, newPassword: string): Promise<void>;
+    followUser(userId: string): Promise<void>;
+    unFollowUser(userId: string): Promise<void>;
 }

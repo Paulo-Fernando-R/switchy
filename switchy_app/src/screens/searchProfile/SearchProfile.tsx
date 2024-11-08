@@ -3,12 +3,13 @@ import ButtonDefault from "../../components/buttonDefault/ButtonDefault";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import BackButton from "../../components/backButton/BackButton";
 import SearchProfileController from "./searchProfileController";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useUserContext } from "../../contexts/userContext";
 import useLayoutFocus from "../../hooks/useLayoutFocus";
 import { View, Text, FlatList } from "react-native";
-import { useQuery } from "@tanstack/react-query";
 import appColors from "../../styles/appColors";
 import styles from "./searchProfileStyles";
-import React from "react";
+import React, { useState } from "react";
 
 type SearchProfileProps = {
     navigation: SearchNavigationProp;
@@ -16,17 +17,27 @@ type SearchProfileProps = {
 };
 
 export default function SearchProfile({ navigation, route }: SearchProfileProps) {
-    const { userId } = route.params;
     const controller = new SearchProfileController();
+
+    const { userId } = route.params;
+    const { user, setUser } = useUserContext();
+
     const ref = useLayoutFocus();
+    const [follow, setFollow] = useState(controller.isFollowing(userId, user));
+
     function goBack() {
         navigation.goBack();
     }
 
-    const { data, error, refetch, isLoading } = useQuery({
+    const { data, error, refetch } = useQuery({
         queryKey: ["SearchProfile" + userId + ref],
         queryFn: () => controller.getScreenData(userId),
         placeholderData: controller.placeholderData,
+    });
+
+    const mutation = useMutation({
+        mutationKey: ["Follow" + userId],
+        mutationFn: () => controller.handleFollow(userId, setFollow, setUser, refetch, follow),
     });
 
     return (
@@ -48,7 +59,14 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
                 </Text>
 
                 <Text style={styles.follow}>{data?.userData.followers?.length} Seguidores</Text>
-                <ButtonDefault text="Seguir" backgroundColor={appColors.accent200} textColor={appColors.accent200} />
+                <ButtonDefault
+                    disabled={mutation.isPending}
+                    text={follow ? "Seguindo" : "Seguir"}
+                    backgroundColor={!follow ? appColors.accent300 : appColors.accent200}
+                    textColor={appColors.accent200}
+                    filled={!follow}
+                    action={async () => mutation.mutate()}
+                />
             </View>
 
             <Text style={styles.subtitle}>Publicações</Text>
