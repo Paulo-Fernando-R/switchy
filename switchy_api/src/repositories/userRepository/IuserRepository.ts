@@ -11,4 +11,6 @@ export default interface IUserRepository {
     changePasswordById(userId: string, newPassword: string): Promise<void>;
     addFollow(userId: string, userToFollow: string): Promise<void>;
     addFollowing(userId: string, userToFollow: string): Promise<void>;
+    removeFollow(userId: string, userToUnfollow: string): Promise<void>;
+    removeFollowing(userId: string, userToUnfollow: string): Promise<void>;
 }

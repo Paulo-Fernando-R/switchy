@@ -12,6 +12,7 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
         super();
         this.jwt = new JwtTokenService();
     }
+
     async createUser(user: IUser) {
         try {
             await this.connect();
@@ -57,7 +58,6 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
 
         return res;
     }
-
     
     async getByEmailAndPassword(email: string, password: string) {
         await this.connect();
@@ -163,7 +163,23 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
         await this.connect();
 
         await User.findByIdAndUpdate(userId, {
-            $push: { followers: { userId: userToFollow } },
+            $push: { following: { userId: userToFollow } },
+        });
+    }
+
+    async removeFollow(userId: string, userToUnfollow: string): Promise<void> {
+        await this.connect();
+
+        await User.findByIdAndUpdate(userToUnfollow, {
+            $pull: { followers: { userId: userId } },
+        });
+    }
+
+    async removeFollowing(userId: string, userToUnfollow: string): Promise<void> {
+        await this.connect();
+
+        await User.findByIdAndUpdate(userId, {
+            $pull: { following: { userId: userToUnfollow } },
         });
     }
 }

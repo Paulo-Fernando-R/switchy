@@ -13,6 +13,7 @@ import SearchUserCase from "../domain/user/cases/searchUserCase";
 import UpdateUserCase from "../domain/user/cases/updateUserCase";
 import ChangeUserPasswordCase from "../domain/user/cases/ChangePasswordCase";
 import FollowUserCase from "../domain/user/cases/followUserCase";
+import UnfollowUserCase from "../domain/user/cases/unfollowUserCase";
 
 export default class UserController {
     private userRepository: IUserRepository;
@@ -23,6 +24,7 @@ export default class UserController {
     private updateUserCase: UpdateUserCase;
     private changeUserPasswordCase: ChangeUserPasswordCase;
     private followUserCase: FollowUserCase;
+    private unfollowUserCase: UnfollowUserCase;
 
     constructor() {
         this.userRepository = new UserRepository();
@@ -33,6 +35,7 @@ export default class UserController {
         this.updateUserCase = new UpdateUserCase(this.userRepository);
         this.changeUserPasswordCase = new ChangeUserPasswordCase(this.userRepository, this.encryptService);
         this.followUserCase = new FollowUserCase(this.userRepository);
+        this.unfollowUserCase = new UnfollowUserCase(this.userRepository);
     }
 
     async signUp(request: Request, response: Response) {
@@ -187,7 +190,7 @@ export default class UserController {
             await this.getUserByIdCase.execute(userId);
             await this.getUserByIdCase.execute(id);
 
-            // TODO: Not Implemented
+            await this.unfollowUserCase.execute(id, userId);
 
             return res.type('application/json').status(StatusCodes.Ok).send();
         } catch (ex) {
