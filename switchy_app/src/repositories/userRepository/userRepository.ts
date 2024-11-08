@@ -113,7 +113,7 @@ export default class UserRepository {
         };
 
         const response = await this.axios.instance.post("/User/Password/Change", data);
-        console.log(response.status);
+       
         if (!response) {
             throw new NetworkError();
         }
