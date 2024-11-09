@@ -4,8 +4,6 @@ import UserController from "../controllers/userController";
 const userRoutes = Router();
 const controller = new UserController();
 
-userRoutes.post("/NewUser", controller.newUser);
-
 userRoutes.get("/Info", (request: Request, response: Response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
