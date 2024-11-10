@@ -1,4 +1,6 @@
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
+import { StatusCodes } from "../../../utils/status_codes";
+import { UserInvalidEmailError } from "../errors/userErrors";
 
 export default class UpdateUserCase {
     private userRepository: IUserRepository;
@@ -7,7 +9,12 @@ export default class UpdateUserCase {
         this.userRepository = userRepository;
     }
 
-    execute(userId: string, name: string, email: string, password: string, userName: string) {
-        this.userRepository.update(userId, name, email, password, userName);
+    async execute(userId: string, name: string, email: string) {
+        const emailAlreadyTaken = await this.userRepository.getByEmail(email);
+        if (emailAlreadyTaken != null) {
+            throw new UserInvalidEmailError("Email already taken.", StatusCodes.BadRequest);
+        }
+        const res = await this.userRepository.update(userId, name, email);
+        return res;
     }
 }

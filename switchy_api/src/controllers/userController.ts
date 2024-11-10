@@ -7,7 +7,13 @@ import IUserRepository from "../repositories/userRepository/IuserRepository";
 import SignUpCase from "../domain/user/cases/signUpCase";
 import EncryptServiceBcrypt from "../services/encrypt/encryptService";
 import SignUpRequest from "../domain/user/requests/signUpRequest";
-import { SamePasswordError, UserEmptyFieldsError, UserError, UserNotFoundError } from "../domain/user/errors/userErrors";
+import {
+    SamePasswordError,
+    UserEmptyFieldsError,
+    UserError,
+    UserNotFoundError,
+    UserInvalidEmailError,
+} from "../domain/user/errors/userErrors";
 import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
 import SearchUserCase from "../domain/user/cases/searchUserCase";
 import UpdateUserCase from "../domain/user/cases/updateUserCase";
@@ -68,7 +74,7 @@ export default class UserController {
 
     async getInfoById(req: Request, res: Response) {
         const { userId } = req.params;
-      
+
         try {
             const userInfo = await new GetUserByIdCase(this.userRepository).execute(userId);
 
@@ -95,20 +101,21 @@ export default class UserController {
     }
 
     async update(req: Request, res: Response) {
-        const { name, email, password, userName } = req.body;
+        const { name, email } = req.body;
         const userId = req.userId;
 
         try {
-            this.getUserByIdCase.execute(userId);
-            this.updateUserCase.execute(userId, name, email, password, userName);
+            const user = await this.updateUserCase.execute(userId, name, email);
 
-            return res.type("application/json").status(StatusCodes.Ok).send();
+            return res.type("application/json").status(StatusCodes.Ok).send(user);
         } catch (ex) {
             if (ex instanceof UserNotFoundError) {
                 return res.status(StatusCodes.NotFound).send();
             }
-
-            throw ex;
+            if (ex instanceof UserInvalidEmailError) {
+                return res.status(StatusCodes.BadRequest).send(ex.message);
+            }
+            return res.status(StatusCodes.InternalServerError).send();
         }
     }
 
@@ -118,14 +125,13 @@ export default class UserController {
             await this.changeUserPasswordCase.execute(req.userId, oldPassword, newPassword);
             return res.type("application/json").status(StatusCodes.Ok).send();
         } catch (ex) {
-
-            if(ex  instanceof UserEmptyFieldsError) {
-                res.status(StatusCodes.BadRequest).send('Missing required fields.');
+            if (ex instanceof UserEmptyFieldsError) {
+                res.status(StatusCodes.BadRequest).send("Missing required fields.");
                 return;
             }
 
-            if(ex instanceof SamePasswordError){
-                res.status(StatusCodes.BadRequest).send('New password cannot be the same as previous.');
+            if (ex instanceof SamePasswordError) {
+                res.status(StatusCodes.BadRequest).send("New password cannot be the same as previous.");
                 return;
             }
 
@@ -147,8 +153,8 @@ export default class UserController {
             await this.getUserByIdCase.execute(id);
 
             this.followUserCase.execute(id, userId);
-    
-            return res.type('application/json').status(StatusCodes.Ok).send();
+
+            return res.type("application/json").status(StatusCodes.Ok).send();
         } catch (ex) {
             if (ex instanceof UserNotFoundError) {
                 return res.status(StatusCodes.NotFound).send();
@@ -168,7 +174,7 @@ export default class UserController {
 
             await this.unfollowUserCase.execute(id, userId);
 
-            return res.type('application/json').status(StatusCodes.Ok).send();
+            return res.type("application/json").status(StatusCodes.Ok).send();
         } catch (ex) {
             if (ex instanceof UserNotFoundError) {
                 return res.status(StatusCodes.NotFound).send();
