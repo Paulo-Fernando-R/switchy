@@ -29,30 +29,25 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
-    const controller = new PostFeedItemController();
 
+    const controller = new PostFeedItemController();
     const { user } = useUserContext();
     const timeAgo = timeAgoFormatter(item.publishDate);
     const [liked, setLiked] = useState(controller.getInitialLike(item, user));
     const [showSnackBar, setShowSnackBar] = useState(false);
     const modalizeRef = useRef<Modalize>(null);
 
-    const {
-        data,
-        mutate,
-        error: qError,
-        isPending,
-    } = useMutation({
+    const {data,mutate,error: qError,isPending,} = useMutation({
         mutationKey: ["Post" + item.id],
+
         mutationFn: (state: boolean) => {
             return controller.handleLike(item.id!, setLiked, state);
         },
+        
         onError: () => {
             setShowSnackBar(true);
         },
     });
-
-    const msg = controller.getErrorMessage(qError);
 
     function navigate() {
         //@ts-ignore
@@ -60,13 +55,18 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
     }
 
     const onOpen = () => {
-        modalizeRef.current?.open();
-      };
+        controller.openmModal(modalizeRef);
+    };
 
     return (
         <View style={styles.listItem}>
-            <BottomModal modalizeRef={modalizeRef}/>
-            <SnackBar.Error message={msg} setVisible={setShowSnackBar} visible={showSnackBar} autoDismissible={true} />
+            <BottomModal modalizeRef={modalizeRef} />
+            <SnackBar.Error
+                message={qError?.message ?? "Ocorreu um erro ao realizar a operação."}
+                setVisible={setShowSnackBar}
+                visible={showSnackBar}
+                autoDismissible={true}
+            />
             <View style={styles.itemAvatar}>
                 <Image style={styles.avatarIcon} source={avatar} />
             </View>
@@ -78,7 +78,9 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
                         <Text style={styles.titleUname}>@{data ? data.user.userName : item.user.userName}</Text>
                         <Text style={styles.titleUname}>{timeAgo}</Text>
                     </View>
-                    {!actionable && <Feather name="more-horizontal" size={20} color={appColors.text200} onPress={onOpen} />}
+                    {actionable && (
+                        <Feather name="more-horizontal" size={20} color={appColors.text200} onPress={onOpen} />
+                    )}
                 </View>
                 <Text style={styles.itemContentBody}>{data ? data.content : item?.content}</Text>
 

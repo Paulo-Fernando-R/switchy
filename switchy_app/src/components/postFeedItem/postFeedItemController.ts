@@ -1,3 +1,5 @@
+import { IHandles } from "react-native-modalize/lib/options";
+import { CustomError } from "../../errors/customErrors";
 import Post from "../../models/post";
 import User from "../../models/user";
 import IPostRepository from "../../repositories/postRepository/IpostRepository";
@@ -28,15 +30,7 @@ export default class PostFeedItemController {
         return false;
     }
 
-    getErrorMessage(qError: Error | null) {
-        if (qError && "screenMessage" in qError) {
-            return (qError.screenMessage as string) ?? "";
-        }
-        return "";
-    }
-
     async handleLike(postId: string, setLiked: React.Dispatch<React.SetStateAction<boolean>>, liked: boolean) {
-       
         try {
             await this.putLike(postId, liked);
             const response = await this.getById(postId);
@@ -44,7 +38,14 @@ export default class PostFeedItemController {
             return response;
         } catch (error) {
             console.error(error);
+            if (error instanceof CustomError) {
+                throw new Error(error.screenMessage);
+            }
             throw error;
         }
+    }
+
+    openmModal(modalizeRef: React.RefObject<IHandles>) {
+        modalizeRef.current?.open();
     }
 }
