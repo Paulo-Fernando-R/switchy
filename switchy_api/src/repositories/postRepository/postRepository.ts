@@ -115,7 +115,11 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         const skip = (page - 1) * 10;
         try {
             await this.connect();
-            const list = await Post.find({ parentId: null }, null, { skip: skip, limit: 10 }).exec();
+            const list = await Post.find({ parentId: null }, null, {
+                skip: skip,
+                limit: 10,
+                sort: { publishDate: -1 },
+            }).exec();
             console.log(list);
 
             const res: IPost[] = list.map((e) => {

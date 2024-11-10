@@ -27,7 +27,8 @@ export default class HomeController {
     async getAppData(pageParam: number) {
         const response = await this.getFeedData(pageParam);
         await this.getUserData();
-        return response.sort((a, b) => (a.publishDate.getTime() < b.publishDate.getTime() ? 1 : -1));
+        return response
+       // return response.sort((a, b) => (a.publishDate.getTime() < b.publishDate.getTime() ? 1 : -1));
     }
 
     async getUserData() {
