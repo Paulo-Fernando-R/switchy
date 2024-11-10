@@ -111,10 +111,11 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         }
     }
 
-    async getFeedPosts(userId: string) {
+    async getFeedPosts(userId: string, page: number) {
+        const skip = (page - 1) * 10;
         try {
             await this.connect();
-            const list = await Post.find({ parentId: null }).exec();
+            const list = await Post.find({ parentId: null }, null, { skip: skip, limit: 10 }).exec();
             console.log(list);
 
             const res: IPost[] = list.map((e) => {
@@ -172,7 +173,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         try {
             await this.connect();
             const post = await Post.findById(id).exec();
-          //  console.log(post?.user);
+            //  console.log(post?.user);
             const res: IPost = {
                 id: post?._id,
                 content: post?.content ?? "",

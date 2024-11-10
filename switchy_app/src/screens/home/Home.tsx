@@ -1,13 +1,14 @@
-import { Text, View, Image, FlatList, RefreshControl } from "react-native";
+import { Text, View, Image, FlatList, RefreshControl, ActivityIndicator } from "react-native";
 import { HomeNavigationProp } from "../../routes/types/navigationTypes";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import useLayoutFocus from "../../hooks/useLayoutFocus";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import HomeController from "./homeController";
 import React from "react";
 import styles from "./homeStyles";
+import appColors from "../../styles/appColors";
 
 type HomeProps = {
     navigation: HomeNavigationProp;
@@ -16,14 +17,14 @@ type HomeProps = {
 export default function Home({ navigation }: HomeProps) {
     const controller = new HomeController();
     const ref = useLayoutFocus();
-    const { data, error, refetch, isRefetching, isLoading } = useQuery({
-        queryKey: ["Feed" + ref],
-        queryFn: () => controller.getAppData(),
-        placeholderData: controller.placeholderData,
-        refetchOnWindowFocus: true
-    });
 
-    //console.log(data[0])
+    const { data, error, fetchNextPage, isFetchingNextPage, refetch, isRefetching } = useInfiniteQuery({
+        queryKey: ["Feed" + ref],
+        queryFn: ({ pageParam }) => controller.getAppData(pageParam),
+        initialPageParam: 1,
+        getNextPageParam: controller.handleNext,
+        placeholderData: () => ({ pageParams: [1], pages: [controller.placeholderData] }),
+    });
 
     return (
         <FlatList
@@ -31,10 +32,17 @@ export default function Home({ navigation }: HomeProps) {
             ListHeaderComponent={() => <Header />}
             style={styles.page}
             contentContainerStyle={styles.list}
-            data={data}
-            renderItem={({ item, index }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
+            data={data?.pages?.flat()}
+            renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
+            onEndReachedThreshold={0.8}
+            onEndReached={() => fetchNextPage()}
+            ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
         />
     );
+}
+
+function Footer() {
+    return <ActivityIndicator size="large" color={appColors.accent300} />;
 }
 
 function Header() {

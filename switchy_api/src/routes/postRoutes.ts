@@ -12,7 +12,7 @@ postRoutes.post("/CreatePost", (req, res) => {
     return controller.createPost(req, res);
 });
 
-postRoutes.get("/GetFeedPosts", (req, res) => {
+postRoutes.get("/GetFeedPosts/:page", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }

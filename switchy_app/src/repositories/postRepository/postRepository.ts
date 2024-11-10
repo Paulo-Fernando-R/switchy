@@ -53,8 +53,8 @@ export default class PostRepository implements IPostRepository {
 
         return aux;
     }
-    async getFeedPosts() {
-        const response = await this.axios.instance.get<Post[]>("/Post/GetFeedPosts");
+    async getFeedPosts(page:number) {
+        const response = await this.axios.instance.get<Post[]>("/Post/GetFeedPosts/" + page);
 
         if (!response) {
             throw new NetworkError();

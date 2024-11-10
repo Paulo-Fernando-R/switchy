@@ -8,10 +8,9 @@ export default class GetFeedPostsCase {
         this.postRepository = _postRepository;
     }
 
-    async execute(userId: string) {
+    async execute(userId: string, page: number) {
         try {
-           
-            const response = await this.postRepository.getFeedPosts(userId);
+            const response = await this.postRepository.getFeedPosts(userId, page);
 
             return response;
         } catch (error) {

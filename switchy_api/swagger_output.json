@@ -410,12 +410,20 @@
         }
       }
     },
-    "/Post/GetFeedPosts": {
+    "/Post/GetFeedPosts/{page}": {
       "get": {
         "tags": [
           "Post"
         ],
         "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Ok."

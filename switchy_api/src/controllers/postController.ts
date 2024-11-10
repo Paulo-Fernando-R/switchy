@@ -36,9 +36,12 @@ export default class PostController {
 
     async getFeedPosts(req: Request, res: Response) {
         const userId = req.userId;
+        const { page } = req.params;
+        let pageInt: number = 1;
+        if (page) pageInt = parseInt(page);
 
         try {
-            const response = await new GetFeedPostsCase(this.postRepository).execute(userId);
+            const response = await new GetFeedPostsCase(this.postRepository).execute(userId, pageInt);
 
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {
