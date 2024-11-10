@@ -1,4 +1,5 @@
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TabBarContext } from "./tabBarContext";
 import { AuthContext } from "./authContext";
 import { Host } from "react-native-portalize";
@@ -30,7 +31,9 @@ export default function NestContext({
             <AuthContext.Provider value={{ auth: auth, setAuth: changeAuth }}>
                 <UserContext.Provider value={{ user: user, setUser: changeUser }}>
                     <TabBarContext.Provider value={{ tabBarVisible: tabBarVisible, setTabBarVisible: changeState }}>
-                        <Host>{children}</Host>
+                        <GestureHandlerRootView style={{ flex: 1 }}>
+                            <Host>{children}</Host>
+                        </GestureHandlerRootView>
                     </TabBarContext.Provider>
                 </UserContext.Provider>
             </AuthContext.Provider>

@@ -20,15 +20,18 @@ const styles = StyleSheet.create({
     },
     avatarIcon: {
         width: 24,
-        height: 24
+        height: 24,
     },
     itemContent: {
         gap: 10,
+        flex: 1,
     },
     itemTitle: {
         flexDirection: "row",
         alignItems: "center",
         gap: 8,
+        justifyContent: "space-between",
+        
     },
     titleName: {
         ...appTexts.paragraph2Regular,
@@ -37,6 +40,7 @@ const styles = StyleSheet.create({
         ...appTexts.paragraph3Regular,
         color: appColors.text300,
     },
+
     itemContentBody: {
         ...appTexts.paragraph3Regular,
         color: appColors.text200,

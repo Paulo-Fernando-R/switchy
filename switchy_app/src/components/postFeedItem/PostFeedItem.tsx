@@ -1,5 +1,5 @@
-import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import { HomeNavigationProp, ProfileNavigationProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
+import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import PostFeedItemController from "./postFeedItemController";
 import { useUserContext } from "../../contexts/userContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -9,19 +9,23 @@ import { Facebook } from "react-content-loader/native";
 import avatar from "../../../assets/icons/avatar.png";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useMutation } from "@tanstack/react-query";
+import Feather from "@expo/vector-icons/Feather";
 import appColors from "../../styles/appColors";
 import SnackBar from "../snackBar/SnackBar";
 import styles from "./postFeedItemStyles";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Post from "../../models/post";
+import BottomModal from "../bottomModal/BottomModal";
+import { Modalize } from "react-native-modalize";
 
 type PostFeedItemProps = {
     item?: Post | undefined;
     error?: Error | null;
     navigation?: HomeNavigationProp | SearchNavigationProp | ProfileNavigationProp | undefined;
+    actionable?: boolean;
 };
 
-export default function PostFeedItem({ item, error, navigation }: PostFeedItemProps) {
+export default function PostFeedItem({ item, error, navigation, actionable }: PostFeedItemProps) {
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
@@ -31,6 +35,7 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
     const timeAgo = timeAgoFormatter(item.publishDate);
     const [liked, setLiked] = useState(controller.getInitialLike(item, user));
     const [showSnackBar, setShowSnackBar] = useState(false);
+    const modalizeRef = useRef<Modalize>(null);
 
     const {
         data,
@@ -54,8 +59,13 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
         navigation?.navigate("Comments", { post: data ? data : item! });
     }
 
+    const onOpen = () => {
+        modalizeRef.current?.open();
+      };
+
     return (
         <View style={styles.listItem}>
+            <BottomModal modalizeRef={modalizeRef}/>
             <SnackBar.Error message={msg} setVisible={setShowSnackBar} visible={showSnackBar} autoDismissible={true} />
             <View style={styles.itemAvatar}>
                 <Image style={styles.avatarIcon} source={avatar} />
@@ -63,10 +73,12 @@ export default function PostFeedItem({ item, error, navigation }: PostFeedItemPr
 
             <View style={styles.itemContent}>
                 <View style={styles.itemTitle}>
-                    <Text style={styles.titleName}>{data ? data.user.name : item.user.name}</Text>
-
-                    <Text style={styles.titleUname}>@{data ? data.user.userName : item.user.userName}</Text>
-                    <Text style={styles.titleUname}>{timeAgo}</Text>
+                    <View style={styles.itemTitle}>
+                        <Text style={styles.titleName}>{data ? data.user.name : item.user.name}</Text>
+                        <Text style={styles.titleUname}>@{data ? data.user.userName : item.user.userName}</Text>
+                        <Text style={styles.titleUname}>{timeAgo}</Text>
+                    </View>
+                    {!actionable && <Feather name="more-horizontal" size={20} color={appColors.text200} onPress={onOpen} />}
                 </View>
                 <Text style={styles.itemContentBody}>{data ? data.content : item?.content}</Text>
 
