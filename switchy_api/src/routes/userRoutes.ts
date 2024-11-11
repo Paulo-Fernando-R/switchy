@@ -40,6 +40,16 @@ userRoutes.put('/Update', (request: Request, response: Response) => {
     return controller.update(request, response);
 });
 
+userRoutes.put('/Update/Username', (request: Request, response: Response) => {
+    // #swagger.tags = ['User']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[403] = { description: 'Forbidden.' }
+    // #swagger.responses[404] = { description: 'Not Found.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+    return controller.updateUsername(request, response);
+});
+
 userRoutes.post('/Password/Change', (request: Request, response: Response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }

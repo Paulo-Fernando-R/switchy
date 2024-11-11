@@ -207,4 +207,31 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
             $pull: { following: { userId: userToUnfollow } },
         });
     }
+
+    async getByUsername(username: string): Promise<IUser | null> {
+        await this.connect();
+
+        const userFromDataBase = await User.findOne({
+            username: username,
+        });
+
+        if (!userFromDataBase) {
+            return null;
+        }
+
+        const user: IUser = {
+            id: userFromDataBase._id,
+            name: userFromDataBase.name,
+            email: userFromDataBase.email,
+            password: userFromDataBase.password,
+        };
+
+        return user;
+    }
+
+    async updateUsername(userId: string, username: string): Promise<void> {
+        await this.connect();
+
+        await User.findByIdAndUpdate(userId, { username: username });
+    }
 }

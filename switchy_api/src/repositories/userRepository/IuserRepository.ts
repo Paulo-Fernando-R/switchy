@@ -13,4 +13,6 @@ export default interface IUserRepository {
     addFollowing(userId: string, userToFollow: string): Promise<void>;
     removeFollow(userId: string, userToUnfollow: string): Promise<void>;
     removeFollowing(userId: string, userToUnfollow: string): Promise<void>;
+    getByUsername(username: string): Promise<IUser | null>;
+    updateUsername(userId: string, username: string): Promise<void>;
 }

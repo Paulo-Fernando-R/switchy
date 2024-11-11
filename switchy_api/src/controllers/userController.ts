@@ -13,6 +13,7 @@ import {
     UserError,
     UserNotFoundError,
     UserInvalidEmailError,
+    UserInvalidUsernameError,
 } from "../domain/user/errors/userErrors";
 import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
 import SearchUserCase from "../domain/user/cases/searchUserCase";
@@ -20,6 +21,7 @@ import UpdateUserCase from "../domain/user/cases/updateUserCase";
 import ChangeUserPasswordCase from "../domain/user/cases/ChangePasswordCase";
 import FollowUserCase from "../domain/user/cases/followUserCase";
 import UnfollowUserCase from "../domain/user/cases/unfollowUserCase";
+import UpdateUsernameCase from "../domain/user/cases/updateUsernameCase";
 
 export default class UserController {
     private userRepository: IUserRepository;
@@ -31,6 +33,7 @@ export default class UserController {
     private changeUserPasswordCase: ChangeUserPasswordCase;
     private followUserCase: FollowUserCase;
     private unfollowUserCase: UnfollowUserCase;
+    private updateUsernameCase: UpdateUsernameCase;
 
     constructor() {
         this.userRepository = new UserRepository();
@@ -42,6 +45,7 @@ export default class UserController {
         this.changeUserPasswordCase = new ChangeUserPasswordCase(this.userRepository, this.encryptService);
         this.followUserCase = new FollowUserCase(this.userRepository);
         this.unfollowUserCase = new UnfollowUserCase(this.userRepository);
+        this.updateUsernameCase = new UpdateUsernameCase(this.userRepository);
     }
 
     async signUp(request: Request, response: Response) {
@@ -111,11 +115,24 @@ export default class UserController {
         } catch (ex) {
             if (ex instanceof UserNotFoundError) {
                 return res.status(StatusCodes.NotFound).send();
-            }
-            if (ex instanceof UserInvalidEmailError) {
+            } else if (ex instanceof UserInvalidEmailError) {
                 return res.status(StatusCodes.BadRequest).send(ex.message);
             }
-            return res.status(StatusCodes.InternalServerError).send();
+        }
+    }
+
+    async updateUsername(req: Request, res: Response) {
+        const { username } = req.body;
+        const userId = req.userId;
+
+        try {
+            await this.updateUsernameCase.execute(userId, username);
+
+            return res.type("application/json").status(StatusCodes.Ok).send();
+        } catch (ex) {
+            if (ex instanceof UserInvalidUsernameError) {
+                return res.status(StatusCodes.BadRequest).send(ex.message);
+            }
         }
     }
 
