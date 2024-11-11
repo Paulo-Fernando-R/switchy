@@ -8,13 +8,19 @@ const styles = StyleSheet.create({
         backgroundColor: appColors.bg100,
         paddingTop: 20,
         gap: 12,
-        paddingBottom: 20,
+        //paddingBottom: 20,
         
+    },
+
+    list:{
+        paddingTop: 20,
+        gap: 12,
+        paddingBottom: 30,
     },
 
     header: {
         paddingHorizontal: 20,
-        paddingBottom: 30,
+        paddingBottom: 0,
     },
 
     formTitle:{

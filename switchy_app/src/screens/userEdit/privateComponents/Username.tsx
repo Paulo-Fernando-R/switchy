@@ -10,13 +10,11 @@ import { useMutation } from "@tanstack/react-query";
 import SnackBar from "../../../components/snackBar/SnackBar";
 import { useUserContext } from "../../../contexts/userContext";
 
-export type UserInfoFormData = {
-    name: string;
-    email: string;
-    description: string;
+export type UsernameFormData = {
+    userName: string;
 };
 
-export default function PersonalInfo() {
+export default function Username() {
     const controller = new UserEditController();
     const { user, setUser } = useUserContext();
     const [snackError, setSnackError] = React.useState(false);
@@ -27,11 +25,9 @@ export default function PersonalInfo() {
         control,
         reset,
         formState: { errors },
-    } = useForm<UserInfoFormData>({
+    } = useForm<UsernameFormData>({
         defaultValues: {
-            name: user?.name!,
-            email: user?.email!,
-            description: user?.description!,
+            userName: user?.userName!,
         },
 
         shouldFocusError: true,
@@ -40,17 +36,9 @@ export default function PersonalInfo() {
     const { isValid } = useFormState({ control });
 
     const onSubmit = handleSubmit(async (data) => {
-        await controller.updateUserInfo(
-            {
-                name: data.name,
-                email: data.email,
-                userName: "",
-                description: data.description,
-            },
-            reset,
-            isValid,
-            setUser
-        );
+        const aux = user!;
+        aux.userName = data.userName;
+        await controller.changeUsername(aux, reset, isValid, setUser);
     });
 
     const mutation = useMutation({
@@ -66,46 +54,30 @@ export default function PersonalInfo() {
     return (
         <View style={styles.form}>
             <SnackBar.Error
-                message={mutation.error?.message ?? "Erro ao atualizar dados pessoais"}
+                message={mutation.error?.message ?? "Erro ao atualizar nome de usuário"}
                 setVisible={setSnackError}
                 visible={snackError}
                 autoDismissible={true}
             />
             <SnackBar.Sucess
-                message={"Dados pessoais atualizados com sucesso"}
+                message={"Nome de usuário atualizado com sucesso"}
                 setVisible={setSnackSuccess}
                 visible={snackSuccess}
                 autoDismissible={true}
             />
-            <Text style={styles.formTitle}>Atualizar dados pessoais</Text>
+            <Text style={styles.formTitle}>Nome de usuário</Text>
             <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                    <InputDefault setText={onChange} text={value} placeholder="Nome" />
+                    <InputDefault setText={onChange} text={value} placeholder="Nome de usuário" />
                 )}
-                name="name"
-                rules={{ required: false, maxLength: 64, minLength: 2 }}
+                name="userName"
+                rules={{ required: true, minLength: 3, maxLength: 16 }}
             />
 
-            <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                    <InputDefault setText={onChange} text={value} placeholder="E-mail" />
-                )}
-                name="email"
-                rules={{ required: false, maxLength: 64, minLength: 3 }}
-            />
-            <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                    <InputDefault multiline={true} setText={onChange} text={value} placeholder="Descrição" />
-                )}
-                name="description"
-                rules={{ required: false, maxLength: 64, minLength: 4 }}
-            />
             <ButtonLarge
                 action={mutation.mutate}
-                title="Salvar"
+                title="Alterar nome de usuário"
                 backColor={appColors.accent300}
                 textColor={appColors.text100}
                 disabled={mutation.isPending}

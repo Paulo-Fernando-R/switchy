@@ -5,25 +5,28 @@ import BackButton from "../../components/backButton/BackButton";
 import PersonalInfo from "./privateComponents/PersonalInfo";
 import Password from "./privateComponents/Password";
 import { ProfileNavigationProp } from "../../routes/types/navigationTypes";
+import Username from "./privateComponents/Username";
 
 type UserEditProps = {
-    navigation: ProfileNavigationProp
-}
+    navigation: ProfileNavigationProp;
+};
 
-export default function UserEdit({navigation}:UserEditProps) {
-    function goBack(){
+export default function UserEdit({ navigation }: UserEditProps) {
+    function goBack() {
         navigation.goBack();
     }
     return (
-        <ScrollView style={styles.page}>
+        <View style={styles.page}>
             <View style={styles.header}>
                 <BackButton goBack={goBack} />
             </View>
-
-            <View style={styles.body}>
-                <PersonalInfo />
-                <Password />
-            </View>
-        </ScrollView>
+            <ScrollView contentContainerStyle={styles.list}>
+                <View style={styles.body}>
+                    <Username />
+                    <PersonalInfo />
+                    <Password />
+                </View>
+            </ScrollView>
+        </View>
     );
 }

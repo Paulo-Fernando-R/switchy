@@ -83,7 +83,12 @@ export default class UserRepository {
     }
 
     async updateUser(user: User) {
-        const response = await this.axios.instance.put<User[]>("/User/Update");
+        const data = {
+            name: user.name,
+            email: user.email,
+        };
+
+        const response = await this.axios.instance.put<User[]>("/User/Update", data);
 
         if (!response) {
             throw new NetworkError();
@@ -91,6 +96,30 @@ export default class UserRepository {
 
         if (response.status === 400) {
             throw new BadRequestError();
+        }
+
+        if (response.status === 401) {
+            throw new UnauthorizedError();
+        }
+
+        if (response.status === 404) {
+            throw new NotFoundError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
+    }
+
+    async chnageUsername(username: string) {
+        const response = await this.axios.instance.put<User[]>("/User/Update", { username });
+
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 400) {
+            throw new BadRequestError(400, "", "Este nome de usuário já está em uso");
         }
 
         if (response.status === 401) {

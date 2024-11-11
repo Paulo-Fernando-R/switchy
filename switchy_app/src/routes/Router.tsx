@@ -69,7 +69,7 @@ export default function Router() {
         return true;
     };
 
-    if (!isAuth()) {
+    if (!auth) {
         return <AuthRouter />;
     }
 

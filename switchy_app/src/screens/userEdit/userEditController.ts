@@ -8,14 +8,20 @@ import StorageTypeEnum from "../../enums/storageTypeEnum";
 import { PasswordFormData } from "./privateComponents/Password";
 import ChangePasswordCase from "../../cases/changePasswordcase/changePasswordCase";
 import IChangePasswordCase from "../../cases/changePasswordcase/IchangePasswordCase";
+import { UsernameFormData } from "./privateComponents/Username";
+import IChangeUsernameCase from "../../cases/changeUsernameCase/IChangeUsernameCase";
+import ChangeUsernameCase from "../../cases/changeUsernameCase/changeUsernameCase";
+import IEditUserCase from "../../cases/editUserCase/IeditUserCase";
 
 export default class UserEditController {
-    private readonly editUserCase: EditUserCase;
+    private readonly editUserCase: IEditUserCase;
     private readonly changePasswordCase: IChangePasswordCase;
+    private readonly changeUsernameCase: IChangeUsernameCase;
     private readonly storageService: IStorageService<User>;
     constructor() {
         this.editUserCase = new EditUserCase();
         this.changePasswordCase = new ChangePasswordCase();
+        this.changeUsernameCase = new ChangeUsernameCase();
         this.storageService = new StorageService(StorageTypeEnum.user);
     }
 
@@ -26,7 +32,10 @@ export default class UserEditController {
         setUser: (user: User) => void
     ) {
         await this.editUserCase.execute(user, isValid);
-        reset({ description: "", name: "", userName: "", email: "" }, { keepDefaultValues: false, keepValues: false });
+        reset(
+            { description: user.description, name: user.name, email: user.email },
+            { keepDefaultValues: false, keepValues: false }
+        );
 
         const current = this.storageService.getItem();
         this.setNewStoredUser(current, user, setUser);
@@ -41,6 +50,18 @@ export default class UserEditController {
         isValid: boolean
     ) {
         return await this.changePasswordCase.execute(oldPassword, newPassword, isValid);
+    }
+
+    async changeUsername(
+        user: User,
+        reset: UseFormReset<UsernameFormData>,
+        isValid: boolean,
+        setUser: (user: User) => void
+    ) {
+        await this.changeUsernameCase.execute(user, isValid);
+        reset({ userName: user.userName }, { keepDefaultValues: false, keepValues: false });
+        const current = this.storageService.getItem();
+        this.setNewStoredUser(current, user, setUser);
     }
 
     setNewStoredUser(current: User | null, update: User, setUser: (user: User) => void) {
