@@ -8,14 +8,17 @@ import GetFeedPostsCase from "../domain/post/cases/getFeedPostsCase";
 import getPostByIdCase from "../domain/post/cases/getPostByIdCase";
 import UpdateLikeOfPostCase from "../domain/post/cases/updateLikeOfPostCase";
 import GetUserPostsCase from "../domain/post/cases/getUserPostsCase";
-
+import IUserRepository from "../repositories/userRepository/IuserRepository";
+import { UserRepository } from "../repositories/userRepository/userRepository";
 export default class PostController {
     postRepository: IPostRepository;
+    private userRepository: IUserRepository;
     getUserPostsCase: GetUserPostsCase;
 
     constructor() {
         this.postRepository = new PostRepository();
         this.getUserPostsCase = new GetUserPostsCase(this.postRepository);
+        this.userRepository = new UserRepository();
     }
     async createPost(req: Request, res: Response) {
         const { content, parentId } = req.body;
@@ -41,7 +44,10 @@ export default class PostController {
         if (page) pageInt = parseInt(page);
 
         try {
-            const response = await new GetFeedPostsCase(this.postRepository).execute(userId, pageInt);
+            const response = await new GetFeedPostsCase(this.postRepository, this.userRepository).execute(
+                userId,
+                pageInt
+            );
 
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {

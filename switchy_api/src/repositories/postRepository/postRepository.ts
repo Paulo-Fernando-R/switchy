@@ -111,7 +111,14 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         }
     }
 
-    async getFeedPosts(userId: string, page: number) {
+    async getFeedPosts(userId: string, page: number, ids: Types.ObjectId[]) {
+        if (!ids || ids.length == 0) {
+            return await this.getFeedPostsWithoutCriteria(page);
+        }
+        return await this.getFeedPostsWithCriteria(page, ids);
+    }
+
+    private async getFeedPostsWithoutCriteria(page: number) {
         const skip = (page - 1) * 10;
         try {
             await this.connect();
@@ -134,6 +141,41 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
                 };
             });
             return res;
+        } catch (error) {
+            console.error(error);
+            //@ts-ignore
+            throw new ServerError(error.message ?? "");
+        }
+    }
+
+    private async getFeedPostsWithCriteria(page: number, ids: Types.ObjectId[]) {
+        const skip = (page - 1) * 10;
+        await this.connect();
+
+        try {
+            const res = await Post.find({ parentId: null }, null, {
+                _id: {
+                    $in: ids,
+                },
+                skip: skip,
+                limit: 10,
+                sort: { publishDate: -1 },
+            }).exec();
+
+            const posts = res.map((e) => {
+                const aux: IPost = {
+                    content: e.content,
+                    publishDate: e.publishDate,
+                    user: e.user,
+                    id: e._id,
+                    parentId: e.parentId,
+                    comments: e.comments,
+                    likes: e.likes,
+                };
+                return aux;
+            });
+
+            return posts;
         } catch (error) {
             console.error(error);
             //@ts-ignore
