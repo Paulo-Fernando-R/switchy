@@ -36,4 +36,32 @@ export default class AuthRepository implements IAuthRepository {
 
         return response.data;
     }
+
+    async signUp(name: string, username: string, email: string, password: string): Promise<Auth> {
+        const data = {
+            name: name,
+            userName: username,
+            email: email,
+            password: password,
+        };
+
+        const response = await this.axios.instance.post("/Login/SignUp", data);
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 400) {
+            throw new BadRequestError();
+        }
+
+        if (response.status === 404) {
+            throw new NotFoundError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
+
+        return response.data;
+    }
 }
