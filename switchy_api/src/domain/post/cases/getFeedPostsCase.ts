@@ -17,7 +17,7 @@ export default class GetFeedPostsCase {
             const followings = user?.following;
 
             if (!followings || followings.length == 0) {
-                return [];
+                return await this.postRepository.getFeedPosts(userId, page);
             }
 
             const ids = followings.map((e) => new Types.ObjectId(e.userId));
