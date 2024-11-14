@@ -94,6 +94,12 @@
           "400": {
             "description": "Bad Request."
           },
+          "460": {
+            "description": "Invalid Email."
+          },
+          "461": {
+            "description": "Invalid Username."
+          },
           "500": {
             "description": "Internal Server Error."
           }

@@ -1,10 +1,6 @@
 import { IUser } from "../../../models/user";
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
-import { UserEmptyFieldsError, UserInvalidEmailError } from "../errors/userErrors";
-import fieldsExists from "../../../helpers/objects/fieldsExists";
-import fieldsNotEmpty from "../../../helpers/objects/fieldsNotEmpty";
-import signUpRequiredFieldsRule from "../rules/signUpRequiredFields";
-import { StatusCodes } from "../../../utils/status_codes";
+import { UserEmptyFieldsError, UserInvalidEmailError, UserInvalidUsernameError } from "../errors/userErrors";
 import IEncryptService from "../../../services/encrypt/iencryptService";
 import SignUpRequest from "../requests/signUpRequest";
 
@@ -19,13 +15,17 @@ export default class SignUpCase {
 
     async execute(newUserData: SignUpRequest): Promise<IUser> {
         if (!newUserData.name || !newUserData.email || !newUserData.password) {
-            throw new UserEmptyFieldsError("Missing required fields", StatusCodes.BadRequest);
+            throw new UserEmptyFieldsError();
         }
 
         const emailAlreadyTaken = await this.userRepository.getByEmail(newUserData.email);
-
         if (emailAlreadyTaken != null) {
-            throw new UserInvalidEmailError("Email already taken.", StatusCodes.BadRequest);
+            throw new UserInvalidEmailError();
+        }
+
+        const usernameAlreadyTaken = await this.userRepository.getByUsername(newUserData.userName);
+        if (usernameAlreadyTaken != null) {
+            throw new UserInvalidUsernameError();
         }
 
         newUserData.password = await this.encryptService.hashPassword(newUserData.password);
