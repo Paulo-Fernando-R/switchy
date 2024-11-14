@@ -1,8 +1,5 @@
-import { IUser } from '../../../models/user';
 import IUserRepository from '../../../repositories/userRepository/IuserRepository';
 import IEncryptService from '../../../services/encrypt/iencryptService';
-import ITokenService from '../../../services/token/itokenService';
-import { AuthInvalidTokenError } from '../../auth/errors/authErrors';
 import { SamePasswordError, UserEmptyFieldsError, UserInvalidPasswordError } from '../errors/userErrors';
 
 export default class ChangeUserPasswordCase {

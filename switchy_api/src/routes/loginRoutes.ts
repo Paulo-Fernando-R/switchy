@@ -20,6 +20,8 @@ loginRoutes.post("/SignUp", (request, response) => {
     // #swagger.tags = ['Login']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[460] = { description: 'Invalid Email.' }
+    // #swagger.responses[461] = { description: 'Invalid Username.' }
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     return userController.signUp(request, response);
 });

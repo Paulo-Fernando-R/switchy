@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import { IUser } from "../models/user";
 import { UserRepository } from "../repositories/userRepository/userRepository";
-import ServerError from "../errors/serverError";
 import { StatusCodes } from "../utils/status_codes";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
 import SignUpCase from "../domain/user/cases/signUpCase";
@@ -18,10 +16,13 @@ import {
 import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
 import SearchUserCase from "../domain/user/cases/searchUserCase";
 import UpdateUserCase from "../domain/user/cases/updateUserCase";
-import ChangeUserPasswordCase from "../domain/user/cases/ChangePasswordCase";
+import ChangeUserPasswordCase from "../domain/user/cases/changePasswordCase";
 import FollowUserCase from "../domain/user/cases/followUserCase";
 import UnfollowUserCase from "../domain/user/cases/unfollowUserCase";
 import UpdateUsernameCase from "../domain/user/cases/updateUsernameCase";
+import GenerateTokenFromUserCase from "../domain/auth/cases/generateTokenFromUserCase";
+import JwtTokenService from "../services/token/jwtTokenService";
+import ITokenService from "../services/token/itokenService";
 
 export default class UserController {
     private userRepository: IUserRepository;
@@ -34,10 +35,13 @@ export default class UserController {
     private followUserCase: FollowUserCase;
     private unfollowUserCase: UnfollowUserCase;
     private updateUsernameCase: UpdateUsernameCase;
+    private generateTokenFromUserCase: GenerateTokenFromUserCase;
+    private tokenService: ITokenService;
 
     constructor() {
         this.userRepository = new UserRepository();
         this.encryptService = new EncryptServiceBcrypt();
+        this.tokenService = new JwtTokenService();
         this.signUpCase = new SignUpCase(this.userRepository, this.encryptService);
         this.searchUserCase = new SearchUserCase(this.userRepository, this.encryptService);
         this.getUserByIdCase = new GetUserByIdCase(this.userRepository);
@@ -46,18 +50,24 @@ export default class UserController {
         this.followUserCase = new FollowUserCase(this.userRepository);
         this.unfollowUserCase = new UnfollowUserCase(this.userRepository);
         this.updateUsernameCase = new UpdateUsernameCase(this.userRepository);
+        this.generateTokenFromUserCase = new GenerateTokenFromUserCase(this.tokenService);
     }
 
     async signUp(request: Request, response: Response) {
         try {
             const { name, email, password, userName } = request.body;
-            console.log(request.body);
             const signUpRequest = { name, email, password, userName } as SignUpRequest;
 
             const newUser = await this.signUpCase.execute(signUpRequest);
-            response.type("application/json").status(StatusCodes.Created).send(newUser);
+            const res = await this.generateTokenFromUserCase.execute(newUser);
+
+            response.type("application/json").status(StatusCodes.Created).send(res);
         } catch (error) {
-            if (error instanceof UserError) response.status(error.statusCode).send(error.message);
+            if (error instanceof UserEmptyFieldsError) {
+                response.status(StatusCodes.BadRequest).send();
+            } else if (error instanceof UserInvalidEmailError) {
+                response.status(StatusCodes.InvalidEmail).send();
+            }
             else throw error;
         }
     }
