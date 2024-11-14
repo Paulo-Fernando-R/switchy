@@ -51,6 +51,7 @@ export default class UserController {
     async signUp(request: Request, response: Response) {
         try {
             const { name, email, password, userName } = request.body;
+            console.log(request.body);
             const signUpRequest = { name, email, password, userName } as SignUpRequest;
 
             const newUser = await this.signUpCase.execute(signUpRequest);

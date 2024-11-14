@@ -46,6 +46,7 @@ export default class AuthRepository implements IAuthRepository {
         };
 
         const response = await this.axios.instance.post("/Login/SignUp", data);
+        console.log(response.status);
         if (!response) {
             throw new NetworkError();
         }
@@ -58,7 +59,7 @@ export default class AuthRepository implements IAuthRepository {
             throw new NotFoundError();
         }
 
-        if (response.status !== 200) {
+        if (response.status !== 201) {
             throw new InternalServerError();
         }
 

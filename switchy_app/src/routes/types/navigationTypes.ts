@@ -3,6 +3,15 @@ import type { NavigatorScreenParams, RouteProp } from "@react-navigation/native"
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import Post from "../../models/post";
 
+//!AUTH
+
+export type AuthStackParamList = {
+    Login: undefined;
+    SignUp: undefined;
+};
+
+export type AuthNavigationProp = StackNavigationProp<AuthStackParamList, "Login">;
+
 //!HOME
 export type HomeStackParamList = {
     Home: undefined;

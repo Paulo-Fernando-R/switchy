@@ -1,10 +1,10 @@
 import CustomTabNavigation from "../components/customTabNavigation/CustomTabNavigation";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
+import { CardStyleInterpolators, createStackNavigator, TransitionSpecs } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useTabBarContext } from "../contexts/tabBarContext";
 import { useAuthContext } from "../contexts/authContext";
-import { RootTabsParamList } from "./types/navigationTypes";
+import { AuthStackParamList, RootTabsParamList } from "./types/navigationTypes";
 import KeyboardStateEnum from "../enums/keyboardStateEnum";
 import ProfileStackRouter from "./profileStackRouter";
 import SearchStackRouter from "./searchStackRouter";
@@ -15,14 +15,23 @@ import Login from "../screens/login/Login";
 import { View } from "react-native";
 import React from "react";
 
+import SignUp from "../screens/signup/SignUp";
+
 const Tab = createBottomTabNavigator<RootTabsParamList>();
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<AuthStackParamList>();
 
 function AuthRouter() {
     return (
         <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Navigator
+                screenOptions={{
+                    headerShown: false,
+                    animationEnabled: true,
+                    cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                }}
+            >
                 <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="SignUp" component={SignUp} />
             </Stack.Navigator>
         </NavigationContainer>
     );

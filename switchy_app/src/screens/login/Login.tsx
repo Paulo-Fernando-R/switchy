@@ -8,8 +8,13 @@ import logo from "../../../assets/images/logo.png";
 import LoginController from "./loginController";
 import styles from "./loginStyles";
 import SnackBar from "../../components/snackBar/SnackBar";
+import { AuthNavigationProp } from "../../routes/types/navigationTypes";
 
-export default function Login() {
+type LoginProps = {
+    navigation: AuthNavigationProp;
+};
+
+export default function Login({ navigation }: LoginProps) {
     const controller = new LoginController();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -24,6 +29,8 @@ export default function Login() {
     useEffect(() => {
         setState(mutation.isError);
     }, [mutation.isError]);
+
+    const navigate = () => navigation.navigate("SignUp");
 
     return (
         <ScrollView contentContainerStyle={styles.page}>
@@ -41,7 +48,7 @@ export default function Login() {
                     <Text style={styles.buttonText}>Entrar</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableHighlight style={styles.textButton}>
+            <TouchableHighlight style={styles.textButton} onPress={navigate}>
                 <Text style={styles.textButtonText}>Crie sua conta</Text>
             </TouchableHighlight>
         </ScrollView>

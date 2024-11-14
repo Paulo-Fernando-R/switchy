@@ -1,4 +1,5 @@
 import { Image, ScrollView, Text, TouchableHighlight, View } from "react-native";
+//@ts-ignore
 import logo from "../../../assets/images/logo.png";
 import InputDefault from "../../components/inputDefault/InputDefault";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -8,8 +9,13 @@ import styles from "./signUpStyles";
 import { useMutation } from "@tanstack/react-query";
 import SignUpController from "./signUpController";
 import { useAuthContext } from "../../contexts/authContext";
+import { AuthNavigationProp } from "../../routes/types/navigationTypes";
 
-export default function SignUp() {
+type SignUpProps = {
+    navigation: AuthNavigationProp;
+};
+
+export default function SignUp({ navigation }: SignUpProps) {
     const controller = new SignUpController();
 
     const [name, setName] = useState("");
@@ -20,17 +26,25 @@ export default function SignUp() {
 
     var { setAuth } = useAuthContext();
 
-
     const mutation = useMutation({
         mutationFn: () => controller.signUp(name, username, email, password, setAuth),
+        onError: () => setState(true),
+        onSuccess: () => navigation.navigate("Login"),
     });
+
+    const navigate = () => navigation.navigate("Login");
 
     return (
         <ScrollView contentContainerStyle={styles.page}>
-            <SnackBar.Error visible={state} setVisible={setState} message="Erro no login" autoDismissible={true} />
+            <SnackBar.Error
+                visible={state}
+                setVisible={setState}
+                message={mutation.error?.message!}
+                autoDismissible={true}
+            />
 
             <View style={styles.header}>
-                <Image style={styles.logo} source={logo}/>
+                <Image style={styles.logo} source={logo} />
                 <Text style={styles.headerText}>Switchy</Text>
             </View>
 
@@ -45,7 +59,7 @@ export default function SignUp() {
                 </TouchableOpacity>
             </View>
 
-            <TouchableHighlight style={styles.textButton}>
+            <TouchableHighlight style={styles.textButton} onPress={navigate}>
                 <Text style={styles.textButtonText}>Faça Login</Text>
             </TouchableHighlight>
         </ScrollView>

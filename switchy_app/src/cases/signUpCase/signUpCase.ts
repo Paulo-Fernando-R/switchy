@@ -1,4 +1,5 @@
 import StorageTypeEnum from "../../enums/storageTypeEnum";
+import { CustomError } from "../../errors/customErrors";
 import Auth from "../../models/auth";
 import AuthRepository from "../../repositories/authRepository/authRepository";
 import IAuthRepository from "../../repositories/authRepository/IauthRepository";
@@ -22,9 +23,17 @@ export default class SignUpCase implements ISignUpCase {
         // }
         //!adicionar validações
 
-        const res = await this.repository.signUp(name, username, email, password);
-        console.log(res);
-        this.storage.setItem(res);
-        return res;
+        try {
+            const res = await this.repository.signUp(name, username, email, password);
+            console.log(res);
+            this.storage.setItem(res);
+            return res;
+        } catch (error) {
+            console.log(error);
+            if (error instanceof CustomError) {
+                throw new Error(error.screenMessage);
+            }
+            throw new Error("Erro ao realizar cadastro");
+        }
     }
 }
