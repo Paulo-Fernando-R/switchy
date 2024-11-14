@@ -1,7 +1,7 @@
 import { Router } from "express";
 import LoginController from "../controllers/loginController";
 import UserController from "../controllers/userController";
-import { Smtp } from "../services/smtp/smtp";
+import { RecoveryEmail } from "../services/smtp/recoveryEmail";
 
 const loginRoutes = Router();
 const controller = new LoginController();
@@ -39,13 +39,12 @@ loginRoutes.post("/ResetPassword", async (req, res) => {
     // #swagger.responses[400] = { description: 'Bad Request.' }
     // #swagger.responses[403] = { description: 'Forbidden.' }
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
-    const smtp = new Smtp();
+    const smtp = new RecoveryEmail();
     await smtp.sendEmail(
-        "jonh@doe.com",
-        "Subject",
+        "teste@teste.com",
         "message"
     );
-     res.status(200).send();
+    res.status(200).send();
 });
 
 export default loginRoutes;

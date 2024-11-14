@@ -1,13 +1,11 @@
 import nodemailer, { Transporter, SendMailOptions } from "nodemailer";
-
-import { emailTemplate } from "./template";
 import { ISmtp } from "./Ismtp";
 
 export class Smtp implements ISmtp {
-    private readonly transporter: Transporter;
+    private readonly _transporter: Transporter;
     private _email: SendMailOptions | undefined;
     constructor() {
-        this.transporter = nodemailer.createTransport({
+        this._transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: parseInt(process.env.SMTP_PORT!),
             secure: true,
@@ -17,20 +15,19 @@ export class Smtp implements ISmtp {
                 pass: process.env.SMTP_PASSWORD,
             },
         });
-        console.log(this.transporter);
+        console.log(this._transporter);
     }
 
     async sendEmail(email: string, subject: string, message: string) {
-        const html = emailTemplate(message);
         this._email = {
             from: process.env.SMTP_USERNAME,
             to: email,
             subject: subject,
-            html: html,
+            html: message,
         };
 
         await new Promise((resolve, reject) => {
-            this.transporter.sendMail(this._email!, (error, info) => {
+            this._transporter.sendMail(this._email!, (error, info) => {
                 if (error) {
                     console.error("Error sending email", error);
                     reject();
@@ -41,8 +38,14 @@ export class Smtp implements ISmtp {
             });
         });
     }
+    get transporter() {
+        return this._transporter;
+    }
 
     get email() {
         return this._email;
+    }
+    set email(email: SendMailOptions | undefined) {
+        this._email = email;
     }
 }
