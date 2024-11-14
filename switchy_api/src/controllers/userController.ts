@@ -67,6 +67,8 @@ export default class UserController {
                 response.status(StatusCodes.BadRequest).send();
             } else if (error instanceof UserInvalidEmailError) {
                 response.status(StatusCodes.InvalidEmail).send();
+            } else if (error instanceof UserInvalidUsernameError) {
+                response.status(StatusCodes.InvalidUsername).send();
             }
             else throw error;
         }

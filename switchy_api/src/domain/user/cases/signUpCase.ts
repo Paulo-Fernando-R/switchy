@@ -1,6 +1,6 @@
 import { IUser } from "../../../models/user";
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
-import { UserEmptyFieldsError, UserInvalidEmailError } from "../errors/userErrors";
+import { UserEmptyFieldsError, UserInvalidEmailError, UserInvalidUsernameError } from "../errors/userErrors";
 import IEncryptService from "../../../services/encrypt/iencryptService";
 import SignUpRequest from "../requests/signUpRequest";
 
@@ -21,6 +21,11 @@ export default class SignUpCase {
         const emailAlreadyTaken = await this.userRepository.getByEmail(newUserData.email);
         if (emailAlreadyTaken != null) {
             throw new UserInvalidEmailError();
+        }
+
+        const usernameAlreadyTaken = await this.userRepository.getByUsername(newUserData.userName);
+        if (usernameAlreadyTaken != null) {
+            throw new UserInvalidUsernameError();
         }
 
         newUserData.password = await this.encryptService.hashPassword(newUserData.password);
