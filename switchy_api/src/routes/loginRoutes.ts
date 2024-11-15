@@ -49,4 +49,13 @@ loginRoutes.post("/ResetPassword", async (req, res) => {
     res.status(200).send();
 });
 
+loginRoutes.post('/Password/Recovery', (req, res) => {
+    // #swagger.tags = ['Login']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[404] = { description: 'Not Found.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+    return userController.recoveryPassword(req, res);
+});
+
 export default loginRoutes;
