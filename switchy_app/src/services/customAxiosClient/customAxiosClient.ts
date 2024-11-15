@@ -44,13 +44,19 @@ export default class CustomAxiosClient implements ICustomAxiosClient {
         }
     }
 
-
     private resInterceptor() {
         const interceptor = async (response: AxiosResponse) => {
             if (response.status !== 401) return response;
 
             const res = this.getTokenFromStorage();
-            if (res) await this.refreshToken(res?.refreshToken);
+            if (res) {
+                const refresh = await this.refreshToken(res?.refreshToken);
+                if (refresh) {
+                    this.instance.defaults.headers.common["Authorization"] = refresh.accessToken;
+                    response.status = 400;
+                    return response;
+                }
+            }
             return response;
         };
 
