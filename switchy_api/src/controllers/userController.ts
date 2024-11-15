@@ -23,6 +23,11 @@ import UpdateUsernameCase from "../domain/user/cases/updateUsernameCase";
 import GenerateTokenFromUserCase from "../domain/auth/cases/generateTokenFromUserCase";
 import JwtTokenService from "../services/token/jwtTokenService";
 import ITokenService from "../services/token/itokenService";
+import GetUserByEmailCase from "../domain/user/cases/getUserByEmailCase";
+import GeneratePasswordService from "../services/crypto/generatePasswordService";
+import IGeneratePasswordService from "../services/crypto/igeneratePasswordService";
+import SendRecoveryPasswordEmailCase from "../domain/user/cases/sendRecoveryPasswordEmailCase";
+import { RecoveryEmail } from "../services/smtp/recoveryEmail";
 
 export default class UserController {
     private userRepository: IUserRepository;
@@ -37,6 +42,10 @@ export default class UserController {
     private updateUsernameCase: UpdateUsernameCase;
     private generateTokenFromUserCase: GenerateTokenFromUserCase;
     private tokenService: ITokenService;
+    private getUserByEmailCase: GetUserByEmailCase;
+    private generatePaswordService: IGeneratePasswordService;
+    private recoveryEmail: RecoveryEmail;
+    private sendRecoveryPasswordEmailCase: SendRecoveryPasswordEmailCase;
 
     constructor() {
         this.userRepository = new UserRepository();
@@ -51,6 +60,10 @@ export default class UserController {
         this.unfollowUserCase = new UnfollowUserCase(this.userRepository);
         this.updateUsernameCase = new UpdateUsernameCase(this.userRepository);
         this.generateTokenFromUserCase = new GenerateTokenFromUserCase(this.tokenService);
+        this.getUserByEmailCase = new GetUserByEmailCase(this.userRepository);
+        this.generatePaswordService = new GeneratePasswordService();
+        this.recoveryEmail = new RecoveryEmail();
+        this.sendRecoveryPasswordEmailCase = new SendRecoveryPasswordEmailCase(this.recoveryEmail);
     }
 
     async signUp(request: Request, response: Response) {
@@ -208,6 +221,32 @@ export default class UserController {
         } catch (ex) {
             if (ex instanceof UserNotFoundError) {
                 return res.status(StatusCodes.NotFound).send();
+            }
+
+            throw ex;
+        }
+    }
+
+    async recoveryPassword(req: Request, res: Response) {
+        try {
+            const { email } = req.body;
+            const user: any = await this.getUserByEmailCase.execute(email);
+            if(user){
+                const newPassword = this.generatePaswordService.generateHex(13);
+                console.log(newPassword)
+                await this.changeUserPasswordCase.execute(user.id, user.password, newPassword);
+                await this.sendRecoveryPasswordEmailCase.execute(user.email, newPassword);
+                return res.type("application/json").status(StatusCodes.Ok).send();
+            } else {
+                return res.status(StatusCodes.NotFound).send("User not found with this email.");
+            }
+
+        } catch (ex) {
+            if (ex instanceof UserInvalidEmailError) {
+                return res.status(StatusCodes.BadRequest).send("Invalid email.");
+            }
+            if (ex instanceof UserEmptyFieldsError) {
+                return res.status(StatusCodes.BadRequest).send("Missing required fields.");
             }
 
             throw ex;
