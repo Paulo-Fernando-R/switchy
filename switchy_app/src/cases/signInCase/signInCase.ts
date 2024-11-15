@@ -1,4 +1,5 @@
 import StorageTypeEnum from "../../enums/storageTypeEnum";
+import { CustomError } from "../../errors/customErrors";
 import Auth from "../../models/auth";
 import AuthRepository from "../../repositories/authRepository/authRepository";
 import IAuthRepository from "../../repositories/authRepository/IauthRepository";
@@ -14,13 +15,15 @@ export default class SignInCase implements ISignInCase {
         this.storage = new StorageService<Auth>(StorageTypeEnum.auth);
     }
     async execute(email: string, password: string) {
-        //const reg = new RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$");
-        // if (!reg.test(email)) {
-        //     return;
-        // }
-        //!adicionar validações
-        const res = await this.repository.login(email, password);
-        this.storage.setItem(res);
-        return res;
+        try {
+            const res = await this.repository.login(email, password);
+            this.storage.setItem(res);
+            return res;
+        } catch (error) {
+            if (error instanceof CustomError) {
+                throw new Error(error.screenMessage);
+            }
+            throw new Error("Erro ao realizar login");
+        }
     }
 }

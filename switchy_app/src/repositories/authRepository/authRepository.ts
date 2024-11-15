@@ -23,11 +23,11 @@ export default class AuthRepository implements IAuthRepository {
         }
 
         if (response.status === 400) {
-            throw new BadRequestError();
+            throw new BadRequestError(400, "", "Email ou senha incorretos");
         }
 
         if (response.status === 404) {
-            throw new NotFoundError();
+            throw new NotFoundError(404, "", "Usuario nao encontrado");
         }
 
         if (response.status !== 200) {

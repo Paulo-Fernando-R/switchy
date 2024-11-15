@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Image, ScrollView, Text, View, TouchableOpacity, TouchableHighlight, Button } from "react-native";
+import React, { useState } from "react";
+import { Image, ScrollView, Text, View, TouchableOpacity } from "react-native";
 import InputDefault from "../../components/inputDefault/InputDefault";
 import { useAuthContext } from "../../contexts/authContext";
 import { useMutation } from "@tanstack/react-query";
@@ -24,18 +24,20 @@ export default function Login({ navigation }: LoginProps) {
 
     const mutation = useMutation({
         mutationFn: () => controller.signIn(email, password, setAuth),
+        onError: () => setState(true),
     });
-
-    useEffect(() => {
-        setState(mutation.isError);
-    }, [mutation.isError]);
 
     const navigate = () => navigation.navigate("SignUp");
     const recovery = () => navigation.navigate("Recovery");
 
     return (
         <ScrollView contentContainerStyle={styles.page}>
-            <SnackBar.Error visible={state} setVisible={setState} message="Erro no login" autoDismissible={true} />
+            <SnackBar.Error
+                visible={state}
+                setVisible={setState}
+                message={mutation.error?.message!}
+                autoDismissible={true}
+            />
             <View style={styles.header}>
                 <Image style={styles.logo} source={logo} />
                 <Text style={styles.headerText}>Switchy</Text>
