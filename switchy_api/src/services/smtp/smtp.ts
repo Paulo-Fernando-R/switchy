@@ -15,7 +15,7 @@ export class Smtp implements ISmtp {
                 pass: process.env.SMTP_PASSWORD,
             },
         });
-        console.log(this._transporter);
+       
     }
 
     async sendEmail(email: string, subject: string, message: string) {
