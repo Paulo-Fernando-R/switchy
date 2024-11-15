@@ -24,7 +24,13 @@ export default class ChangeUserPasswordCase {
 
         const user: any = await this.userRepository.getByIdWithPassword(userId);
 
-        const isOldPasswordCorrect = await this.encryptService.comparePassword(oldPassword, user.password);
+
+        let isOldPasswordCorrect = true;
+
+        if(oldPassword != user.password){
+            isOldPasswordCorrect = await this.encryptService.comparePassword(oldPassword, user.password);
+        }
+
 
         if(!isOldPasswordCorrect){
             throw new UserInvalidPasswordError('Incorrect user password.');
