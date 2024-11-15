@@ -5,12 +5,7 @@ import StorageService from "../storageService/storageService";
 import StorageTypeEnum from "../../enums/storageTypeEnum";
 import IStorageService from "../storageService/IstorageService";
 import Auth from "../../models/auth";
-import IAuthRepository from "../../repositories/authRepository/IauthRepository";
-import AuthRepository from "../../repositories/authRepository/authRepository";
 import RefreshTokenService from "../refreshTokenService/refreshTokenService";
-
-const tempToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzEwMDkzNGY4MTNmY2I5MjA3YmU0YjUiLCJpYXQiOjE3Mjk1MjQ3MTMsImV4cCI6MTcyOTYxMTExM30.WwKXgMqkeB8iIFW7gwPgu9tbdHxKaeu7VbgQZSGE4C4";
 
 export default class CustomAxiosClient implements ICustomAxiosClient {
     instance: AxiosInstance;
