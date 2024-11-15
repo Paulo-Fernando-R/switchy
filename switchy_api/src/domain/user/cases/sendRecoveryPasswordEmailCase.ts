@@ -8,6 +8,6 @@ export default class SendRecoveryPasswordEmailCase {
     }
 
     async execute(email: string, newPassword: string): Promise<void> {
-        this.recoveryEmail.sendEmail(email, newPassword);
+        await this.recoveryEmail.sendEmail(email, newPassword);
     }
 }

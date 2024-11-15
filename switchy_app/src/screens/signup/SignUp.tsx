@@ -59,9 +59,9 @@ export default function SignUp({ navigation }: SignUpProps) {
                 </TouchableOpacity>
             </View>
 
-            <TouchableHighlight style={styles.textButton} onPress={navigate}>
+            <TouchableOpacity activeOpacity={0.5} style={styles.textButton} onPress={navigate}>
                 <Text style={styles.textButtonText}>Faça Login</Text>
-            </TouchableHighlight>
+            </TouchableOpacity>
         </ScrollView>
     );
 }

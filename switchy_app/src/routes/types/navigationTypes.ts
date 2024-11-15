@@ -8,6 +8,7 @@ import Post from "../../models/post";
 export type AuthStackParamList = {
     Login: undefined;
     SignUp: undefined;
+    Recovery: undefined;
 };
 
 export type AuthNavigationProp = StackNavigationProp<AuthStackParamList, "Login">;

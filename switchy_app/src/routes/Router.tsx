@@ -14,6 +14,7 @@ import useKeyboard from "../hooks/useKeyboard";
 import Login from "../screens/login/Login";
 import { View } from "react-native";
 import React from "react";
+import Recovery from "../screens/recovery/Recovery";
 
 import SignUp from "../screens/signup/SignUp";
 
@@ -27,11 +28,13 @@ function AuthRouter() {
                 screenOptions={{
                     headerShown: false,
                     animationEnabled: true,
+
                     cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                 }}
             >
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="SignUp" component={SignUp} />
+                <Stack.Screen name="Recovery" component={Recovery} />
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -242,14 +242,15 @@ export default class UserController {
             }
 
         } catch (ex) {
+            console.log(ex);
             if (ex instanceof UserInvalidEmailError) {
                 return res.status(StatusCodes.BadRequest).send("Invalid email.");
             }
             if (ex instanceof UserEmptyFieldsError) {
                 return res.status(StatusCodes.BadRequest).send("Missing required fields.");
             }
-
-            throw ex;
+            return res.status(StatusCodes.InternalServerError).send();
+            //throw ex;
         }
     }
 }

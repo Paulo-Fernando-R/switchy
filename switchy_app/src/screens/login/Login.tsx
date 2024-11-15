@@ -31,6 +31,7 @@ export default function Login({ navigation }: LoginProps) {
     }, [mutation.isError]);
 
     const navigate = () => navigation.navigate("SignUp");
+    const recovery = () => navigation.navigate("Recovery");
 
     return (
         <ScrollView contentContainerStyle={styles.page}>
@@ -44,13 +45,17 @@ export default function Login({ navigation }: LoginProps) {
                 <Text style={styles.title}>Entre em sua conta do Switchy</Text>
                 <InputDefault text={email} setText={setEmail} placeholder="E-mail" />
                 <InputDefault text={password} setText={setPassword} password={true} placeholder="Senha" />
+
                 <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={() => mutation.mutate()}>
                     <Text style={styles.buttonText}>Entrar</Text>
                 </TouchableOpacity>
+                <TouchableOpacity activeOpacity={0.5} style={styles.textButton} onPress={recovery}>
+                    <Text style={styles.textButtonText}>Esqueceu sua senha?</Text>
+                </TouchableOpacity>
             </View>
-            <TouchableHighlight style={styles.textButton} onPress={navigate}>
+            <TouchableOpacity activeOpacity={0.5} style={styles.textButton} onPress={navigate}>
                 <Text style={styles.textButtonText}>Crie sua conta</Text>
-            </TouchableHighlight>
+            </TouchableOpacity>
         </ScrollView>
     );
 }

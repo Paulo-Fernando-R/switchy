@@ -65,4 +65,30 @@ export default class AuthRepository implements IAuthRepository {
 
         return response.data;
     }
+
+    async recovery(email: string): Promise<void> {
+        const data = {
+            email: email,
+        };
+
+        const response = await this.axios.instance.post("/Login/Password/Recovery", data);
+
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 400) {
+            throw new BadRequestError();
+        }
+
+        if (response.status === 404) {
+            throw new NotFoundError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
+
+        return response.data;
+    }
 }
