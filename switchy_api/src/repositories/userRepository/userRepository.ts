@@ -13,31 +13,27 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
         this.jwt = new JwtTokenService();
     }
 
-    async createUser(user: IUser) {
-        try {
-            await this.connect();
-            const aux = new User({
-                email: user.email,
-                name: user.name,
-                password: user.password,
-                userName: user.userName,
-            });
+    async create(user: IUser) {
+        await this.connect();
+        const aux = new User({
+            email: user.email,
+            name: user.name,
+            password: user.password,
+            userName: user.userName,
+        });
 
-            const newUser = await aux.save();
+        const newUser = await aux.save();
 
-            const token = this.jwt.create(newUser._id.toString(), "1d");
+        const token = this.jwt.create(newUser._id.toString(), "1d");
 
-            const res: IUser = {
-                email: newUser.email,
-                name: newUser.name,
-                token: token,
-            };
+        const res: IUser = {
+            id: newUser._id,
+            email: newUser.email,
+            name: newUser.name,
+            token: token,
+        };
 
-            return res;
-        } catch (error) {
-            console.error(error);
-            throw new ServerError();
-        }
+        return res;
     }
 
     async getById(id: string) {

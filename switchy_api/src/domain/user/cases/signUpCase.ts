@@ -37,6 +37,6 @@ export default class SignUpCase {
             userName: newUserData.userName,
         };
 
-        return await this.userRepository.createUser(user);
+        return await this.userRepository.create(user);
     }
 }
