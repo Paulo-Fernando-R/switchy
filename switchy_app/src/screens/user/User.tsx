@@ -26,6 +26,7 @@ type ProfileProps = {
 
 export default function Profile({ navigation, route }: ProfileProps) {
     const { user } = useUserContext();
+
     const controller = new UserController();
 
     const ref = useLayoutFocus();
@@ -65,7 +66,7 @@ function Header({ user, navigate }: UserHeaderProps) {
 
             <View style={styles.profileBox}>
                 <View style={styles.nameBox}>
-                    <Text style={styles.name}>{user.name}</Text>
+                    <Text style={styles.name}>{user?.name}</Text>
                     <TouchableOpacity activeOpacity={0.5} onPress={navigate}>
                         <Feather name="edit-3" size={20} color={appColors.text300} />
                     </TouchableOpacity>

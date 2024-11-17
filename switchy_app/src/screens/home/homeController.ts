@@ -24,16 +24,17 @@ export default class HomeController {
         return await this.repository.getFeedPosts(pageParam);
     }
 
-    async getAppData(pageParam: number) {
+    async getAppData(pageParam: number, setUser: (user: User) => void) {
+        await this.getUserData(setUser);
         const response = await this.getFeedData(pageParam);
-        await this.getUserData();
-        return response
-       // return response.sort((a, b) => (a.publishDate.getTime() < b.publishDate.getTime() ? 1 : -1));
+
+        return response;
     }
 
-    async getUserData() {
+    async getUserData(setUser: (user: User) => void) {
         const user = await this.getUserDataCase.execute();
         this.storageService.setItem(user);
+        setUser(user);
     }
 
     handleNext(lastPage: Post[], pages: Post[][], lastPageParam: number) {
