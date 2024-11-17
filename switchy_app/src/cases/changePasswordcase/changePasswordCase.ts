@@ -11,9 +11,8 @@ export default class ChangePasswordCase implements IChangePasswordCase {
     }
     async execute(oldPassword: string, newPassword: string, isValid: boolean) {
         try {
-            
             if (oldPassword === newPassword) {
-                throw new MissingData(400, "", "Senhas iguais");
+                throw new MissingData(400, "", "As senhas devem ser diferentes");
             }
 
             await this.repository.changePassword(oldPassword, newPassword);

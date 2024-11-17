@@ -86,6 +86,7 @@ export default class UserRepository {
         const data = {
             name: user.name,
             email: user.email,
+            description: user.description,
         };
 
         const response = await this.axios.instance.put<User[]>("/User/Update", data);
