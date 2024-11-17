@@ -1,4 +1,4 @@
-import { Image, ScrollView, Text, TouchableHighlight, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, Text, TouchableHighlight, View } from "react-native";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
 import InputDefault from "../../components/inputDefault/InputDefault";
@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import SignUpController from "./signUpController";
 import { useAuthContext } from "../../contexts/authContext";
 import { AuthNavigationProp } from "../../routes/types/navigationTypes";
+import appColors from "../../styles/appColors";
 
 type SignUpProps = {
     navigation: AuthNavigationProp;
@@ -55,11 +56,20 @@ export default function SignUp({ navigation }: SignUpProps) {
                 <InputDefault text={email} setText={setEmail} placeholder="E-mail" />
                 <InputDefault text={password} setText={setPassword} password={true} placeholder="Senha" />
                 <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={() => mutation.mutate()}>
-                    <Text style={styles.buttonText}>Criar</Text>
+                    {!mutation.isPending ? (
+                        <Text style={styles.buttonText}>Criar</Text>
+                    ) : (
+                        <ActivityIndicator size="small" color={appColors.text300} />
+                    )}
                 </TouchableOpacity>
             </View>
 
-            <TouchableOpacity activeOpacity={0.5} style={styles.textButton} onPress={navigate}>
+            <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.textButton}
+                onPress={navigate}
+                disabled={mutation.isPending}
+            >
                 <Text style={styles.textButtonText}>Faça Login</Text>
             </TouchableOpacity>
         </ScrollView>

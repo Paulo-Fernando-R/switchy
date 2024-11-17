@@ -11,14 +11,14 @@ export default class LoginController {
 
     async signIn(email: string, password: string, setAuth: (value: Auth) => void) {
         if (!email || !password) return;
-        //const reg = new RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$");
-        // if (!reg.test(email)) {
-        //throw new Error("Email inválido");
-        // }
+        const reg = new RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$");
+        if (!reg.test(email)) {
+            throw new Error("Email inválido");
+        }
 
-        // if (password.length < 6) {
-        //     return;
-        // }
+        if (password.length < 6) {
+            return;
+        }
 
         const res = await this.signIncase.execute(email, password);
         setAuth(res);

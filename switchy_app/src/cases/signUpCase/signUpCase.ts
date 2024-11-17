@@ -19,7 +19,6 @@ export default class SignUpCase implements ISignUpCase {
     async execute(name: string, username: string, email: string, password: string) {
         try {
             const res = await this.repository.signUp(name, username, email, password);
-            console.log(res);
             this.storage.setItem(res);
             return res;
         } catch (error) {

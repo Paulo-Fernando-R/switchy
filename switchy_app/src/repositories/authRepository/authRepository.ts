@@ -46,7 +46,7 @@ export default class AuthRepository implements IAuthRepository {
         };
 
         const response = await this.axios.instance.post("/Login/SignUp", data);
-        console.log(response.status);
+      
         if (!response) {
             throw new NetworkError();
         }
@@ -57,6 +57,14 @@ export default class AuthRepository implements IAuthRepository {
 
         if (response.status === 404) {
             throw new NotFoundError();
+        }
+
+        if (response.status === 460) {
+            throw new BadRequestError(460, "", "Email ja cadastrado");
+        }
+
+        if (response.status === 461) {
+            throw new BadRequestError(461, "", "Usuário ja cadastrado");
         }
 
         if (response.status !== 201) {
