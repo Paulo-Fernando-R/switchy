@@ -17,7 +17,7 @@ export default class LoginController {
         }
 
         if (password.length < 6) {
-            return;
+            throw new Error("Senha deve ter pelo menos 6 caracteres");
         }
 
         const res = await this.signIncase.execute(email, password);

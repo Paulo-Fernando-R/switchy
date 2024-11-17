@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, ScrollView, Text, View, TouchableOpacity } from "react-native";
+import { Image, ScrollView, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import InputDefault from "../../components/inputDefault/InputDefault";
 import { useAuthContext } from "../../contexts/authContext";
 import { useMutation } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import LoginController from "./loginController";
 import styles from "./loginStyles";
 import SnackBar from "../../components/snackBar/SnackBar";
 import { AuthNavigationProp } from "../../routes/types/navigationTypes";
+import appColors from "../../styles/appColors";
 
 type LoginProps = {
     navigation: AuthNavigationProp;
@@ -48,8 +49,17 @@ export default function Login({ navigation }: LoginProps) {
                 <InputDefault text={email} setText={setEmail} placeholder="E-mail" />
                 <InputDefault text={password} setText={setPassword} password={true} placeholder="Senha" />
 
-                <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={() => mutation.mutate()}>
-                    <Text style={styles.buttonText}>Entrar</Text>
+                <TouchableOpacity
+                    style={styles.button}
+                    activeOpacity={0.8}
+                    onPress={() => mutation.mutate()}
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending ? (
+                        <ActivityIndicator size="small" color={appColors.text300} />
+                    ) : (
+                        <Text style={styles.buttonText}>Entrar</Text>
+                    )}
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.5} style={styles.textButton} onPress={recovery}>
                     <Text style={styles.textButtonText}>Esqueceu sua senha?</Text>
