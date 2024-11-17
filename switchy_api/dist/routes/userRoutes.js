@@ -1,10 +1,13 @@
-import { Request, Response, Router } from "express";
-import UserController from "../controllers/userController";
-
-const userRoutes = Router();
-const controller = new UserController();
-
-userRoutes.get("/Info", (request: Request, response: Response) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const userController_1 = __importDefault(require("../controllers/userController"));
+const userRoutes = (0, express_1.Router)();
+const controller = new userController_1.default();
+userRoutes.get("/Info", (request, response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -12,8 +15,7 @@ userRoutes.get("/Info", (request: Request, response: Response) => {
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     return controller.getInfo(request, response);
 });
-
-userRoutes.get("/Info/:userId", (request: Request, response: Response) => {
+userRoutes.get("/Info/:userId", (request, response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -21,8 +23,7 @@ userRoutes.get("/Info/:userId", (request: Request, response: Response) => {
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     return controller.getInfoById(request, response);
 });
-
-userRoutes.get("/Search/:query", (request: Request, response: Response) => {
+userRoutes.get("/Search/:query", (request, response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -30,8 +31,7 @@ userRoutes.get("/Search/:query", (request: Request, response: Response) => {
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     return controller.searchUser(request, response);
 });
-
-userRoutes.put("/Update", (request: Request, response: Response) => {
+userRoutes.put("/Update", (request, response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -39,8 +39,7 @@ userRoutes.put("/Update", (request: Request, response: Response) => {
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     controller.update(request, response);
 });
-
-userRoutes.put("/Update/Username", (request: Request, response: Response) => {
+userRoutes.put("/Update/Username", (request, response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -49,8 +48,7 @@ userRoutes.put("/Update/Username", (request: Request, response: Response) => {
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     controller.updateUsername(request, response);
 });
-
-userRoutes.post("/Password/Change", (request: Request, response: Response) => {
+userRoutes.post("/Password/Change", (request, response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -58,8 +56,7 @@ userRoutes.post("/Password/Change", (request: Request, response: Response) => {
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     controller.changePassword(request, response);
 });
-
-userRoutes.post("/Follow", (request: Request, response: Response) => {
+userRoutes.post("/Follow", (request, response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -67,8 +64,7 @@ userRoutes.post("/Follow", (request: Request, response: Response) => {
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     controller.follow(request, response);
 });
-
-userRoutes.delete("/Unfollow", (request: Request, response: Response) => {
+userRoutes.delete("/Unfollow", (request, response) => {
     // #swagger.tags = ['User']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -76,5 +72,4 @@ userRoutes.delete("/Unfollow", (request: Request, response: Response) => {
     // #swagger.responses[500] = { description: 'Internal Server Error.' }
     controller.unfollow(request, response);
 });
-
-export default userRoutes;
+exports.default = userRoutes;
