@@ -1,9 +1,10 @@
+import Post from "../../models/post";
 import IPostRepository from "../../repositories/postRepository/IpostRepository";
 import PostRepository from "../../repositories/postRepository/postRepository";
 
 export default class UserController {
     private repository: IPostRepository;
-    placeholderData: any[]
+    placeholderData: any[];
 
     constructor() {
         this.repository = new PostRepository();
@@ -11,7 +12,13 @@ export default class UserController {
     }
     async getPosts(userId: string) {
         const posts = await this.repository.getUserPosts(userId);
+        return posts;
+    }
 
-        return posts.sort((a,b) => a.publishDate.getTime() < b.publishDate.getTime() ? 1:-1)
+    handleNext(lastPage: Post[], pages: Post[][], lastPageParam: number) {
+        if (lastPage.length < 10) {
+            return;
+        }
+        return lastPageParam + 1;
     }
 }

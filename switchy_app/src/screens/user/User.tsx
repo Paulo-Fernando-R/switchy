@@ -1,13 +1,13 @@
 import { ProfileNavigationProp, ProfileRouteProp } from "../../routes/types/navigationTypes";
-import { Text, View, Image, FlatList, TouchableOpacity } from "react-native";
-import ButtonDefault from "../../components/buttonDefault/ButtonDefault";
+import { Text, View, Image, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import { useUserContext } from "../../contexts/userContext";
+import EmptyList from "../../components/emptyList/EmpyList";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import useLayoutFocus from "../../hooks/useLayoutFocus";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
 import Feather from "@expo/vector-icons/Feather";
-import { useQuery } from "@tanstack/react-query";
 import appColors from "../../styles/appColors";
 import UserController from "./userController";
 import User from "../../models/user";
@@ -15,7 +15,7 @@ import styles from "./userStyles";
 import React from "react";
 
 type UserHeaderProps = {
-    user: User;
+    user: User | null;
     navigate: () => void;
 };
 
@@ -25,20 +25,19 @@ type ProfileProps = {
 };
 
 export default function Profile({ navigation, route }: ProfileProps) {
+    const controller = new UserController();
+    const ref = useLayoutFocus();
     const { user } = useUserContext();
 
-    const controller = new UserController();
-
-    const ref = useLayoutFocus();
-
-    const { data, error, isLoading, refetch } = useQuery({
+    const { data, error, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
         queryKey: ["Profile" + ref],
         queryFn: () => controller.getPosts(user?.id!),
-        placeholderData: controller.placeholderData,
+        placeholderData: () => ({ pageParams: [1], pages: [controller.placeholderData] }),
+        getNextPageParam: controller.handleNext,
+        initialPageParam: 1,
     });
 
     function navigate() {
-        console.log("navigate");
         navigation.navigate("ProfileEdit");
     }
 
@@ -48,9 +47,13 @@ export default function Profile({ navigation, route }: ProfileProps) {
             <Text style={styles.subtitle}>Publicações</Text>
 
             <FlatList
+                ListEmptyComponent={EmptyList}
                 contentContainerStyle={styles.list}
-                data={data}
+                data={data?.pages?.flat()}
                 renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
+                onEndReachedThreshold={0.8}
+                onEndReached={() => fetchNextPage()}
+                ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
             />
         </View>
     );
@@ -72,17 +75,21 @@ function Header({ user, navigate }: UserHeaderProps) {
                     </TouchableOpacity>
                 </View>
 
-                <Text style={styles.userName}>@{user.userName}</Text>
+                <Text style={styles.userName}>@{user?.userName}</Text>
                 <Text style={styles.bio}>
                     necessário adicionar ao tipo de usuario no back e front Lorem ipsum dolor sit amet, consectetur
                     adipiscing elit. Donec sed felis id risus consequat tincidunt.
                 </Text>
-              
+
                 <View style={styles.buttons}>
-                    <Text style={styles.follow}>{user.followers?.length} Seguidores</Text>
-                    <Text style={styles.follow}>{user.following?.length} Seguindo</Text>
+                    <Text style={styles.follow}>{user?.followers?.length} Seguidores</Text>
+                    <Text style={styles.follow}>{user?.following?.length} Seguindo</Text>
                 </View>
             </View>
         </View>
     );
+}
+
+function Footer() {
+    return <ActivityIndicator size="large" color={appColors.accent300} />;
 }

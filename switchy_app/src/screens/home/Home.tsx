@@ -1,15 +1,16 @@
 import { Text, View, Image, FlatList, RefreshControl, ActivityIndicator } from "react-native";
 import { HomeNavigationProp } from "../../routes/types/navigationTypes";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
+import { useUserContext } from "../../contexts/userContext";
+import EmptyList from "../../components/emptyList/EmpyList";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import useLayoutFocus from "../../hooks/useLayoutFocus";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import HomeController from "./homeController";
-import React from "react";
-import styles from "./homeStyles";
 import appColors from "../../styles/appColors";
-import { useUserContext } from "../../contexts/userContext";
+import HomeController from "./homeController";
+import styles from "./homeStyles";
+import React from "react";
 
 type HomeProps = {
     navigation: HomeNavigationProp;
@@ -30,6 +31,7 @@ export default function Home({ navigation }: HomeProps) {
 
     return (
         <FlatList
+            ListEmptyComponent={EmptyList}
             refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
             ListHeaderComponent={() => <Header />}
             style={styles.page}
@@ -43,10 +45,6 @@ export default function Home({ navigation }: HomeProps) {
     );
 }
 
-function Footer() {
-    return <ActivityIndicator size="large" color={appColors.accent300} />;
-}
-
 function Header() {
     return (
         <View style={styles.header}>
@@ -54,4 +52,8 @@ function Header() {
             <Text style={styles.headerText}>Swithcy</Text>
         </View>
     );
+}
+
+function Footer() {
+    return <ActivityIndicator size="large" color={appColors.accent300} />;
 }
