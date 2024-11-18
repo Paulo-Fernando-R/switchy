@@ -33,13 +33,16 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
     }
 
     const controller = new PostFeedItemController();
+
     const { user } = useUserContext();
-    const timeAgo = timeAgoFormatter(item.publishDate);
-    const [liked, setLiked] = useState(controller.getInitialLike(item, user));
-    const [showSnackBar, setShowSnackBar] = useState(false);
-    const modalizeRef = useRef<Modalize>(null);
     const { updateOne } = usePostsListContext();
 
+    const [liked, setLiked] = useState(controller.getInitialLike(item, user));
+    const [showSnackBar, setShowSnackBar] = useState(false);
+
+    const timeAgo = timeAgoFormatter(item.publishDate);
+    const modalizeRef = useRef<Modalize>(null);
+    
     const {
         data,
         mutate,
@@ -59,7 +62,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
 
     function navigate() {
         //@ts-ignore
-        navigation?.navigate("Comments", { post: data ? data : item! });
+        navigation?.push("Comments", { post: data ? data : item! });
     }
 
     const onOpen = () => {

@@ -1,4 +1,4 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { useCallback, useRef } from "react";
 import Post from "../models/post";
@@ -9,9 +9,10 @@ const useLayoutFocus = () => {
         useCallback(() => {
             ref.current++
             //refetch();
-            console.log('focus' + ref.current)
+           // console.log('focus' + ref.current)
         }, [])
     );
+    useIsFocused();
     return ref.current
 };
 
