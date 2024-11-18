@@ -13,6 +13,9 @@ import CommentsController from "./commentsController";
 import appColors from "../../styles/appColors";
 import React, { useState } from "react";
 import styles from "./commentsStyles";
+import useLayoutFocus from "../../hooks/useLayoutFocus";
+import { RefreshControl } from "react-native";
+
 
 type CommentsProps = {
     route: CommentsRouteProp | SearchCommentsRouteProp;
@@ -20,14 +23,18 @@ type CommentsProps = {
 };
 
 export default function Comments({ route, navigation }: CommentsProps) {
+
     const controller = new CommentsController();
+
     const [content, setContent] = useState("");
     const [snackBar, setSnackBar] = useState(false);
+
     const { updateOne } = usePostsListContext();
     const { post } = route.params;
+    const ref = useLayoutFocus();
 
-    const { data, refetch } = useQuery({
-        queryKey: [`Comments${post.id}`],
+    const { data, refetch, isRefetching } = useQuery({
+        queryKey: [`Comments${post.id}${ref}`],
         queryFn: () => controller.getComments(post.id!),
     });
 
@@ -42,7 +49,7 @@ export default function Comments({ route, navigation }: CommentsProps) {
     });
 
     function goBack() {
-        navigation.goBack();
+        navigation.pop(1);
     }
 
     return (
@@ -73,9 +80,11 @@ export default function Comments({ route, navigation }: CommentsProps) {
             <Text style={styles.title}>Respostas</Text>
 
             <FlatList
+                refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
                 contentContainerStyle={styles.list}
                 data={data}
                 renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} />}
+                keyExtractor={(item, index) => `${item?.id}-${index}${item?.comments?.length}${item?.likes?.length}`}
             />
             <View style={styles.inputBox}>
                 <TextInput
