@@ -31,7 +31,7 @@ export default function Profile({ navigation, route }: ProfileProps) {
 
     const { data, error, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
         queryKey: ["Profile" + ref],
-        queryFn: () => controller.getPosts(user?.id!),
+        queryFn: ({ pageParam }) => controller.getPosts(user?.id!, pageParam),
         placeholderData: () => ({ pageParams: [1], pages: [controller.placeholderData] }),
         getNextPageParam: controller.handleNext,
         initialPageParam: 1,

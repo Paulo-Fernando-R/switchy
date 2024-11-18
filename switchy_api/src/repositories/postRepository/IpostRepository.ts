@@ -11,5 +11,5 @@ export default interface IPostRepository {
     getPostComments(ids: Types.ObjectId[]): Promise<IPost[]>;
     addLike(postId: string, userId: string): Promise<void>;
     removeLike(postId: string, userId: string): Promise<void>;
-    getUserPosts(userId: string): Promise<IPost[]>;
+    getUserPosts(userId: string, page: number): Promise<IPost[]>;
 }

@@ -600,7 +600,7 @@
         }
       }
     },
-    "/Post/GetPostsByUserId/{userId}": {
+    "/Post/GetPostsByUserId/{userId}/{page}": {
       "get": {
         "tags": [
           "Post"
@@ -609,6 +609,12 @@
         "parameters": [
           {
             "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
             "in": "path",
             "required": true,
             "type": "string"

@@ -10,11 +10,16 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         super();
     }
 
-    async getUserPosts(userId: string) {
-        console.log("NESSA MERDA");
+    async getUserPosts(userId: string, page: number) {
+        const skip = (page - 1) * 10;
+
         try {
             await this.connect();
-            const list = await Post.find({ "user.id": new Types.ObjectId(userId) });
+            const list = await Post.find({ "user.id": new Types.ObjectId(userId) }, null, {
+                skip: skip,
+                limit: 10,
+                sort: { publishDate: -1 },
+            });
 
             // console.log(list);
 
