@@ -1,5 +1,6 @@
 import { HomeNavigationProp, ProfileNavigationProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
 import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
+import { usePostsListContext } from "../../contexts/postsListContext";
 import PostFeedItemController from "./postFeedItemController";
 import { useUserContext } from "../../contexts/userContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -8,15 +9,15 @@ import { Facebook } from "react-content-loader/native";
 //@ts-ignore
 import avatar from "../../../assets/icons/avatar.png";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import BottomModal from "../bottomModal/BottomModal";
 import { useMutation } from "@tanstack/react-query";
+import { Modalize } from "react-native-modalize";
 import Feather from "@expo/vector-icons/Feather";
+import React, { useRef, useState } from "react";
 import appColors from "../../styles/appColors";
 import SnackBar from "../snackBar/SnackBar";
 import styles from "./postFeedItemStyles";
-import React, { useRef, useState } from "react";
 import Post from "../../models/post";
-import BottomModal from "../bottomModal/BottomModal";
-import { Modalize } from "react-native-modalize";
 
 type PostFeedItemProps = {
     item?: Post | undefined;
@@ -26,6 +27,7 @@ type PostFeedItemProps = {
 };
 
 export default function PostFeedItem({ item, error, navigation, actionable }: PostFeedItemProps) {
+   
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
@@ -36,14 +38,20 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
     const [liked, setLiked] = useState(controller.getInitialLike(item, user));
     const [showSnackBar, setShowSnackBar] = useState(false);
     const modalizeRef = useRef<Modalize>(null);
+    const { updateOne } = usePostsListContext();
 
-    const {data,mutate,error: qError,isPending,} = useMutation({
+    const {
+        data,
+        mutate,
+        error: qError,
+        isPending,
+    } = useMutation({
         mutationKey: ["Post" + item.id],
 
         mutationFn: (state: boolean) => {
-            return controller.handleLike(item.id!, setLiked, state);
+            return controller.handleLike(item.id!, setLiked, state, updateOne);
         },
-        
+
         onError: () => {
             setShowSnackBar(true);
         },

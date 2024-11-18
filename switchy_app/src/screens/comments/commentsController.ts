@@ -23,12 +23,15 @@ export default class CommentsController {
         content: string,
         parentId: string,
         refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<Post[], Error>>,
-        setContent: React.Dispatch<React.SetStateAction<string>>
+        setContent: React.Dispatch<React.SetStateAction<string>>,
+        updateOne: (post: Post) => void
     ) {
         await this.createCommentCase.execute(content, parentId);
+        const res = await this.repository.getPostById(parentId);
+        updateOne(res);
         refetch();
         setContent("");
 
-        return true
+        return true;
     }
 }
