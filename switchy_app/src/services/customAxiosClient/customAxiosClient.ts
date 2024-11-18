@@ -6,6 +6,7 @@ import StorageTypeEnum from "../../enums/storageTypeEnum";
 import IStorageService from "../storageService/IstorageService";
 import Auth from "../../models/auth";
 import RefreshTokenService from "../refreshTokenService/refreshTokenService";
+import RNRestart from 'react-native-restart';
 
 export default class CustomAxiosClient implements ICustomAxiosClient {
     instance: AxiosInstance;
@@ -52,6 +53,7 @@ export default class CustomAxiosClient implements ICustomAxiosClient {
                     return response;
                 }
             }
+            RNRestart.restart();
             return response;
         };
 

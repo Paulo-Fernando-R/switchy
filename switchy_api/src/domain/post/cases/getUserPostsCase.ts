@@ -9,9 +9,9 @@ export default class GetUserPostsCase {
         this.postRepository = _postRepository;
     }
 
-    async execute(userId: string) {
+    async execute(userId: string, page: number) {
         try {
-            const response = await this.postRepository.getUserPosts(userId);
+            const response = await this.postRepository.getUserPosts(userId, page);
             return response;
         } catch (error) {
             console.error(error);

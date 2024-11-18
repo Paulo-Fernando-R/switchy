@@ -1,4 +1,4 @@
-import { InternalServerError, NetworkError, UnauthorizedError,  } from "../../errors/customErrors";
+import { InternalServerError, NetworkError, UnauthorizedError } from "../../errors/customErrors";
 import ICustomAxiosClient from "../../services/customAxiosClient/IcustomAxiosClient";
 import CustomAxiosClient from "../../services/customAxiosClient/customAxiosClient";
 import IPostRepository from "./IpostRepository";
@@ -53,7 +53,7 @@ export default class PostRepository implements IPostRepository {
 
         return aux;
     }
-    async getFeedPosts(page:number) {
+    async getFeedPosts(page: number) {
         const response = await this.axios.instance.get<Post[]>("/Post/GetFeedPosts/" + page);
 
         if (!response) {
@@ -137,8 +137,8 @@ export default class PostRepository implements IPostRepository {
         return response.data;
     }
 
-    async getUserPosts(userId: string) {
-        const response = await this.axios.instance.get<Post[]>("/Post/GetPostsByUserId/" + userId);
+    async getUserPosts(userId: string, page: number) {
+        const response = await this.axios.instance.get<Post[]>("/Post/GetPostsByUserId/" + userId + "/" + page);
 
         if (!response) {
             throw new NetworkError();

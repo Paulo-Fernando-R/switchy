@@ -81,9 +81,12 @@ export default class PostController {
     }
 
     async getUserPosts(req: Request, res: Response) {
-        const { userId } = req.params;
+        const { userId, page } = req.params;
+        let pageInt: number = 1;
+        if (page) pageInt = parseInt(page);
+
         try {
-            const list = await this.getUserPostsCase.execute(userId);
+            const list = await this.getUserPostsCase.execute(userId, pageInt);
             res.status(StatusCodes.Ok).send(list);
         } catch (error) {
             res.status(StatusCodes.InternalServerError).send(error);

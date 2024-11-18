@@ -10,8 +10,8 @@ export default class UserController {
         this.repository = new PostRepository();
         this.placeholderData = [null, null, null, null, null, null, null, null];
     }
-    async getPosts(userId: string) {
-        const posts = await this.repository.getUserPosts(userId);
+    async getPosts(userId: string, pageParam: number) {
+        const posts = await this.repository.getUserPosts(userId, pageParam);
         return posts;
     }
 

@@ -55,7 +55,7 @@ export default function SignUp({ navigation }: SignUpProps) {
                 <InputDefault text={username} setText={setUsername} placeholder="Nome de usuário" />
                 <InputDefault text={email} setText={setEmail} placeholder="E-mail" />
                 <InputDefault text={password} setText={setPassword} password={true} placeholder="Senha" />
-                <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={() => mutation.mutate()}>
+                <TouchableOpacity disabled={mutation.isPending} style={styles.button} activeOpacity={0.8} onPress={() => mutation.mutate()}>
                     {!mutation.isPending ? (
                         <Text style={styles.buttonText}>Criar</Text>
                     ) : (
