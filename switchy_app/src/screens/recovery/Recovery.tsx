@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, Text, View, TouchableOpacity } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import InputDefault from "../../components/inputDefault/InputDefault";
 import { useMutation } from "@tanstack/react-query";
 import LoginController from "./recoveryController";
@@ -7,6 +7,7 @@ import styles from "./recoveryStyles";
 import SnackBar from "../../components/snackBar/SnackBar";
 import { AuthNavigationProp } from "../../routes/types/navigationTypes";
 import BackButton from "../../components/backButton/BackButton";
+import appColors from "../../styles/appColors";
 
 type RecoveryProps = {
     navigation: AuthNavigationProp;
@@ -58,7 +59,12 @@ export default function Recovery({ navigation }: RecoveryProps) {
                     activeOpacity={0.8}
                     onPress={() => mutation.mutate()}
                 >
-                    <Text style={styles.buttonText}>Enviar</Text>
+                    {!mutation.isPending ? (
+                        <Text style={styles.buttonText}>Enviar</Text>
+                    ) : (
+                        <ActivityIndicator size="small" color={appColors.text300} />
+                    )}
+                   
                 </TouchableOpacity>
             </View>
         </ScrollView>
