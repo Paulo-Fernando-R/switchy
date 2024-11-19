@@ -11,7 +11,7 @@ export default class UpdateUserCase {
 
     async execute(userId: string, name: string, email: string, description: string) {
         const emailAlreadyTaken = await this.userRepository.getByEmail(email);
-        if (emailAlreadyTaken != null) {
+        if (emailAlreadyTaken != null && userId != emailAlreadyTaken.id?.toString()) {
             throw new UserInvalidEmailError("Email already taken.", StatusCodes.BadRequest);
         }
 
