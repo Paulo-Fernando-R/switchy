@@ -18,6 +18,7 @@ import appColors from "../../styles/appColors";
 import SnackBar from "../snackBar/SnackBar";
 import styles from "./postFeedItemStyles";
 import Post from "../../models/post";
+import HyperlinkText from "../hypelinkText/HyperlinkText";
 
 type PostFeedItemProps = {
     item?: Post | undefined;
@@ -92,7 +93,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
                         <Feather name="more-horizontal" size={20} color={appColors.text200} onPress={onOpen} />
                     )}
                 </View>
-                <Text style={styles.itemContentBody}>{data ? data.content : item?.content}</Text>
+                <HyperlinkText text={data ? data.content : item?.content} textStyle={styles.itemContentBody} />
 
                 <View style={styles.itemContentActions}>
                     {liked ? (
