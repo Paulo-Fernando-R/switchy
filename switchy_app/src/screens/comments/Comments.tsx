@@ -1,6 +1,6 @@
 import { HomeNavigationProp, SearchCommentsRouteProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
 LogBox.ignoreLogs(["Non-serializable values were found in the navigation state. Check:"]);
-import { View, Text, TextInput, TouchableOpacity, LogBox } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, LogBox, ActivityIndicator } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { CommentsRouteProp } from "../../routes/types/navigationTypes";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
@@ -99,7 +99,11 @@ export default function Comments({ route, navigation }: CommentsProps) {
                     value={content}
                 />
                 <TouchableOpacity disabled={mutation.isPending} activeOpacity={0.8} onPress={() => mutation.mutate()}>
-                    <MaterialCommunityIcons name="send-outline" size={20} color={appColors.accent300} />
+                    {mutation.isPending ? (
+                        <ActivityIndicator size="small" color={appColors.accent300} />
+                    ) : (
+                        <MaterialCommunityIcons name="send-outline" size={20} color={appColors.accent300} />
+                    )}
                 </TouchableOpacity>
             </View>
         </View>
