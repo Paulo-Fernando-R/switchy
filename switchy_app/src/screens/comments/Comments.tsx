@@ -16,14 +16,12 @@ import styles from "./commentsStyles";
 import useLayoutFocus from "../../hooks/useLayoutFocus";
 import { RefreshControl } from "react-native";
 
-
 type CommentsProps = {
     route: CommentsRouteProp | SearchCommentsRouteProp;
     navigation: HomeNavigationProp | SearchNavigationProp;
 };
 
 export default function Comments({ route, navigation }: CommentsProps) {
-
     const controller = new CommentsController();
 
     const [content, setContent] = useState("");
@@ -36,6 +34,11 @@ export default function Comments({ route, navigation }: CommentsProps) {
     const { data, refetch, isRefetching } = useQuery({
         queryKey: [`Comments${post.id}${ref}`],
         queryFn: () => controller.getComments(post.id!),
+    });
+
+    const mainPostQuery = useQuery({
+        queryKey: [`MainPost${post.id}${ref}`],
+        queryFn: () => controller.getMainPost(post.id!),
     });
 
     const mutation = useMutation({
@@ -75,7 +78,7 @@ export default function Comments({ route, navigation }: CommentsProps) {
                 <BackButton goBack={goBack} />
             </View>
             <View style={styles.mainPost}>
-                <PostFeedItem item={post} />
+                <PostFeedItem item={mainPostQuery.data} />
             </View>
             <Text style={styles.title}>Respostas</Text>
 
