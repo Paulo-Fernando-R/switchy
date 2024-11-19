@@ -28,21 +28,21 @@ export default function Comments({ route, navigation }: CommentsProps) {
     const [snackBar, setSnackBar] = useState(false);
 
     const { updateOne } = usePostsListContext();
-    const { post } = route.params;
+    const { postId } = route.params;
     const ref = useLayoutFocus();
 
     const { data, refetch, isRefetching } = useQuery({
-        queryKey: [`Comments${post.id}${ref}`],
-        queryFn: () => controller.getComments(post.id!),
+        queryKey: [`Comments${postId}${ref}`],
+        queryFn: () => controller.getComments(postId),
     });
 
     const mainPostQuery = useQuery({
-        queryKey: [`MainPost${post.id}${ref}`],
-        queryFn: () => controller.getMainPost(post.id!),
+        queryKey: [`MainPost${postId}${ref}`],
+        queryFn: () => controller.getMainPost(postId),
     });
 
     const mutation = useMutation({
-        mutationFn: () => controller.createComment(content, post.id!, refetch, setContent, updateOne),
+        mutationFn: () => controller.createComment(content, postId, refetch, setContent, updateOne),
         onError: () => {
             setSnackBar(true);
         },

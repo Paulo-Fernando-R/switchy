@@ -27,7 +27,6 @@ type PostFeedItemProps = {
 };
 
 export default function PostFeedItem({ item, error, navigation, actionable }: PostFeedItemProps) {
-   
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
@@ -42,7 +41,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
 
     const timeAgo = timeAgoFormatter(item.publishDate);
     const modalizeRef = useRef<Modalize>(null);
-    
+
     const {
         data,
         mutate,
@@ -62,7 +61,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
 
     function navigate() {
         //@ts-ignore
-        navigation?.push("Comments", { post: data ? data : item! });
+        navigation?.push("Comments", { postId: item.id });
     }
 
     const onOpen = () => {
