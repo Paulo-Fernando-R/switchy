@@ -300,6 +300,9 @@
                 },
                 "email": {
                   "example": "any"
+                },
+                "description": {
+                  "example": "any"
                 }
               }
             }

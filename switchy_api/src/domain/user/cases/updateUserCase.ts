@@ -9,12 +9,13 @@ export default class UpdateUserCase {
         this.userRepository = userRepository;
     }
 
-    async execute(userId: string, name: string, email: string) {
+    async execute(userId: string, name: string, email: string, description: string) {
         const emailAlreadyTaken = await this.userRepository.getByEmail(email);
         if (emailAlreadyTaken != null) {
             throw new UserInvalidEmailError("Email already taken.", StatusCodes.BadRequest);
         }
-        const res = await this.userRepository.update(userId, name, email);
+
+        const res = await this.userRepository.update(userId, name, email, description);
         return res;
     }
 }
