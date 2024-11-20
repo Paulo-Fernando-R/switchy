@@ -90,9 +90,12 @@ class PostController {
     }
     getUserPosts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { userId } = req.params;
+            const { userId, page } = req.params;
+            let pageInt = 1;
+            if (page)
+                pageInt = parseInt(page);
             try {
-                const list = yield this.getUserPostsCase.execute(userId);
+                const list = yield this.getUserPostsCase.execute(userId, pageInt);
                 res.status(status_codes_1.StatusCodes.Ok).send(list);
             }
             catch (error) {

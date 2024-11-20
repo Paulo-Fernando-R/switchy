@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const postErrors_1 = require("../errors/postErrors");
+const getFeedPostsResponse_1 = __importDefault(require("../response/getFeedPostsResponse"));
 class GetFeedPostsCase {
     constructor(_postRepository, _userRepository) {
         this.postRepository = _postRepository;
@@ -22,11 +26,16 @@ class GetFeedPostsCase {
                 const user = yield this.userRepository.getById(userId);
                 const followings = user === null || user === void 0 ? void 0 : user.following;
                 if (!followings || followings.length == 0) {
-                    return yield this.postRepository.getFeedPosts(userId, page);
+                    const posts = yield this.postRepository.getFeedPosts(userId, page);
+                    const response = new getFeedPostsResponse_1.default(posts);
+                    response.setPostsLikedByUser(userId);
+                    return response.getResponse();
                 }
                 const ids = followings.map((e) => new mongoose_1.Types.ObjectId(e.userId));
-                const response = yield this.postRepository.getFeedPosts(userId, page, ids);
-                return response;
+                const posts = yield this.postRepository.getFeedPosts(userId, page, ids);
+                const response = new getFeedPostsResponse_1.default(posts);
+                response.setPostsLikedByUser(userId);
+                return response.getResponse();
             }
             catch (error) {
                 console.error(error);
