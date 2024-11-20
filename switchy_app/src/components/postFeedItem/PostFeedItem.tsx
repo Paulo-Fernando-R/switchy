@@ -3,11 +3,13 @@ import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import { usePostsListContext } from "../../contexts/postsListContext";
 import PostFeedItemController from "./postFeedItemController";
 import { useUserContext } from "../../contexts/userContext";
+import HyperlinkText from "../hypelinkText/HyperlinkText";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import timeAgoFormatter from "../../../timeAgoFormatter";
 import { Facebook } from "react-content-loader/native";
 //@ts-ignore
 import avatar from "../../../assets/icons/avatar.png";
+import PostWebView from "../postWebView/PostWebView";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import BottomModal from "../bottomModal/BottomModal";
 import { useMutation } from "@tanstack/react-query";
@@ -18,7 +20,6 @@ import appColors from "../../styles/appColors";
 import SnackBar from "../snackBar/SnackBar";
 import styles from "./postFeedItemStyles";
 import Post from "../../models/post";
-import HyperlinkText from "../hypelinkText/HyperlinkText";
 
 type PostFeedItemProps = {
     item?: Post | undefined;
@@ -94,6 +95,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
                     )}
                 </View>
                 <HyperlinkText text={data ? data.content : item?.content} textStyle={styles.itemContentBody} />
+                <PostWebView text={data ? data.content : item?.content} />
 
                 <View style={styles.itemContentActions}>
                     {liked ? (
