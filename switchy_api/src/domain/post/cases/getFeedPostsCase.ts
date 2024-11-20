@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { UnableGetPostError } from "../errors/postErrors";
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
+import GetFeedPostsResponse from "../response/getFeedPostsResponse";
 
 export default class GetFeedPostsCase {
     private readonly postRepository: IPostRepository;
@@ -17,14 +18,21 @@ export default class GetFeedPostsCase {
             const followings = user?.following;
 
             if (!followings || followings.length == 0) {
-                return await this.postRepository.getFeedPosts(userId, page);
+                const posts = await this.postRepository.getFeedPosts(userId, page);
+                const response = new GetFeedPostsResponse(posts);
+                response.setPostsLikedByUser(userId);
+                return response.getResponse();
             }
 
             const ids = followings.map((e) => new Types.ObjectId(e.userId));
 
-            const response = await this.postRepository.getFeedPosts(userId, page, ids);
+            const posts = await this.postRepository.getFeedPosts(userId, page, ids);
 
-            return response;
+            const response = new GetFeedPostsResponse(posts);
+
+            response.setPostsLikedByUser(userId);
+
+            return response.getResponse();
         } catch (error) {
             console.error(error);
             throw new UnableGetPostError();
