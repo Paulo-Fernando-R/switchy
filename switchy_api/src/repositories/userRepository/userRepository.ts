@@ -46,6 +46,7 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
             id: user?._id,
             email: user?.email,
             userName: user.userName,
+            description: user?.description,
             name: user?.name!,
             followers: user?.followers,
             following: user?.following,
@@ -117,22 +118,34 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
         return userList;
     }
 
-    async update(userId: string, name: string, email: string): Promise<IUser | null> {
+    async update(userId: string, name: string, email: string, description: string): Promise<IUser | null> {
         const updateObj = {};
-        if (name)
+        if (name) {
             Object.defineProperty(updateObj, "name", {
                 value: name,
                 enumerable: true,
                 configurable: true,
                 writable: true,
             });
-        if (email)
+        }
+
+        if (email){
             Object.defineProperty(updateObj, "email", {
                 value: email,
                 enumerable: true,
                 configurable: true,
                 writable: true,
             });
+        }
+
+        if (description){
+            Object.defineProperty(updateObj, "description", {
+                value: description,
+                enumerable: true,
+                configurable: true,
+                writable: true,
+            });
+        }
 
         const res = await User.findByIdAndUpdate(userId, updateObj, { returnDocument: "after" });
         if (res == null) return null;
@@ -141,6 +154,7 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
             id: res?._id,
             email: res?.email,
             userName: res.userName,
+            description: res.description,
             name: res?.name!,
             followers: res?.followers,
             following: res?.following,

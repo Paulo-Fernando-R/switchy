@@ -17,7 +17,7 @@ export type AuthNavigationProp = StackNavigationProp<AuthStackParamList, "Login"
 export type HomeStackParamList = {
     Home: undefined;
     Comments: {
-        post: Post;
+        postId: string;
     };
 };
 
@@ -32,7 +32,7 @@ export type SearchStackParamList = {
         userId: string;
     };
     Comments: {
-        post: Post;
+        postId: string;
     };
 };
 
@@ -46,7 +46,7 @@ export type ProfileStackParamList = {
     Profile: undefined;
     ProfileEdit: undefined;
     Comments: {
-        post: Post;
+        postId: string;
     };
 };
 

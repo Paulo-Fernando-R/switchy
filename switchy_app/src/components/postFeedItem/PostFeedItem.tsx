@@ -3,11 +3,13 @@ import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import { usePostsListContext } from "../../contexts/postsListContext";
 import PostFeedItemController from "./postFeedItemController";
 import { useUserContext } from "../../contexts/userContext";
+import HyperlinkText from "../hypelinkText/HyperlinkText";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import timeAgoFormatter from "../../../timeAgoFormatter";
 import { Facebook } from "react-content-loader/native";
 //@ts-ignore
 import avatar from "../../../assets/icons/avatar.png";
+import PostWebView from "../postWebView/PostWebView";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import BottomModal from "../bottomModal/BottomModal";
 import { useMutation } from "@tanstack/react-query";
@@ -27,7 +29,6 @@ type PostFeedItemProps = {
 };
 
 export default function PostFeedItem({ item, error, navigation, actionable }: PostFeedItemProps) {
-   
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
@@ -42,7 +43,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
 
     const timeAgo = timeAgoFormatter(item.publishDate);
     const modalizeRef = useRef<Modalize>(null);
-    
+
     const {
         data,
         mutate,
@@ -62,7 +63,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
 
     function navigate() {
         //@ts-ignore
-        navigation?.push("Comments", { post: data ? data : item! });
+        navigation?.push("Comments", { postId: item.id });
     }
 
     const onOpen = () => {
@@ -93,7 +94,8 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
                         <Feather name="more-horizontal" size={20} color={appColors.text200} onPress={onOpen} />
                     )}
                 </View>
-                <Text style={styles.itemContentBody}>{data ? data.content : item?.content}</Text>
+                <HyperlinkText text={data ? data.content : item?.content} textStyle={styles.itemContentBody} />
+                <PostWebView text={data ? data.content : item?.content} />
 
                 <View style={styles.itemContentActions}>
                     {liked ? (

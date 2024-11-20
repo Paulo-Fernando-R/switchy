@@ -43,7 +43,7 @@ export default function HomeStackRouter({ navigation, route }: RootTabsHomeNavig
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Group screenOptions={{ presentation: "modal" }}>
-                    <Stack.Screen name="Comments" component={Comments} initialParams={{ post: undefined }} />
+                    <Stack.Screen name="Comments" component={Comments} initialParams={{ postId: undefined }} />
                 </Stack.Group>
             </Stack.Navigator>
         </PostListContext.Provider>

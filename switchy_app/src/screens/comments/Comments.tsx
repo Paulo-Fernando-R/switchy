@@ -1,6 +1,6 @@
 import { HomeNavigationProp, SearchCommentsRouteProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
 LogBox.ignoreLogs(["Non-serializable values were found in the navigation state. Check:"]);
-import { View, Text, TextInput, TouchableOpacity, LogBox } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, LogBox, ActivityIndicator } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { CommentsRouteProp } from "../../routes/types/navigationTypes";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
@@ -16,30 +16,33 @@ import styles from "./commentsStyles";
 import useLayoutFocus from "../../hooks/useLayoutFocus";
 import { RefreshControl } from "react-native";
 
-
 type CommentsProps = {
     route: CommentsRouteProp | SearchCommentsRouteProp;
     navigation: HomeNavigationProp | SearchNavigationProp;
 };
 
 export default function Comments({ route, navigation }: CommentsProps) {
-
     const controller = new CommentsController();
 
     const [content, setContent] = useState("");
     const [snackBar, setSnackBar] = useState(false);
 
     const { updateOne } = usePostsListContext();
-    const { post } = route.params;
+    const { postId } = route.params;
     const ref = useLayoutFocus();
 
     const { data, refetch, isRefetching } = useQuery({
-        queryKey: [`Comments${post.id}${ref}`],
-        queryFn: () => controller.getComments(post.id!),
+        queryKey: [`Comments${postId}${ref}`],
+        queryFn: () => controller.getComments(postId),
+    });
+
+    const mainPostQuery = useQuery({
+        queryKey: [`MainPost${postId}${ref}`],
+        queryFn: () => controller.getMainPost(postId),
     });
 
     const mutation = useMutation({
-        mutationFn: () => controller.createComment(content, post.id!, refetch, setContent, updateOne),
+        mutationFn: () => controller.createComment(content, postId, refetch, setContent, updateOne),
         onError: () => {
             setSnackBar(true);
         },
@@ -75,7 +78,7 @@ export default function Comments({ route, navigation }: CommentsProps) {
                 <BackButton goBack={goBack} />
             </View>
             <View style={styles.mainPost}>
-                <PostFeedItem item={post} />
+                <PostFeedItem item={mainPostQuery.data} />
             </View>
             <Text style={styles.title}>Respostas</Text>
 
@@ -96,7 +99,11 @@ export default function Comments({ route, navigation }: CommentsProps) {
                     value={content}
                 />
                 <TouchableOpacity disabled={mutation.isPending} activeOpacity={0.8} onPress={() => mutation.mutate()}>
-                    <MaterialCommunityIcons name="send-outline" size={20} color={appColors.accent300} />
+                    {mutation.isPending ? (
+                        <ActivityIndicator size="small" color={appColors.accent300} />
+                    ) : (
+                        <MaterialCommunityIcons name="send-outline" size={20} color={appColors.accent300} />
+                    )}
                 </TouchableOpacity>
             </View>
         </View>

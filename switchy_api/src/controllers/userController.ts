@@ -131,11 +131,11 @@ export default class UserController {
     }
 
     async update(req: Request, res: Response) {
-        const { name, email } = req.body;
+        const { name, email, description } = req.body;
         const userId = req.userId;
 
         try {
-            const user = await this.updateUserCase.execute(userId, name, email);
+            const user = await this.updateUserCase.execute(userId, name, email, description);
 
             return res.type("application/json").status(StatusCodes.Ok).send(user);
         } catch (ex) {
