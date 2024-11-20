@@ -1,6 +1,6 @@
 import { IPost } from "../../../models/post";
 
-export default class GetPostByIdResponse {
+export default class GetPostResponse {
     private post: any
     ;
     constructor(post: IPost) {

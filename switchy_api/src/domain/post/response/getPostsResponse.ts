@@ -1,6 +1,6 @@
 import { IPost } from "../../../models/post";
 
-export default class GetPostsByUserIdResponse {
+export default class GetPostsResponse {
     private posts: any[];
     constructor(posts: Array<IPost>) {
         this.posts = posts;

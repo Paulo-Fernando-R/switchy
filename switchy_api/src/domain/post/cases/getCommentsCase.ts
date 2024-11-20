@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { IPost } from "../../../models/post";
-import GetCommentsByPostResponse from "../response/getCommentsByPostResponse";
+import GetPostsResponse from "../response/getPostsResponse";
 
 export default class GetCommentsCase {
     private readonly postRepository: IPostRepository;
@@ -19,7 +19,7 @@ export default class GetCommentsCase {
 
         const ids = comments.map((e) => new Types.ObjectId(e.postId));
         const posts = await this.postRepository.getPostComments(ids);
-        const response = new GetCommentsByPostResponse(posts);
+        const response = new GetPostsResponse(posts);
         response.setPostsLikedByUser(userId);
         return response.getResponse();
     }
