@@ -50,7 +50,7 @@ export default function Profile({ navigation, route }: ProfileProps) {
                 ListEmptyComponent={EmptyList}
                 contentContainerStyle={styles.list}
                 data={data?.pages?.flat()}
-                renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
+                renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} actionable={true} />}
                 onEndReachedThreshold={0.8}
                 onEndReached={() => fetchNextPage()}
                 ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
