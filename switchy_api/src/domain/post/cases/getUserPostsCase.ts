@@ -1,6 +1,7 @@
 import ServerError from "../../../errors/serverError";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { PostEmptyValueError } from "../errors/postErrors";
+import GetPostsByUserIdResponse from "../response/getPostsByUserIdResponse";
 
 export default class GetUserPostsCase {
     private readonly postRepository: IPostRepository;
@@ -11,8 +12,10 @@ export default class GetUserPostsCase {
 
     async execute(userId: string, page: number) {
         try {
-            const response = await this.postRepository.getUserPosts(userId, page);
-            return response;
+            const posts = await this.postRepository.getUserPosts(userId, page);
+            const response = new GetPostsByUserIdResponse(posts);
+            response.setPostsLikedByUser(userId);
+            return response.getResponse();
         } catch (error) {
             console.error(error);
             throw new ServerError();
