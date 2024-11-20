@@ -57,9 +57,10 @@ export default class PostController {
 
     async getPostById(req: Request, res: Response) {
         const { postId } = req.params;
+        const userId = req.userId;
 
         try {
-            const response = await new getPostByIdCase(this.postRepository).execute(postId);
+            const response = await new getPostByIdCase(this.postRepository).execute(postId, userId);
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {
             res.status(StatusCodes.InternalServerError).send(error);

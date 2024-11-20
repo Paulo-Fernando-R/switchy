@@ -1,5 +1,6 @@
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { UnableGetPostError } from "../errors/postErrors";
+import GetPostByIdResponse from "../response/getPostByIdResponse";
 
 export default class getPostByIdCase {
     private readonly postRepository: IPostRepository;
@@ -8,10 +9,12 @@ export default class getPostByIdCase {
         this.postRepository = _postRepository;
     }
 
-    async execute(postId: string) {
+    async execute(postId: string, userId: any) {
         try {
-            const response = await this.postRepository.getPostById(postId);
-            return response;
+            const post = await this.postRepository.getPostById(postId);
+            const response = new GetPostByIdResponse(post);
+            response.setPostsLikedByUser(userId)
+            return response.getResponse();
         } catch (error) {
             console.error(error);
             throw new UnableGetPostError();
