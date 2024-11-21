@@ -1,7 +1,4 @@
-import Preview from "../../models/preview";
 import HyperlinkExtractor from "../../utils/hyperlinkExtractor";
-//@ts-ignore
-import twitter from "../../../assets/images/twitter.png";
 import { TouchableWithoutFeedback } from "react-native";
 import { webViewJsCode } from "./postwebViewScripts";
 import RegularExp from "../../utils/regularExp";
@@ -10,11 +7,9 @@ import WebView from "react-native-webview";
 import styles from "./postWebViewStyles";
 import { Linking } from "react-native";
 import React from "react";
-import { getLinkPreview } from "link-preview-js";
 import { useQuery } from "@tanstack/react-query";
 import appColors from "../../styles/appColors";
 import appTexts from "../../styles/appTexts";
-import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import PostWebViewController from "./postWebViewController";
 
 type PostWebViewProps = {
@@ -30,68 +25,37 @@ type OptionsProps = {
 export default function PostWebView({ text }: PostWebViewProps) {
     let url = HyperlinkExtractor.extractUrl(text);
     if (!url) return null;
+
     const controller = new PostWebViewController();
+
+    const domain = HyperlinkExtractor.extractDomain(url[0]) ?? "";
+
+    if (RegularExp.instagram.test(domain)) return <Instagram url={url[0]} />;
+    if (RegularExp.youtube.test(domain)) return <Youtube url={url[0]} />;
 
     const query = useQuery({
         queryKey: ["linkPreview", url],
         queryFn: () => controller.getPostPreview(url[0]),
     });
 
-    const domain = HyperlinkExtractor.extractDomain(url[0]) ?? "";
-
-    // async function fetchData(url: string): Promise<Preview> {
-    //     try {
-    //         const data = await getLinkPreview(url);
-    //         if (!data) throw new Error("Erro ao obter preview da URL");
-    //         return data as Preview;
-    //     } catch (error) {
-    //         console.error("Erro ao obter preview da URL:", error);
-    //         throw error;
-    //     }
-    // }
-
     if (query.error) return null;
-    console.log(query.data);
 
-    // function getIcon() {
-    //     if (query.data?.images) if (query.data.images.length > 0) return query.data.images[0];
-
-    //     if (query.data?.favicons) if (query.data.favicons.length > 0) return query.data.favicons[0];
-
-    //     return "https://placehold.co/600x400/2B2B3D/white/png?text=No+data+preview";
-    // }
-
-    if (RegularExp.instagram.test(domain))
-        return (
-            <>
-                <Instagram url={url[0]} />
-                <CardTitle url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />
-            </>
-        );
-    if (RegularExp.youtube.test(domain)) return <Youtube url={url[0]} />;
     if (RegularExp.twitter.test(domain))
-        return <CardTitle url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />;
+        return <Twitter url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />;
+
     if (RegularExp.tiktok.test(domain))
-        return <CardTitle url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />;
-    if (RegularExp.image.test(domain)) return <ImagePreview url={url[0]} img={url[0]} />;
+        return <TikTok url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />;
+
+    if (RegularExp.image.test(url[0])) return <ImagePreview url={url[0]} img={url[0]} />;
 
     return <CardTitle url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />;
 }
 
-function ImagePreview({ url }: OptionsProps) {
+function ImagePreview({ url, img }: OptionsProps) {
     return (
-        <View style={styles.defaultContainer}>
-            <LinkPreview
-                text={url}
-                metadataContainerStyle={{ display: "none" }}
-                metadataTextContainerStyle={{ display: "none" }}
-                textContainerStyle={{ display: "none" }}
-                renderText={() => null}
-                renderDescription={() => null}
-                renderHeader={() => null}
-                renderTitle={() => null}
-            />
-        </View>
+        <TouchableWithoutFeedback onPress={() => Linking.openURL(url)}>
+            <Image source={{ uri: img! }} style={styles.imageContainer} />
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -123,20 +87,22 @@ function CardTitle({ img, text, url }: OptionsProps) {
 
 function Instagram({ url }: OptionsProps) {
     return (
-        <View style={styles.InstagraContainer}>
-            <WebView
-                source={{ uri: url }}
-                style={styles.instagramWeb}
-                injectedJavaScript={webViewJsCode}
-                injectedJavaScriptBeforeContentLoaded={webViewJsCode}
-                originWhitelist={["*"]}
-                javaScriptEnabled={true}
-                onMessage={() => {}}
-                cacheEnabled={true}
-                cacheMode="LOAD_CACHE_ELSE_NETWORK"
-                mixedContentMode="compatibility"
-            />
-        </View>
+        <TouchableWithoutFeedback onPress={() => Linking.openURL(url)}>
+            <View style={styles.InstagraContainer}>
+                <WebView
+                    source={{ uri: url }}
+                    style={styles.instagramWeb}
+                    injectedJavaScript={webViewJsCode}
+                    injectedJavaScriptBeforeContentLoaded={webViewJsCode}
+                    originWhitelist={["*"]}
+                    javaScriptEnabled={true}
+                    onMessage={() => {}}
+                    cacheEnabled={true}
+                    cacheMode="LOAD_CACHE_ELSE_NETWORK"
+                    mixedContentMode="compatibility"
+                />
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -157,36 +123,53 @@ function Youtube({ url }: OptionsProps) {
     );
 }
 
-function Twitter({ url }: OptionsProps) {
+function Twitter({ url, img, text }: OptionsProps) {
     return (
-        <View style={styles.twitterContainer}>
-            <TouchableWithoutFeedback onPress={() => Linking.openURL(url)}>
-                <Image style={{ width: "100%", height: "100%" }} source={twitter} />
-            </TouchableWithoutFeedback>
-        </View>
+        <TouchableWithoutFeedback onPress={() => Linking.openURL(url)}>
+            <View style={styles.twitterContainer}>
+                <Image source={{ uri: img! }} style={styles.twitterImg} />
+                <Text numberOfLines={3} style={styles.twitterText}>
+                    {text}
+                </Text>
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
+
+function TikTok({ url, img, text }: OptionsProps) {
+    return (
+        <TouchableWithoutFeedback onPress={() => Linking.openURL(url)}>
+            <View style={styles.twitterContainer}>
+                <Image source={{ uri: img! }} style={styles.twitterImg} />
+                <Text numberOfLines={3} style={styles.twitterText}>
+                    {text}
+                </Text>
+            </View>
+        </TouchableWithoutFeedback>
+    );
+}
+
 //   const baseUrl = 'https://vm.tiktok.com/embed/v3/?videoId='
-function TikTok({ url }: OptionsProps) {
-    const baseUrl = "https://www.tiktok.com/oembed?url=";
-    // const baseUrl = 'https://vm.tiktok.com/embed/v3/?videoId='
-    const videId = HyperlinkExtractor.extractTiktokId(url);
+// function TikTok({ url }: OptionsProps) {
+//     const baseUrl = "https://www.tiktok.com/oembed?url=";
+//     // const baseUrl = 'https://vm.tiktok.com/embed/v3/?videoId='
+//     const videId = HyperlinkExtractor.extractTiktokId(url);
 
-    const query = useQuery({
-        queryKey: ["tiktok", videId],
-        queryFn: () => fetch(baseUrl + url).then((res) => res.json()),
-    });
+//     const query = useQuery({
+//         queryKey: ["tiktok", videId],
+//         queryFn: () => fetch(baseUrl + url).then((res) => res.json()),
+//     });
 
-    console.log(url);
-    return (
-        <View style={styles.tiktokContainer}>
-            <WebView
-                source={{ html: query.data?.html ?? "" }}
-                style={styles.instagramWeb}
-                cacheEnabled={true}
-                cacheMode="LOAD_CACHE_ELSE_NETWORK"
-                mixedContentMode="compatibility"
-            />
-        </View>
-    );
-}
+//     console.log(url);
+//     return (
+//         <View style={styles.tiktokContainer}>
+//             <WebView
+//                 source={{ html: query.data?.html ?? "" }}
+//                 style={styles.instagramWeb}
+//                 cacheEnabled={true}
+//                 cacheMode="LOAD_CACHE_ELSE_NETWORK"
+//                 mixedContentMode="compatibility"
+//             />
+//         </View>
+//     );
+// }

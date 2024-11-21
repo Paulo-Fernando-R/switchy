@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import appColors from "../../styles/appColors";
+import appTexts from "../../styles/appTexts";
 
 const styles = StyleSheet.create({
     InstagraContainer: {
@@ -13,6 +15,14 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: -50,
         marginBottom: -50,
+    },
+
+    imageContainer:{
+        overflow: "hidden",
+        borderRadius: 12,
+        width: "100%",
+         minHeight: 200,
+        maxHeight: 400,
     },
 
     defaultContainer: {
@@ -33,10 +43,27 @@ const styles = StyleSheet.create({
     },
 
     twitterContainer: {
-        width: "60%",
-        aspectRatio: 16 / 9,
+        flexDirection: "row",
+        gap: 12,
+        padding: 12,
+        borderRadius: 24,
+        backgroundColor: appColors.bg200,
+        alignItems: "center",
+        height: 100,
+    },
+
+    twitterImg: {
+        height: "100%",
+        aspectRatio: 1,
+        objectFit: "cover",
         overflow: "hidden",
         borderRadius: 12,
+    },
+
+    twitterText: {
+        flex: 1,
+        color: appColors.text200,
+        ...appTexts.paragraph3Regular,
     },
 
     tiktokContainer: {

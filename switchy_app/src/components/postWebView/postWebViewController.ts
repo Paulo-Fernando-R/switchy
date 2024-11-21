@@ -34,6 +34,8 @@ export default class PostWebViewController {
 
         if (data.title) return data.title;
 
+        if(data.url) return data.url;
+
         return "No data preview";
     }
 }

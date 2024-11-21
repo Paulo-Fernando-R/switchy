@@ -29,7 +29,7 @@ type PostFeedItemProps = {
 };
 
 export default function PostFeedItem({ item, error, navigation, actionable }: PostFeedItemProps) {
-    console.log(item)
+    //console.log(item)
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
