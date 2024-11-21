@@ -82,11 +82,7 @@ export default class PostController {
         let pageInt: number = 1;
         if (page) pageInt = parseInt(page);
 
-        try {
-            const list = await this.getUserPostsCase.execute(userId, pageInt);
-            res.status(StatusCodes.Ok).send(list);
-        } catch (error) {
-            res.status(StatusCodes.InternalServerError).send(error);
-        }
+        const list = await this.getUserPostsCase.execute(userId, pageInt);
+        res.status(StatusCodes.Ok).send(list);
     }
 }
