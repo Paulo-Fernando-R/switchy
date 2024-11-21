@@ -39,7 +39,7 @@ export default class HyperlinkExtractor {
 
     static extractTiktokId(url: string | undefined) {
         if (!url) return null;
-        const regex = /(?:https?:\/\/)?(?:www\.)?tiktok\.com\/(?:.*\/video\/)?(\d+)/;
+        const regex = /(?:https?:\/\/)?(?:vm\.|www\.)?tiktok\.com\/([\w-]+)/;
         const res = url.match(regex);
         if (!res) return null;
         // console.log(res, '|')

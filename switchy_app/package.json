@@ -19,6 +19,7 @@
         "expo-secure-store": "~13.0.2",
         "expo-status-bar": "~1.12.1",
         "javascript-time-ago": "^2.5.11",
+        "link-preview-js": "^3.0.12",
         "react": "18.2.0",
         "react-content-loader": "^7.0.2",
         "react-hook-form": "^7.53.1",
