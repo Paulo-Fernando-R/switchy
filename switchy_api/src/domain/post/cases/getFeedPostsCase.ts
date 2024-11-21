@@ -1,8 +1,9 @@
 import { Types } from "mongoose";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
-import { IGetFeedPostsResponse, IGetFeedPostsUserResponse } from "../response/getFeedPostsResponse";
 import { IPost } from "../../../models/post";
+import IUserPost from "../entities/userPost";
+import IGetFeedPostsResponse from "../response/getFeedPostsResponse";
 
 export default class GetFeedPostsCase {
     private readonly postRepository: IPostRepository;
@@ -38,7 +39,7 @@ export default class GetFeedPostsCase {
             var comments = this.getTotalComments(post);
             var likes = this.getTotalLikes(post);
             var likedByUser = this.isLikedByUser(post, loggedUserId);
-            var user: IGetFeedPostsUserResponse = this.getUserOfPost(post);
+            var user: IUserPost = this.getUserOfPost(post);
 
             var obj: IGetFeedPostsResponse = {
                 content: post.content,
@@ -59,7 +60,7 @@ export default class GetFeedPostsCase {
 
     private getUserOfPost(post: IPost) {
         var userPost = post.user;
-        var user: IGetFeedPostsUserResponse = {
+        var user: IUserPost = {
             name: userPost.get('name'),
             userName: userPost.get('userName'),
             id: userPost.get('id').toString(),

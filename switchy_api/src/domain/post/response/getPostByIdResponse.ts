@@ -1,6 +1,6 @@
 import IUserPost from "../entities/userPost";
 
-export default interface IGetFeedPostsResponse {
+export default interface IGetPostByIdResponse {
     id: String;
     user: IUserPost;
     parentId?: string;
