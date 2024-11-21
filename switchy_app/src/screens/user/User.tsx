@@ -1,5 +1,5 @@
 import { ProfileNavigationProp, ProfileRouteProp } from "../../routes/types/navigationTypes";
-import { Text, View, Image, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Text, View, Image, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import { useUserContext } from "../../contexts/userContext";
 import EmptyList from "../../components/emptyList/EmpyList";
@@ -12,7 +12,8 @@ import appColors from "../../styles/appColors";
 import UserController from "./userController";
 import User from "../../models/user";
 import styles from "./userStyles";
-import React from "react";
+import React, { useEffect } from "react";
+import { usePostsListContext } from "../../contexts/postsListContext";
 
 type UserHeaderProps = {
     user: User | null;
@@ -26,11 +27,12 @@ type ProfileProps = {
 
 export default function Profile({ navigation, route }: ProfileProps) {
     const controller = new UserController();
-    const ref = useLayoutFocus();
+    //const ref = useLayoutFocus();
     const { user } = useUserContext();
+    const { posts, setPosts } = usePostsListContext();
 
-    const { data, error, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
-        queryKey: ["Profile" + ref],
+    const { data, isSuccess, error, fetchNextPage, isFetchingNextPage, isRefetching, refetch } = useInfiniteQuery({
+        queryKey: ["Profile"],
         queryFn: ({ pageParam }) => controller.getPosts(user?.id!, pageParam),
         placeholderData: () => ({ pageParams: [1], pages: [controller.placeholderData] }),
         getNextPageParam: controller.handleNext,
@@ -41,6 +43,10 @@ export default function Profile({ navigation, route }: ProfileProps) {
         navigation.navigate("ProfileEdit");
     }
 
+    useEffect(() => {
+        isSuccess && setPosts(data?.pages?.flat());
+    }, [data]);
+
     return (
         <View style={styles.page}>
             <Header user={user!} navigate={navigate} />
@@ -48,13 +54,18 @@ export default function Profile({ navigation, route }: ProfileProps) {
 
             <FlatList
                 ListEmptyComponent={EmptyList}
+                refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
                 contentContainerStyle={styles.list}
-                data={data?.pages?.flat()}
-                renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} actionable={true} />}
+                data={posts}
+                renderItem={({ item }) => (
+                    <PostFeedItem item={item} error={error} navigation={navigation} actionable={true} />
+                )}
                 onEndReachedThreshold={0.8}
                 onEndReached={() => fetchNextPage()}
                 ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
-                keyExtractor={(item, index) => `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`}
+                keyExtractor={(item, index) =>
+                    `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`
+                }
             />
         </View>
     );

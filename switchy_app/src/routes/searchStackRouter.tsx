@@ -27,7 +27,7 @@ export default function SearchStackRouter({ navigation, route }: RootTabsSearchN
             <Stack.Screen name="Search" component={Search} />
             <Stack.Group screenOptions={{ presentation: "modal" }}>
                 <Stack.Screen name="SearchProfile" component={SearchProfile} initialParams={{ userId: undefined }} />
-                <Stack.Screen name="Comments" component={Comments} initialParams={{ post: undefined }} />
+                <Stack.Screen name="Comments" component={Comments} initialParams={{ postId: undefined }} />
             </Stack.Group>
         </Stack.Navigator>
     );
