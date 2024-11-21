@@ -37,13 +37,14 @@ export default class PostFeedItemController {
         updateOne: (post: Post) => void
     ) {
         try {
+            setLiked(liked);
             await this.putLike(postId, liked);
             const response = await this.getById(postId);
             updateOne(response);
-            setLiked(liked);
             return response;
         } catch (error) {
             console.error(error);
+            setLiked(!liked);
             if (error instanceof CustomError) {
                 throw new Error(error.screenMessage);
             }
