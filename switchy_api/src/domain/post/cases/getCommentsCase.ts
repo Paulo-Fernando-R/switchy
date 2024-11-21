@@ -2,6 +2,8 @@ import { Types } from "mongoose";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { IPost } from "../../../models/post";
 import GetPostsResponse from "../response/getFeedPostsResponse";
+import IUserPost from "../entities/userPost";
+import IGetFeedPostsResponse from "../response/getFeedPostsResponse";
 
 export default class GetCommentsCase {
     private readonly postRepository: IPostRepository;
@@ -10,7 +12,7 @@ export default class GetCommentsCase {
         this.postRepository = postRepository;
     }
 
-    async execute(id: string, userId: string): Promise<IPost[]> {
+    async execute(id: string, userId: string): Promise<GetPostsResponse[]> {
         const post = await this.postRepository.getPostById(id);
         const comments = post.comments;
         if (!comments || comments.length == 0) {
@@ -19,8 +21,65 @@ export default class GetCommentsCase {
 
         const ids = comments.map((e) => new Types.ObjectId(e.postId));
         const posts = await this.postRepository.getPostComments(ids);
-        const response = new GetPostsResponse(posts);
-        response.setPostsLikedByUser(userId);
-        return response.getResponse();
+
+        var ls: IGetFeedPostsResponse[] = [];
+        for (var i = 0; i < posts.length; i++) {
+            var item = posts[i];
+
+            var totalComments = this.getTotalComments(item);
+            var likes = this.getTotalLikes(item);
+            var likedByUser = this.isLikedByUser(item, userId);
+            var user: IUserPost = this.getUserOfPost(item);
+
+            var obj: IGetFeedPostsResponse = {
+                content: item.content,
+                publishDate: item.publishDate,
+                user: user,
+                id: item.id!.toString(),
+                parentId: item.parentId,
+                comments: totalComments,
+                likes: likes,
+                likedByUser: likedByUser,
+            };
+
+            ls.push(obj);
+        }
+
+        return ls;
+    }
+
+    private getUserOfPost(post: IPost) {
+        var userPost = post.user;
+        var user: IUserPost = {
+            name: userPost.get("name"),
+            userName: userPost.get("userName"),
+            id: userPost.get("id").toString(),
+        };
+        return user;
+    }
+
+    private isLikedByUser(post: IPost, userId: string) {
+        if (post.likes == null) {
+            return false;
+        }
+
+        var likedByUser = post.likes.filter((like: any) => like.userId.equals(userId)).length > 0;
+        return likedByUser;
+    }
+
+    private getTotalComments(post: IPost) {
+        var comments = 0;
+        if (post.comments != null) {
+            comments = post.comments?.length;
+        }
+        return comments;
+    }
+
+    private getTotalLikes(post: IPost) {
+        var likes = 0;
+        if (post.likes != null) {
+            likes = post.likes?.length;
+        }
+        return likes;
     }
 }

@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import appColors from "../../styles/appColors";
 import appTexts from "../../styles/appTexts";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
+import PostWebViewController from "./postWebViewController";
 
 type PostWebViewProps = {
     text: string | undefined;
@@ -29,51 +30,52 @@ type OptionsProps = {
 export default function PostWebView({ text }: PostWebViewProps) {
     let url = HyperlinkExtractor.extractUrl(text);
     if (!url) return null;
+    const controller = new PostWebViewController();
 
     const query = useQuery({
         queryKey: ["linkPreview", url],
-        queryFn: () => fetchData(url[0]),
+        queryFn: () => controller.getPostPreview(url[0]),
     });
 
     const domain = HyperlinkExtractor.extractDomain(url[0]) ?? "";
 
-    async function fetchData(url: string): Promise<Preview> {
-        try {
-            const data = await getLinkPreview(url);
-            if (!data) throw new Error("Erro ao obter preview da URL");
-            return data as Preview;
-        } catch (error) {
-            console.error("Erro ao obter preview da URL:", error);
-            throw error;
-        }
-    }
+    // async function fetchData(url: string): Promise<Preview> {
+    //     try {
+    //         const data = await getLinkPreview(url);
+    //         if (!data) throw new Error("Erro ao obter preview da URL");
+    //         return data as Preview;
+    //     } catch (error) {
+    //         console.error("Erro ao obter preview da URL:", error);
+    //         throw error;
+    //     }
+    // }
 
     if (query.error) return null;
     console.log(query.data);
 
-    function getIcon() {
-        if (query.data?.images) if (query.data.images.length > 0) return query.data.images[0];
+    // function getIcon() {
+    //     if (query.data?.images) if (query.data.images.length > 0) return query.data.images[0];
 
-        if (query.data?.favicons) if (query.data.favicons.length > 0) return query.data.favicons[0];
+    //     if (query.data?.favicons) if (query.data.favicons.length > 0) return query.data.favicons[0];
 
-        return "https://placehold.co/600x400/2B2B3D/white/png?text=No+data+preview";
-    }
+    //     return "https://placehold.co/600x400/2B2B3D/white/png?text=No+data+preview";
+    // }
 
     if (RegularExp.instagram.test(domain))
         return (
             <>
                 <Instagram url={url[0]} />
-                <CardTitle url={url[0]} img={getIcon()} text={query.data?.title ?? query.data?.url ?? ""} />
+                <CardTitle url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />
             </>
         );
     if (RegularExp.youtube.test(domain)) return <Youtube url={url[0]} />;
     if (RegularExp.twitter.test(domain))
-        return <CardTitle url={url[0]} img={getIcon()} text={query.data?.title ?? query.data?.url ?? ""} />;
+        return <CardTitle url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />;
     if (RegularExp.tiktok.test(domain))
-        return <CardTitle url={url[0]} img={getIcon()} text={query.data?.title ?? query.data?.url ?? ""} />;
+        return <CardTitle url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />;
     if (RegularExp.image.test(domain)) return <ImagePreview url={url[0]} img={url[0]} />;
 
-    return <CardTitle url={url[0]} img={getIcon()} text={query.data?.title ?? query.data?.url ?? ""} />;
+    return <CardTitle url={url[0]} img={controller.getIcon(query.data)} text={controller.getText(query.data)} />;
 }
 
 function ImagePreview({ url }: OptionsProps) {
@@ -94,7 +96,6 @@ function ImagePreview({ url }: OptionsProps) {
 }
 
 function CardTitle({ img, text, url }: OptionsProps) {
-
     return (
         <TouchableWithoutFeedback onPress={() => Linking.openURL(url)}>
             <View
@@ -113,7 +114,6 @@ function CardTitle({ img, text, url }: OptionsProps) {
                     style={{ height: "100%", width: "40%", objectFit: "cover", overflow: "hidden", borderRadius: 12 }}
                 />
                 <Text numberOfLines={3} style={{ flex: 1, color: appColors.text200, ...appTexts.paragraph3Regular }}>
-                    {/* {query.data?.title ?? query.data?.url} */}
                     {text}
                 </Text>
             </View>
