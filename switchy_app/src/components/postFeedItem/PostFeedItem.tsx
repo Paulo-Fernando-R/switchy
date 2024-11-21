@@ -38,7 +38,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
     const { user } = useUserContext();
     const { updateOne } = usePostsListContext();
 
-    const [liked, setLiked] = useState(controller.getInitialLike(item, user));
+    const [liked, setLiked] = useState(item.likedByUser ?? false);
     const [showSnackBar, setShowSnackBar] = useState(false);
 
     const timeAgo = timeAgoFormatter(item.publishDate);
@@ -105,9 +105,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
                             onPress={() => mutate(false)}
                         >
                             <AntDesign name="heart" size={20} color={appColors.text100} />
-                            <Text style={styles.contentActionText}>
-                                {data ? data.likes?.length : item.likes?.length}
-                            </Text>
+                            <Text style={styles.contentActionText}>{data ? data.likes : item.likes}</Text>
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity
@@ -116,18 +114,14 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
                             onPress={() => mutate(true)}
                         >
                             <AntDesign name="hearto" size={20} color={appColors.text100} />
-                            <Text style={styles.contentActionText}>
-                                {data ? data.likes?.length : item.likes?.length}
-                            </Text>
+                            <Text style={styles.contentActionText}>{data ? data.likes : item.likes}</Text>
                         </TouchableOpacity>
                     )}
 
                     {navigation ? (
                         <TouchableOpacity style={styles.contentActionButton} onPress={navigate}>
                             <FontAwesome name="comment-o" size={20} color={appColors.text100} />
-                            <Text style={styles.contentActionText}>
-                                {data ? data.comments?.length : item.comments?.length}
-                            </Text>
+                            <Text style={styles.contentActionText}>{data ? data.comments : item.comments}</Text>
                         </TouchableOpacity>
                     ) : null}
                 </View>

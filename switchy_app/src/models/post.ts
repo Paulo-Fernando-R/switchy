@@ -6,6 +6,9 @@ export default interface Post {
     parentId?: string;
     publishDate: Date;
     content: string;
-    comments?: { postId: string }[];
-    likes?: { userId: string }[];
+    // comments?: { postId: string }[];
+    // likes?: { userId: string }[];
+    comments?: number;
+    likes?: number;
+    likedByUser?: boolean;
 }

@@ -87,7 +87,9 @@ export default function Comments({ route, navigation }: CommentsProps) {
                 contentContainerStyle={styles.list}
                 data={data}
                 renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} />}
-                keyExtractor={(item, index) => `${item?.id}-${index}${item?.comments?.length}${item?.likes?.length}`}
+                keyExtractor={(item, index) =>
+                    `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`
+                }
             />
             <View style={styles.inputBox}>
                 <TextInput

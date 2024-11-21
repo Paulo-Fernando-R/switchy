@@ -54,7 +54,7 @@ export default function Profile({ navigation, route }: ProfileProps) {
                 onEndReachedThreshold={0.8}
                 onEndReached={() => fetchNextPage()}
                 ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
-                keyExtractor={(item, index) => `${item?.id}-${index}${item?.comments?.length}${item?.likes?.length}`}
+                keyExtractor={(item, index) => `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`}
             />
         </View>
     );

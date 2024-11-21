@@ -20,15 +20,15 @@ export default class PostFeedItemController {
         return await this.repository.getPostById(postId);
     }
 
-    getInitialLike(item: Post | undefined, user: User | null) {
-        const likes = item?.likes;
-        const id = user?.id;
+    // getInitialLike(item: Post | undefined, user: User | null) {
+    //     const likes = item?.likes;
+    //     const id = user?.id;
 
-        if (likes?.some((value) => value.userId === id)) {
-            return true;
-        }
-        return false;
-    }
+    //     if (likes?.some((value) => value.userId === id)) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     async handleLike(
         postId: string,
