@@ -3,7 +3,7 @@ import { IUser, User, userSchema } from "./user";
 
 export interface IPost {
     id?: Types.ObjectId;
-    user: IUser;
+    user: any;
     parentId?: string;
     publishDate: Date;
     content: string;

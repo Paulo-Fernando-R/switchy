@@ -11,15 +11,18 @@ import GetUserPostsCase from "../domain/post/cases/getUserPostsCase";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
 import { UserRepository } from "../repositories/userRepository/userRepository";
 export default class PostController {
-    postRepository: IPostRepository;
+    private postRepository: IPostRepository;
     private userRepository: IUserRepository;
-    getUserPostsCase: GetUserPostsCase;
+    private getUserPostsCase: GetUserPostsCase;
+    private getFeedPostsCase: GetFeedPostsCase;
 
     constructor() {
         this.postRepository = new PostRepository();
         this.getUserPostsCase = new GetUserPostsCase(this.postRepository);
         this.userRepository = new UserRepository();
+        this.getFeedPostsCase = new GetFeedPostsCase(this.postRepository, this.userRepository);
     }
+
     async createPost(req: Request, res: Response) {
         const { content, parentId } = req.body;
         const userId = req.userId;
@@ -43,16 +46,9 @@ export default class PostController {
         let pageInt: number = 1;
         if (page) pageInt = parseInt(page);
 
-        try {
-            const response = await new GetFeedPostsCase(this.postRepository, this.userRepository).execute(
-                userId,
-                pageInt
-            );
+        const response = await this.getFeedPostsCase.execute(userId, pageInt);
 
-            res.status(StatusCodes.Ok).send(response);
-        } catch (error) {
-            res.status(StatusCodes.InternalServerError).send(error);
-        }
+        res.status(StatusCodes.Ok).send(response);
     }
 
     async getPostById(req: Request, res: Response) {

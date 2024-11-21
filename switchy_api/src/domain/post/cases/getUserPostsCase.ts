@@ -1,7 +1,7 @@
 import ServerError from "../../../errors/serverError";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { PostEmptyValueError } from "../errors/postErrors";
-import GetPostsResponse from "../response/getPostsResponse";
+import GetPostsResponse from "../response/getFeedPostsResponse";
 
 export default class GetUserPostsCase {
     private readonly postRepository: IPostRepository;

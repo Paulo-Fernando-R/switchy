@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { IPost } from "../../../models/post";
-import GetPostsResponse from "../response/getPostsResponse";
+import GetPostsResponse from "../response/getFeedPostsResponse";
 
 export default class GetCommentsCase {
     private readonly postRepository: IPostRepository;
