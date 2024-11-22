@@ -4,7 +4,6 @@ import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import { useUserContext } from "../../contexts/userContext";
 import EmptyList from "../../components/emptyList/EmpyList";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import useLayoutFocus from "../../hooks/useLayoutFocus";
 //@ts-ignore
 import logo from "../../../assets/images/logo.png";
 import Feather from "@expo/vector-icons/Feather";
@@ -12,8 +11,13 @@ import appColors from "../../styles/appColors";
 import UserController from "./userController";
 import User from "../../models/user";
 import styles from "./userStyles";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { usePostsListContext } from "../../contexts/postsListContext";
+import NavigateComment from "../../components/postFeedItem/privateComponents/NavigateComment";
+import BottomModal from "../../components/bottomModal/BottomModal";
+import { Modalize } from "react-native-modalize";
+import PostWebView from "../../components/postWebView/PostWebView";
+import MoreActionsButton from "../../components/postFeedItem/privateComponents/MoreActionsButton";
 
 type UserHeaderProps = {
     user: User | null;
@@ -25,11 +29,13 @@ type ProfileProps = {
     route: ProfileRouteProp;
 };
 
-export default function Profile({ navigation, route }: ProfileProps) {
+export default function Profile({ navigation }: ProfileProps) {
+
     const controller = new UserController();
-    //const ref = useLayoutFocus();
+
     const { user } = useUserContext();
     const { posts, setPosts } = usePostsListContext();
+    const modalizeRef = useRef<Modalize>(null);
 
     const { data, isSuccess, error, fetchNextPage, isFetchingNextPage, isRefetching, refetch } = useInfiniteQuery({
         queryKey: ["Profile"],
@@ -41,6 +47,10 @@ export default function Profile({ navigation, route }: ProfileProps) {
 
     function navigate() {
         navigation.navigate("ProfileEdit");
+    }
+    
+    function navigateComent(id: string | undefined) {
+        if (id) navigation?.push("Comments", { postId: id });
     }
 
     useEffect(() => {
@@ -58,7 +68,19 @@ export default function Profile({ navigation, route }: ProfileProps) {
                 contentContainerStyle={styles.list}
                 data={posts}
                 renderItem={({ item }) => (
-                    <PostFeedItem item={item} error={error} navigation={navigation} actionable={true} />
+                    <PostFeedItem
+                        item={item}
+                        error={error}
+                        actionModal={<BottomModal modalizeRef={modalizeRef} />}
+                        postWebView={<PostWebView text={item?.content} />}
+                        moreActionsButton={<MoreActionsButton modalizeRef={modalizeRef} />}
+                        navigateComment={
+                            <NavigateComment
+                                commentsNumber={item?.comments}
+                                navigate={() => navigateComent(item?.id)}
+                            />
+                        }
+                    />
                 )}
                 onEndReachedThreshold={0.8}
                 onEndReached={() => fetchNextPage()}
