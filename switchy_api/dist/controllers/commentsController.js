@@ -20,6 +20,7 @@ const userRepository_1 = require("../repositories/userRepository/userRepository"
 const saveCommentCase_1 = __importDefault(require("../domain/post/cases/saveCommentCase"));
 const postErrors_1 = require("../domain/post/errors/postErrors");
 const getCommentsCase_1 = __importDefault(require("../domain/post/cases/getCommentsCase"));
+const mongoose_1 = require("mongoose");
 class CommentsController {
     constructor() {
         this.postRepository = new postRepository_1.PostRepository();
@@ -31,7 +32,12 @@ class CommentsController {
             const userId = req.userId;
             try {
                 const user = yield new getUserByIdCase_1.default(this.userRepository).execute(userId);
-                yield new saveCommentCase_1.default(this.postRepository).execute(content, parentId, user);
+                const aux = {
+                    email: user.email,
+                    name: user.name,
+                    id: new mongoose_1.Types.ObjectId(user.id),
+                };
+                yield new saveCommentCase_1.default(this.postRepository).execute(content, parentId, aux);
                 res.status(status_codes_1.StatusCodes.Ok).send();
             }
             catch (ex) {
@@ -50,7 +56,8 @@ class CommentsController {
     getByPost(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { postId } = req.params;
-            const response = yield new getCommentsCase_1.default(this.postRepository).execute(postId);
+            const userId = req.userId;
+            const response = yield new getCommentsCase_1.default(this.postRepository).execute(postId, userId);
             res.status(status_codes_1.StatusCodes.Ok).send(response);
         });
     }

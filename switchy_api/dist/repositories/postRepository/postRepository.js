@@ -23,34 +23,25 @@ class PostRepository extends databaseConnection_1.default {
     }
     getUserPosts(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             const skip = (page - 1) * 10;
-            try {
-                yield this.connect();
-                const list = yield post_1.Post.find({ "user.id": new mongoose_1.Types.ObjectId(userId) }, null, {
-                    skip: skip,
-                    limit: 10,
-                    sort: { publishDate: -1 },
-                });
-                // console.log(list);
-                const res = list.map((e) => {
-                    return {
-                        content: e.content,
-                        publishDate: e.publishDate,
-                        user: e.user,
-                        id: e._id,
-                        parentId: e.parentId,
-                        comments: e.comments,
-                        likes: e.likes,
-                    };
-                });
-                return res;
-            }
-            catch (error) {
-                console.error(error);
-                //@ts-ignore
-                throw new serverError_1.default((_a = error.message) !== null && _a !== void 0 ? _a : "");
-            }
+            yield this.connect();
+            const list = yield post_1.Post.find({ 'user.id': new mongoose_1.Types.ObjectId(userId) }, null, {
+                skip: skip,
+                limit: 10,
+                sort: { publishDate: -1 },
+            });
+            const res = list.map((e) => {
+                return {
+                    content: e.content,
+                    publishDate: e.publishDate,
+                    user: e.user,
+                    id: e._id,
+                    parentId: e.parentId,
+                    comments: e.comments,
+                    likes: e.likes,
+                };
+            });
+            return res;
         });
     }
     addLike(postId, userId) {

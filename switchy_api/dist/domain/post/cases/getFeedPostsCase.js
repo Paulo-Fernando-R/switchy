@@ -8,13 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
-const postErrors_1 = require("../errors/postErrors");
-const getFeedPostsResponse_1 = __importDefault(require("../response/getFeedPostsResponse"));
 class GetFeedPostsCase {
     constructor(_postRepository, _userRepository) {
         this.postRepository = _postRepository;
@@ -22,26 +17,72 @@ class GetFeedPostsCase {
     }
     execute(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const user = yield this.userRepository.getById(userId);
-                const followings = user === null || user === void 0 ? void 0 : user.following;
-                if (!followings || followings.length == 0) {
-                    const posts = yield this.postRepository.getFeedPosts(userId, page);
-                    const response = new getFeedPostsResponse_1.default(posts);
-                    response.setPostsLikedByUser(userId);
-                    return response.getResponse();
-                }
-                const ids = followings.map((e) => new mongoose_1.Types.ObjectId(e.userId));
-                const posts = yield this.postRepository.getFeedPosts(userId, page, ids);
-                const response = new getFeedPostsResponse_1.default(posts);
-                response.setPostsLikedByUser(userId);
-                return response.getResponse();
+            const loggedUser = yield this.userRepository.getById(userId);
+            const followings = loggedUser === null || loggedUser === void 0 ? void 0 : loggedUser.following;
+            if (!followings || followings.length == 0) {
+                const posts = yield this.postRepository.getFeedPosts(userId, page);
+                const response = this.parsePostsToResponse(posts, userId);
+                return response;
             }
-            catch (error) {
-                console.error(error);
-                throw new postErrors_1.UnableGetPostError();
-            }
+            const ids = followings.map((e) => new mongoose_1.Types.ObjectId(e.userId));
+            const posts = yield this.postRepository.getFeedPosts(userId, page, ids);
+            var ls = this.parsePostsToResponse(posts, userId);
+            return ls;
         });
+    }
+    parsePostsToResponse(posts, loggedUserId) {
+        var ls = [];
+        for (var i = 0; i < posts.length; i++) {
+            var post = posts[i];
+            var comments = this.getTotalComments(post);
+            var likes = this.getTotalLikes(post);
+            var likedByUser = this.isLikedByUser(post, loggedUserId);
+            var user = this.getUserOfPost(post);
+            var obj = {
+                content: post.content,
+                publishDate: post.publishDate,
+                user: user,
+                id: post.id.toString(),
+                parentId: post.parentId,
+                comments: comments,
+                likes: likes,
+                likedByUser: likedByUser,
+            };
+            ls.push(obj);
+        }
+        return ls;
+    }
+    getUserOfPost(post) {
+        var userPost = post.user;
+        var user = {
+            name: userPost.get('name'),
+            userName: userPost.get('userName'),
+            id: userPost.get('id').toString(),
+        };
+        return user;
+    }
+    isLikedByUser(post, userId) {
+        if (post.likes == null) {
+            return false;
+        }
+        var likedByUser = post.likes.filter((like) => like.userId.equals(userId)).length > 0;
+        return likedByUser;
+    }
+    getTotalComments(post) {
+        var _a;
+        var comments = 0;
+        if (post.comments != null) {
+            comments = (_a = post.comments) === null || _a === void 0 ? void 0 : _a.length;
+        }
+        return comments;
+    }
+    getTotalLikes(post) {
+        var _a;
+        var likes = 0;
+        if (post.likes != null) {
+            likes = (_a = post.likes) === null || _a === void 0 ? void 0 : _a.length;
+        }
+        return likes;
     }
 }
 exports.default = GetFeedPostsCase;

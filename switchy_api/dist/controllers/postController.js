@@ -26,6 +26,7 @@ class PostController {
         this.postRepository = new postRepository_1.PostRepository();
         this.getUserPostsCase = new getUserPostsCase_1.default(this.postRepository);
         this.userRepository = new userRepository_1.UserRepository();
+        this.getFeedPostsCase = new getFeedPostsCase_1.default(this.postRepository, this.userRepository);
     }
     createPost(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -52,20 +53,16 @@ class PostController {
             let pageInt = 1;
             if (page)
                 pageInt = parseInt(page);
-            try {
-                const response = yield new getFeedPostsCase_1.default(this.postRepository, this.userRepository).execute(userId, pageInt);
-                res.status(status_codes_1.StatusCodes.Ok).send(response);
-            }
-            catch (error) {
-                res.status(status_codes_1.StatusCodes.InternalServerError).send(error);
-            }
+            const response = yield this.getFeedPostsCase.execute(userId, pageInt);
+            res.status(status_codes_1.StatusCodes.Ok).send(response);
         });
     }
     getPostById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { postId } = req.params;
+            const userId = req.userId;
             try {
-                const response = yield new getPostByIdCase_1.default(this.postRepository).execute(postId);
+                const response = yield new getPostByIdCase_1.default(this.postRepository).execute(postId, userId);
                 res.status(status_codes_1.StatusCodes.Ok).send(response);
             }
             catch (error) {
@@ -94,13 +91,8 @@ class PostController {
             let pageInt = 1;
             if (page)
                 pageInt = parseInt(page);
-            try {
-                const list = yield this.getUserPostsCase.execute(userId, pageInt);
-                res.status(status_codes_1.StatusCodes.Ok).send(list);
-            }
-            catch (error) {
-                res.status(status_codes_1.StatusCodes.InternalServerError).send(error);
-            }
+            const list = yield this.getUserPostsCase.execute(userId, pageInt);
+            res.status(status_codes_1.StatusCodes.Ok).send(list);
         });
     }
 }

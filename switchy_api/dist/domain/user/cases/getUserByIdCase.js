@@ -16,11 +16,22 @@ class GetUserByIdCase {
     }
     execute(userId) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c;
             const user = yield this.userRepository.getById(userId);
             if (user == null) {
                 throw new userErrors_1.UserNotFoundError();
             }
-            return user;
+            const response = {
+                id: user.id.toString(),
+                email: user.email,
+                userName: user.userName,
+                description: (_a = user.description) !== null && _a !== void 0 ? _a : null,
+                name: user.name,
+                createdAt: user.createdAt,
+                followers: (_b = user.followers) !== null && _b !== void 0 ? _b : [],
+                following: (_c = user.following) !== null && _c !== void 0 ? _c : [],
+            };
+            return response;
         });
     }
 }
