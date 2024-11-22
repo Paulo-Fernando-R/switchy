@@ -23,9 +23,17 @@ type PostFeedItemProps = {
     navigation?: HomeNavigationProp | SearchNavigationProp | ProfileNavigationProp | undefined;
     actionModal?: ReactNode;
     moreActionsButton?: ReactNode;
+    postWebView?: ReactNode;
 };
 
-export default function PostFeedItem({ item, error, navigation, actionModal, moreActionsButton }: PostFeedItemProps) {
+export default function PostFeedItem({
+    item,
+    error,
+    navigation,
+    actionModal,
+    moreActionsButton,
+    postWebView,
+}: PostFeedItemProps) {
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
@@ -84,7 +92,8 @@ export default function PostFeedItem({ item, error, navigation, actionModal, mor
                     {moreActionsButton}
                 </View>
                 <HyperlinkText text={data ? data.content : item?.content} textStyle={styles.itemContentBody} />
-                <PostWebView text={data ? data.content : item?.content} />
+
+                {postWebView}
 
                 <View style={styles.itemContentActions}>
                     {liked ? (

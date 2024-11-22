@@ -15,6 +15,7 @@ import TopArea from "./privateComponents/TopArea";
 import { Modalize } from "react-native-modalize";
 import MoreActionsButton from "../../components/postFeedItem/privateComponents/MoreActionsButton";
 import BottomModal from "../../components/bottomModal/BottomModal";
+import PostWebView from "../../components/postWebView/PostWebView";
 
 type CommentsProps = {
     route: CommentsRouteProp | SearchCommentsRouteProp;
@@ -73,12 +74,13 @@ export default function Comments({ route, navigation }: CommentsProps) {
                 refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
                 contentContainerStyle={styles.list}
                 data={data}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                     <PostFeedItem
                         moreActionsButton={<MoreActionsButton modalizeRef={modalizeRef} />}
                         item={item}
                         navigation={navigation}
                         actionModal={<BottomModal modalizeRef={modalizeRef} />}
+                        postWebView={<PostWebView text={item.content} key={index} />}
                     />
                 )}
                 keyExtractor={(item, index) =>

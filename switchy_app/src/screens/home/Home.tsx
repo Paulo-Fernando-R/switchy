@@ -11,7 +11,7 @@ import appColors from "../../styles/appColors";
 import HomeController from "./homeController";
 import React, { useEffect } from "react";
 import styles from "./homeStyles";
-
+import PostWebView from "../../components/postWebView/PostWebView";
 
 type HomeProps = {
     navigation: HomeNavigationProp;
@@ -42,7 +42,14 @@ export default function Home({ navigation }: HomeProps) {
             style={styles.page}
             contentContainerStyle={styles.list}
             data={posts}
-            renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
+            renderItem={({ item }) => (
+                <PostFeedItem
+                    item={item}
+                    error={error}
+                    navigation={navigation}
+                    postWebView={<PostWebView text={item.content} />}
+                />
+            )}
             onEndReachedThreshold={0.8}
             onEndReached={() => fetchNextPage()}
             ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
