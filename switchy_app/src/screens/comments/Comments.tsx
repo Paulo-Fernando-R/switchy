@@ -1,4 +1,9 @@
-import { HomeNavigationProp, SearchCommentsRouteProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
+import {
+    HomeNavigationProp,
+    SearchCommentsRouteProp,
+    SearchNavigationProp,
+    ProfileNavigationProp,
+} from "../../routes/types/navigationTypes";
 import { View } from "react-native";
 import { CommentsRouteProp } from "../../routes/types/navigationTypes";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
@@ -6,20 +11,18 @@ import { usePostsListContext } from "../../contexts/postsListContext";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { FlatList } from "react-native-gesture-handler";
 import CommentsController from "./commentsController";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styles from "./commentsStyles";
 import useLayoutFocus from "../../hooks/useLayoutFocus";
 import { RefreshControl } from "react-native";
 import InputArea from "./privateComponents/InputArea";
 import TopArea from "./privateComponents/TopArea";
-import { Modalize } from "react-native-modalize";
-import MoreActionsButton from "../../components/postFeedItem/privateComponents/MoreActionsButton";
-import BottomModal from "../../components/bottomModal/BottomModal";
 import PostWebView from "../../components/postWebView/PostWebView";
+import NavigateComment from "../../components/postFeedItem/privateComponents/NavigateComment";
 
 type CommentsProps = {
     route: CommentsRouteProp | SearchCommentsRouteProp;
-    navigation: HomeNavigationProp | SearchNavigationProp;
+    navigation: HomeNavigationProp | SearchNavigationProp | ProfileNavigationProp;
 };
 
 export default function Comments({ route, navigation }: CommentsProps) {
@@ -32,7 +35,6 @@ export default function Comments({ route, navigation }: CommentsProps) {
     const { postId } = route.params;
 
     const ref = useLayoutFocus();
-    const modalizeRef = useRef<Modalize>(null);
 
     const { data, refetch, isRefetching } = useQuery({
         queryKey: [`Comments${postId}${ref}`],
@@ -57,6 +59,10 @@ export default function Comments({ route, navigation }: CommentsProps) {
     function goBack() {
         navigation.pop(1);
     }
+    function navigate(id: string | undefined) {
+        //@ts-ignore
+        if (id) navigation.push("Comments", { postId: id });
+    }
 
     return (
         <View style={styles.page}>
@@ -76,10 +82,10 @@ export default function Comments({ route, navigation }: CommentsProps) {
                 data={data}
                 renderItem={({ item, index }) => (
                     <PostFeedItem
-                        moreActionsButton={<MoreActionsButton modalizeRef={modalizeRef} />}
+                        navigateComment={
+                            <NavigateComment commentsNumber={item?.comments} navigate={() => navigate(item?.id)} />
+                        }
                         item={item}
-                        navigation={navigation}
-                        actionModal={<BottomModal modalizeRef={modalizeRef} />}
                         postWebView={<PostWebView text={item.content} key={index} />}
                     />
                 )}

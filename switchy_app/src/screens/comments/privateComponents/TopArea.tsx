@@ -5,6 +5,7 @@ import PostFeedItem from "../../../components/postFeedItem/PostFeedItem";
 import Post from "../../../models/post";
 import styles from "../commentsStyles";
 import BackButton from "../../../components/backButton/BackButton";
+import PostWebView from "../../../components/postWebView/PostWebView";
 
 type TopAreaProps = {
     isError: boolean;
@@ -17,7 +18,16 @@ type TopAreaProps = {
     goBack: () => void;
 };
 
-export default function TopArea({ errorMessage, isError, isSuccess, setVisible, visible, item, goBack, sucessMessage }: TopAreaProps) {
+export default function TopArea({
+    errorMessage,
+    isError,
+    isSuccess,
+    setVisible,
+    visible,
+    item,
+    goBack,
+    sucessMessage,
+}: TopAreaProps) {
     return (
         <>
             {isError && (
@@ -30,7 +40,7 @@ export default function TopArea({ errorMessage, isError, isSuccess, setVisible, 
             )}
             {isSuccess && (
                 <SnackBar.Sucess
-                    message={sucessMessage??"Comentário publicado"}
+                    message={sucessMessage ?? "Comentário publicado"}
                     setVisible={setVisible}
                     visible={visible}
                     autoDismissible={true}
@@ -41,7 +51,7 @@ export default function TopArea({ errorMessage, isError, isSuccess, setVisible, 
                 <BackButton goBack={goBack} />
             </View>
             <View style={styles.mainPost}>
-                <PostFeedItem item={item} />
+                <PostFeedItem item={item} postWebView={<PostWebView text={item?.content} />} />
             </View>
             <Text style={styles.title}>Respostas</Text>
         </>

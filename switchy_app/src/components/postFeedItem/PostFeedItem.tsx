@@ -1,14 +1,11 @@
-import { HomeNavigationProp, ProfileNavigationProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
 import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import { usePostsListContext } from "../../contexts/postsListContext";
 import PostFeedItemController from "./postFeedItemController";
 import HyperlinkText from "../hypelinkText/HyperlinkText";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import timeAgoFormatter from "../../../timeAgoFormatter";
 import { Facebook } from "react-content-loader/native";
 //@ts-ignore
 import avatar from "../../../assets/icons/avatar.png";
-import PostWebView from "../postWebView/PostWebView";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useMutation } from "@tanstack/react-query";
 import React, { ReactNode, useState } from "react";
@@ -20,19 +17,19 @@ import Post from "../../models/post";
 type PostFeedItemProps = {
     item?: Post | undefined;
     error?: Error | null;
-    navigation?: HomeNavigationProp | SearchNavigationProp | ProfileNavigationProp | undefined;
     actionModal?: ReactNode;
     moreActionsButton?: ReactNode;
     postWebView?: ReactNode;
+    navigateComment?: ReactNode;
 };
 
 export default function PostFeedItem({
     item,
     error,
-    navigation,
     actionModal,
     moreActionsButton,
     postWebView,
+    navigateComment,
 }: PostFeedItemProps) {
     if (!item || error) {
         return <PostFeedItemSkeleton />;
@@ -41,13 +38,13 @@ export default function PostFeedItem({
     const controller = new PostFeedItemController();
 
     const { updateOne } = usePostsListContext();
+    const [screenData, setScreenData] = useState(item);
     const [liked, setLiked] = useState(item.likedByUser ?? false);
     const [showSnackBar, setShowSnackBar] = useState(false);
 
     const timeAgo = timeAgoFormatter(item.publishDate);
 
     const {
-        data,
         mutate,
         error: qError,
         isPending,
@@ -58,15 +55,14 @@ export default function PostFeedItem({
             return controller.handleLike(item.id!, setLiked, state, updateOne);
         },
 
+        onSuccess: (data) => {
+            setScreenData(data);
+        },
+
         onError: () => {
             setShowSnackBar(true);
         },
     });
-
-    function navigate() {
-        //@ts-ignore
-        navigation?.push("Comments", { postId: item.id });
-    }
 
     return (
         <View style={styles.listItem}>
@@ -84,14 +80,14 @@ export default function PostFeedItem({
             <View style={styles.itemContent}>
                 <View style={styles.itemTitle}>
                     <View style={styles.itemTitle}>
-                        <Text style={styles.titleName}>{data ? data.user.name : item.user.name}</Text>
-                        <Text style={styles.titleUname}>@{data ? data.user.userName : item.user.userName}</Text>
+                        <Text style={styles.titleName}>{screenData?.user.name}</Text>
+                        <Text style={styles.titleUname}>@{screenData?.user.userName}</Text>
                         <Text style={styles.titleUname}>{timeAgo}</Text>
                     </View>
 
                     {moreActionsButton}
                 </View>
-                <HyperlinkText text={data ? data.content : item?.content} textStyle={styles.itemContentBody} />
+                <HyperlinkText text={screenData?.content ?? ""} textStyle={styles.itemContentBody} />
 
                 {postWebView}
 
@@ -103,7 +99,7 @@ export default function PostFeedItem({
                             onPress={() => mutate(false)}
                         >
                             <AntDesign name="heart" size={20} color={appColors.text100} />
-                            <Text style={styles.contentActionText}>{data ? data.likes : item.likes}</Text>
+                            <Text style={styles.contentActionText}>{screenData?.likes}</Text>
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity
@@ -112,16 +108,11 @@ export default function PostFeedItem({
                             onPress={() => mutate(true)}
                         >
                             <AntDesign name="hearto" size={20} color={appColors.text100} />
-                            <Text style={styles.contentActionText}>{data ? data.likes : item.likes}</Text>
+                            <Text style={styles.contentActionText}>{screenData?.likes}</Text>
                         </TouchableOpacity>
                     )}
 
-                    {navigation ? (
-                        <TouchableOpacity style={styles.contentActionButton} onPress={navigate}>
-                            <FontAwesome name="comment-o" size={20} color={appColors.text100} />
-                            <Text style={styles.contentActionText}>{data ? data.comments : item.comments}</Text>
-                        </TouchableOpacity>
-                    ) : null}
+                    {navigateComment}
                 </View>
             </View>
         </View>
