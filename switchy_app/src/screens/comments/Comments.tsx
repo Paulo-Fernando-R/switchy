@@ -11,10 +11,13 @@ import SnackBar from "../../components/snackBar/SnackBar";
 import { FlatList } from "react-native-gesture-handler";
 import CommentsController from "./commentsController";
 import appColors from "../../styles/appColors";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./commentsStyles";
 import useLayoutFocus from "../../hooks/useLayoutFocus";
 import { RefreshControl } from "react-native";
+import useKeyboard from "../../hooks/useKeyboard";
+import KeyboardStateEnum from "../../enums/keyboardStateEnum";
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 type CommentsProps = {
     route: CommentsRouteProp | SearchCommentsRouteProp;
@@ -29,7 +32,13 @@ export default function Comments({ route, navigation }: CommentsProps) {
 
     const { updateOne } = usePostsListContext();
     const { postId } = route.params;
+    const keyBoard = useKeyboard() === KeyboardStateEnum.show;
+    const transLateY = useSharedValue(0);
     const ref = useLayoutFocus();
+
+    const animatedStyles = useAnimatedStyle(() => ({
+        transform: [{ translateY: withSpring(transLateY.value) }],
+    }));
 
     const { data, refetch, isRefetching } = useQuery({
         queryKey: [`Comments${postId}${ref}`],
@@ -54,6 +63,10 @@ export default function Comments({ route, navigation }: CommentsProps) {
     function goBack() {
         navigation.pop(1);
     }
+
+    useEffect(() => {
+        transLateY.value = keyBoard ? -30 : 0;
+    }, [keyBoard]);
 
     return (
         <View style={styles.page}>
@@ -87,9 +100,11 @@ export default function Comments({ route, navigation }: CommentsProps) {
                 contentContainerStyle={styles.list}
                 data={data}
                 renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} />}
-                keyExtractor={(item, index) => `${item?.id}-${index}${item?.comments?.length}${item?.likes?.length}`}
+                keyExtractor={(item, index) =>
+                    `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`
+                }
             />
-            <View style={styles.inputBox}>
+            <Animated.View style={[styles.inputBox, animatedStyles]}>
                 <TextInput
                     placeholder="Responder"
                     placeholderTextColor={appColors.text300}
@@ -105,7 +120,7 @@ export default function Comments({ route, navigation }: CommentsProps) {
                         <MaterialCommunityIcons name="send-outline" size={20} color={appColors.accent300} />
                     )}
                 </TouchableOpacity>
-            </View>
+            </Animated.View>
         </View>
     );
 }

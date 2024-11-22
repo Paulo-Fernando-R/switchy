@@ -118,10 +118,10 @@ class UserController {
     }
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { name, email } = req.body;
+            const { name, email, description } = req.body;
             const userId = req.userId;
             try {
-                const user = yield this.updateUserCase.execute(userId, name, email);
+                const user = yield this.updateUserCase.execute(userId, name, email, description);
                 return res.type("application/json").status(status_codes_1.StatusCodes.Ok).send(user);
             }
             catch (ex) {

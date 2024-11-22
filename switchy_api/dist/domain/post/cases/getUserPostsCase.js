@@ -17,10 +17,10 @@ class GetUserPostsCase {
     constructor(_postRepository) {
         this.postRepository = _postRepository;
     }
-    execute(userId) {
+    execute(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = yield this.postRepository.getUserPosts(userId);
+                const response = yield this.postRepository.getUserPosts(userId, page);
                 return response;
             }
             catch (error) {

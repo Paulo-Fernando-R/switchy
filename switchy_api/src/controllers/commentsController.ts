@@ -43,8 +43,9 @@ export default class CommentsController {
 
     async getByPost(req: Request, res: Response) {
         const { postId } = req.params;
+        const userId = req.userId;
 
-        const response = await new GetCommentsCase(this.postRepository).execute(postId);
+        const response = await new GetCommentsCase(this.postRepository).execute(postId, userId);
         res.status(StatusCodes.Ok).send(response);
     }
 }

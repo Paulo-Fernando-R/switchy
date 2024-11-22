@@ -13,33 +13,26 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     async getUserPosts(userId: string, page: number) {
         const skip = (page - 1) * 10;
 
-        try {
-            await this.connect();
-            const list = await Post.find({ "user.id": new Types.ObjectId(userId) }, null, {
-                skip: skip,
-                limit: 10,
-                sort: { publishDate: -1 },
-            });
+        await this.connect();
 
-            // console.log(list);
+        const list = await Post.find({ 'user.id': new Types.ObjectId(userId) }, null, {
+            skip: skip,
+            limit: 10,
+            sort: { publishDate: -1 },
+        });
 
-            const res: IPost[] = list.map((e) => {
-                return {
-                    content: e.content,
-                    publishDate: e.publishDate,
-                    user: e.user,
-                    id: e._id,
-                    parentId: e.parentId,
-                    comments: e.comments,
-                    likes: e.likes,
-                };
-            });
-            return res;
-        } catch (error) {
-            console.error(error);
-            //@ts-ignore
-            throw new ServerError(error.message ?? "");
-        }
+        const res: IPost[] = list.map((e) => {
+            return {
+                content: e.content,
+                publishDate: e.publishDate,
+                user: e.user,
+                id: e._id,
+                parentId: e.parentId,
+                comments: e.comments,
+                likes: e.likes,
+            };
+        });
+        return res;
     }
 
     async addLike(postId: string, userId: string): Promise<void> {

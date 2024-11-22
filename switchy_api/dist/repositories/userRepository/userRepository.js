@@ -51,6 +51,7 @@ class UserRepository extends databaseConnection_1.default {
                 id: user === null || user === void 0 ? void 0 : user._id,
                 email: user === null || user === void 0 ? void 0 : user.email,
                 userName: user.userName,
+                description: user === null || user === void 0 ? void 0 : user.description,
                 name: user === null || user === void 0 ? void 0 : user.name,
                 followers: user === null || user === void 0 ? void 0 : user.followers,
                 following: user === null || user === void 0 ? void 0 : user.following,
@@ -114,23 +115,33 @@ class UserRepository extends databaseConnection_1.default {
             return userList;
         });
     }
-    update(userId, name, email) {
+    update(userId, name, email, description) {
         return __awaiter(this, void 0, void 0, function* () {
             const updateObj = {};
-            if (name)
+            if (name) {
                 Object.defineProperty(updateObj, "name", {
                     value: name,
                     enumerable: true,
                     configurable: true,
                     writable: true,
                 });
-            if (email)
+            }
+            if (email) {
                 Object.defineProperty(updateObj, "email", {
                     value: email,
                     enumerable: true,
                     configurable: true,
                     writable: true,
                 });
+            }
+            if (description) {
+                Object.defineProperty(updateObj, "description", {
+                    value: description,
+                    enumerable: true,
+                    configurable: true,
+                    writable: true,
+                });
+            }
             const res = yield user_1.User.findByIdAndUpdate(userId, updateObj, { returnDocument: "after" });
             if (res == null)
                 return null;
@@ -138,6 +149,7 @@ class UserRepository extends databaseConnection_1.default {
                 id: res === null || res === void 0 ? void 0 : res._id,
                 email: res === null || res === void 0 ? void 0 : res.email,
                 userName: res.userName,
+                description: res.description,
                 name: res === null || res === void 0 ? void 0 : res.name,
                 followers: res === null || res === void 0 ? void 0 : res.followers,
                 following: res === null || res === void 0 ? void 0 : res.following,

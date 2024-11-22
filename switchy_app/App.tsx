@@ -5,12 +5,17 @@ import { StatusBar } from "expo-status-bar";
 import Router from "./src/routes/Router";
 import TimeAgo from "javascript-time-ago";
 import StorageService from "./src/services/storageService/storageService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Auth from "./src/models/auth";
 import StorageTypeEnum from "./src/enums/storageTypeEnum";
 import NestContext from "./src/contexts/NestContext";
 import React from "react";
 import User from "./src/models/user";
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
+
+
 
 export default function App() {
     TimeAgo.addLocale(br);
@@ -26,6 +31,13 @@ export default function App() {
     const changeState = (isVisible: boolean) => setTabBarVisible(isVisible);
     const changeAuth = (auth: Auth) => setAuth(auth);
     const changeUser = (user: User) => setUser(user);
+
+    useEffect(()=>{
+        function hide(){
+            SplashScreen.hideAsync();
+        }
+        hide()
+    })
 
     return (
         <NestContext

@@ -15,13 +15,14 @@ class UpdateUserCase {
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
-    execute(userId, name, email) {
+    execute(userId, name, email, description) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const emailAlreadyTaken = yield this.userRepository.getByEmail(email);
-            if (emailAlreadyTaken != null) {
+            if (emailAlreadyTaken != null && userId != ((_a = emailAlreadyTaken.id) === null || _a === void 0 ? void 0 : _a.toString())) {
                 throw new userErrors_1.UserInvalidEmailError("Email already taken.", status_codes_1.StatusCodes.BadRequest);
             }
-            const res = yield this.userRepository.update(userId, name, email);
+            const res = yield this.userRepository.update(userId, name, email, description);
             return res;
         });
     }

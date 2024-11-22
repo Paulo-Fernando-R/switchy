@@ -20,15 +20,15 @@ export default class PostFeedItemController {
         return await this.repository.getPostById(postId);
     }
 
-    getInitialLike(item: Post | undefined, user: User | null) {
-        const likes = item?.likes;
-        const id = user?.id;
+    // getInitialLike(item: Post | undefined, user: User | null) {
+    //     const likes = item?.likes;
+    //     const id = user?.id;
 
-        if (likes?.some((value) => value.userId === id)) {
-            return true;
-        }
-        return false;
-    }
+    //     if (likes?.some((value) => value.userId === id)) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     async handleLike(
         postId: string,
@@ -37,13 +37,14 @@ export default class PostFeedItemController {
         updateOne: (post: Post) => void
     ) {
         try {
+            setLiked(liked);
             await this.putLike(postId, liked);
             const response = await this.getById(postId);
             updateOne(response);
-            setLiked(liked);
             return response;
         } catch (error) {
             console.error(error);
+            setLiked(!liked);
             if (error instanceof CustomError) {
                 throw new Error(error.screenMessage);
             }

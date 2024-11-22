@@ -6,6 +6,7 @@ exports.userSchema = new mongoose_1.Schema({
     id: { type: mongoose_1.Schema.Types.ObjectId, ref: "id", required: false },
     name: { type: String, required: true },
     email: { type: String, required: true },
+    description: { type: String, required: false },
     userName: { type: String, required: false },
     password: { type: String, required: false },
     createdAt: { type: Number, default: Date.now() },

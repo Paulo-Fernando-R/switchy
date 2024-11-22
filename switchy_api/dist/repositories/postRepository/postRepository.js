@@ -21,13 +21,17 @@ class PostRepository extends databaseConnection_1.default {
     constructor() {
         super();
     }
-    getUserPosts(userId) {
+    getUserPosts(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            console.log("NESSA MERDA");
+            const skip = (page - 1) * 10;
             try {
                 yield this.connect();
-                const list = yield post_1.Post.find({ "user.id": new mongoose_1.Types.ObjectId(userId) });
+                const list = yield post_1.Post.find({ "user.id": new mongoose_1.Types.ObjectId(userId) }, null, {
+                    skip: skip,
+                    limit: 10,
+                    sort: { publishDate: -1 },
+                });
                 // console.log(list);
                 const res = list.map((e) => {
                     return {
