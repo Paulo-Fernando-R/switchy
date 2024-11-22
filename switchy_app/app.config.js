@@ -1,8 +1,8 @@
-{
+module.exports = {
     "expo": {
         "name": "Switchy",
         "slug": "switchy",
-        "version": "1.0.0",
+        "version": "0.0.1",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "light",
@@ -19,8 +19,10 @@
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#3D65C9"
             },
-            "package": "com.nome123.switchy_app",
-            "softwareKeyboardLayoutMode": "pan"
+            "package": "com.ferreira.switchy",
+            "softwareKeyboardLayoutMode": "pan",
+            "serviceAccountKeyPath": "process.env.EXPO_UPLOAD_KEYSTORE_GOOGLE",
+            "track": "internal"
         },
         "web": {
             "favicon": "./assets/favicon.png"
