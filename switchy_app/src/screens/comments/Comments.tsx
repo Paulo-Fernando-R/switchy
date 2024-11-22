@@ -6,12 +6,15 @@ import { usePostsListContext } from "../../contexts/postsListContext";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { FlatList } from "react-native-gesture-handler";
 import CommentsController from "./commentsController";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./commentsStyles";
 import useLayoutFocus from "../../hooks/useLayoutFocus";
 import { RefreshControl } from "react-native";
 import InputArea from "./privateComponents/InputArea";
 import TopArea from "./privateComponents/TopArea";
+import { Modalize } from "react-native-modalize";
+import MoreActionsButton from "../../components/postFeedItem/privateComponents/MoreActionsButton";
+import BottomModal from "../../components/bottomModal/BottomModal";
 
 type CommentsProps = {
     route: CommentsRouteProp | SearchCommentsRouteProp;
@@ -28,6 +31,7 @@ export default function Comments({ route, navigation }: CommentsProps) {
     const { postId } = route.params;
 
     const ref = useLayoutFocus();
+    const modalizeRef = useRef<Modalize>(null);
 
     const { data, refetch, isRefetching } = useQuery({
         queryKey: [`Comments${postId}${ref}`],
@@ -69,7 +73,14 @@ export default function Comments({ route, navigation }: CommentsProps) {
                 refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
                 contentContainerStyle={styles.list}
                 data={data}
-                renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} />}
+                renderItem={({ item }) => (
+                    <PostFeedItem
+                        moreActionsButton={<MoreActionsButton modalizeRef={modalizeRef} />}
+                        item={item}
+                        navigation={navigation}
+                        actionModal={<BottomModal modalizeRef={modalizeRef} />}
+                    />
+                )}
                 keyExtractor={(item, index) =>
                     `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`
                 }
