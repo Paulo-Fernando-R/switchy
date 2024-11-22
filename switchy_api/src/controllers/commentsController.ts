@@ -9,6 +9,8 @@ import { UserRepository } from "../repositories/userRepository/userRepository";
 import SaveCommentCase from "../domain/post/cases/saveCommentCase";
 import { PostError } from "../domain/post/errors/postErrors";
 import GetCommentsCase from "../domain/post/cases/getCommentsCase";
+import { IUser } from "../models/user";
+import { Types } from "mongoose";
 
 export default class CommentsController {
     private readonly postRepository: IPostRepository;
@@ -25,7 +27,13 @@ export default class CommentsController {
 
         try {
             const user = await new GetUserByIdCase(this.userRepository).execute(userId);
-            await new SaveCommentCase(this.postRepository).execute(content, parentId, user);
+
+            const aux: IUser = {
+                email: user.email,
+                name: user.name,
+                id: new Types.ObjectId(user.id as string),
+            };
+            await new SaveCommentCase(this.postRepository).execute(content, parentId, aux);
 
             res.status(StatusCodes.Ok).send();
         } catch (ex) {

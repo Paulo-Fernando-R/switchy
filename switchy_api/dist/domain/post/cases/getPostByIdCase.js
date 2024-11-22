@@ -9,22 +9,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const postErrors_1 = require("../errors/postErrors");
 class getPostByIdCase {
     constructor(_postRepository) {
         this.postRepository = _postRepository;
     }
-    execute(postId) {
+    execute(postId, loggedUserId) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const response = yield this.postRepository.getPostById(postId);
-                return response;
-            }
-            catch (error) {
-                console.error(error);
-                throw new postErrors_1.UnableGetPostError();
-            }
+            const post = yield this.postRepository.getPostById(postId);
+            var comments = this.getTotalComments(post);
+            var likes = this.getTotalLikes(post);
+            var likedByUser = this.isLikedByUser(post, loggedUserId);
+            var user = this.getUserOfPost(post);
+            var obj = {
+                content: post.content,
+                publishDate: post.publishDate,
+                user: user,
+                id: post.id.toString(),
+                parentId: post.parentId,
+                comments: comments,
+                likes: likes,
+                likedByUser: likedByUser,
+            };
+            return obj;
         });
+    }
+    getUserOfPost(post) {
+        var userPost = post.user;
+        var user = {
+            name: userPost.get('name'),
+            userName: userPost.get('userName'),
+            id: userPost.get('id').toString(),
+        };
+        return user;
+    }
+    isLikedByUser(post, userId) {
+        if (post.likes == null) {
+            return false;
+        }
+        var likedByUser = post.likes.filter((like) => like.userId.equals(userId)).length > 0;
+        return likedByUser;
+    }
+    getTotalComments(post) {
+        var _a;
+        var comments = 0;
+        if (post.comments != null) {
+            comments = (_a = post.comments) === null || _a === void 0 ? void 0 : _a.length;
+        }
+        return comments;
+    }
+    getTotalLikes(post) {
+        var _a;
+        var likes = 0;
+        if (post.likes != null) {
+            likes = (_a = post.likes) === null || _a === void 0 ? void 0 : _a.length;
+        }
+        return likes;
     }
 }
 exports.default = getPostByIdCase;
