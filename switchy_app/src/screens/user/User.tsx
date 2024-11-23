@@ -29,10 +29,12 @@ export default function Profile({ navigation }: ProfileProps) {
     const controller = new UserController();
 
     const [snackBar, setSnackBar] = useState(false);
+    const [errorSnackBar, setErrorSnackBar] = useState(false);
     const [popup, setPopup] = React.useState(false);
     const { user } = useUserContext();
     const { posts, setPosts } = usePostsListContext();
     const modalizeRef = useRef<Modalize>(null);
+    let currentSelectedItem = useRef<string>("");
 
     const { data, isSuccess, error, fetchNextPage, isFetchingNextPage, isRefetching, refetch } = useInfiniteQuery({
         queryKey: ["Profile"],
@@ -43,14 +45,14 @@ export default function Profile({ navigation }: ProfileProps) {
     });
 
     const mutation = useMutation({
-        mutationFn: (postId: string | undefined) => controller.deletePost(postId, posts, setPopup),
-        onError: () => setSnackBar(true),
+        mutationFn: () => controller.deletePost(currentSelectedItem.current, setPopup, refetch),
+        onError: () => setErrorSnackBar(true),
         onSuccess: () => setSnackBar(true),
     });
 
-    function openPopup() {
-        setPopup(true);
-        modalizeRef.current?.close();
+    function openModal(id: string | undefined) {
+        modalizeRef.current?.open();
+        currentSelectedItem.current = id!;
     }
 
     function navigate() {
@@ -69,8 +71,8 @@ export default function Profile({ navigation }: ProfileProps) {
         <View style={styles.page}>
             <SnackBar.Error
                 message={error?.message ?? ""}
-                setVisible={setSnackBar}
-                visible={snackBar}
+                setVisible={setErrorSnackBar}
+                visible={errorSnackBar}
                 autoDismissible={true}
             />
             <SnackBar.Sucess
@@ -79,43 +81,39 @@ export default function Profile({ navigation }: ProfileProps) {
                 visible={snackBar}
                 autoDismissible={true}
             />
+
             <FlatList
                 ListHeaderComponent={<Header user={user!} navigate={navigate} />}
                 ListEmptyComponent={EmptyList}
                 refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
                 contentContainerStyle={styles.list}
                 data={posts}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                     <PostFeedItem
                         item={item}
                         error={error}
                         postWebView={<PostWebView text={item?.content} />}
-                        moreActionsButton={<MoreActionsButton modalizeRef={modalizeRef} />}
+                        moreActionsButton={<MoreActionsButton openModal={() => openModal(item?.id)} />}
                         navigateComment={
-                            <NavigateComment
-                                commentsNumber={item?.comments}
-                                navigate={() => navigateComent(item?.id)}
-                            />
+                            <NavigateComment commentsNumber={item?.comments} navigate={() => navigateComent(item.id)} />
                         }
                         actionModal={
-                            <BottomModal
-                                modalizeRef={modalizeRef}
-                                popup={
-                                    <QuestionPopup
-                                        visibility={popup}
-                                        setVisibility={setPopup}
-                                        title="Excluir publicação?"
-                                        description="Tem certeza que deseja excluir essa publicação?"
-                                        action={() => mutation.mutate(item?.id)}
-                                    />
-                                }
-                            >
+                            <BottomModal modalizeRef={modalizeRef}>
                                 <ModalButton
-                                    action={openPopup}
+                                    action={() => setPopup(true)}
                                     text="Excluir"
                                     icon={<MaterialIcons name="delete-outline" size={24} color={appColors.text200} />}
                                 />
                             </BottomModal>
+                        }
+                        popup={
+                            <QuestionPopup
+                                visibility={popup}
+                                setVisibility={setPopup}
+                                title="Excluir publicação?"
+                                description="Tem certeza que deseja excluir essa publicação?"
+                                action={() => mutation.mutate()}
+                            />
                         }
                     />
                 )}

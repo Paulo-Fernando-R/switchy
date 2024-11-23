@@ -1,4 +1,3 @@
-import ServerError from "../../../errors/serverError";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { UnableDeletePostError } from "../errors/postErrors";
 
@@ -12,7 +11,6 @@ export default class DeletePostCase {
         try {
             await this.postRepository.deletePost(postId);
         } catch (error) {
-            console.error(error);
             throw new UnableDeletePostError();
         }
     }

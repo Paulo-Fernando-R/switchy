@@ -162,6 +162,7 @@ export default class PostRepository implements IPostRepository {
 
     async deletePost(postId: string) {
         const response = await this.axios.instance.delete("/Post/DeletePost/" + postId);
+        console.log(response.status, postId);
         if (!response) {
             throw new NetworkError();
         }

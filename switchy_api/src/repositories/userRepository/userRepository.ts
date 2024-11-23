@@ -239,9 +239,22 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
         return user;
     }
 
-    async updateUsername(userId: string, username: string): Promise<void> {
+    async updateUsername(userId: string, username: string): Promise<IUser | null> {
         await this.connect();
 
-        await User.findByIdAndUpdate(userId, { username: username });
+        var res = await User.findByIdAndUpdate(userId, { userName: username }, { returnDocument: 'after' });
+        if (res == null) return null;
+
+        const user: IUser = {
+            id: res?._id,
+            email: res?.email,
+            userName: res.userName,
+            description: res.description,
+            name: res?.name!,
+            followers: res?.followers,
+            following: res?.following,
+        };
+
+        return user;
     }
 }

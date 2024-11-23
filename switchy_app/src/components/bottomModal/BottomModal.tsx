@@ -7,13 +7,12 @@ import { Portal } from "react-native-portalize";
 type BottomModalProps = {
     modalizeRef: React.RefObject<IHandles>;
     children: React.ReactNode[] | React.ReactNode;
-    popup?: React.ReactNode;
 };
 
-export default function BottomModal({ modalizeRef, children, popup }: BottomModalProps) {
+export default function BottomModal({ modalizeRef, children }: BottomModalProps) {
     return (
         <>
-            {popup}
+            {/* {popup} */}
             <Portal>
                 <Modalize
                     closeSnapPointStraightEnabled={true}

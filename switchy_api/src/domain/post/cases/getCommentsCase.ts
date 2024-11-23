@@ -2,7 +2,6 @@ import { Types } from "mongoose";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { IPost } from "../../../models/post";
 import GetPostsResponse from "../response/getFeedPostsResponse";
-import IUserPost from "../entities/userPost";
 import IGetFeedPostsResponse from "../response/getFeedPostsResponse";
 
 export default class GetCommentsCase {
@@ -29,12 +28,11 @@ export default class GetCommentsCase {
             var totalComments = this.getTotalComments(item);
             var likes = this.getTotalLikes(item);
             var likedByUser = this.isLikedByUser(item, userId);
-            var user: IUserPost = this.getUserOfPost(item);
 
             var obj: IGetFeedPostsResponse = {
                 content: item.content,
                 publishDate: item.publishDate,
-                user: user,
+                user: item.user,
                 id: item.id!.toString(),
                 parentId: item.parentId,
                 comments: totalComments,
@@ -46,16 +44,6 @@ export default class GetCommentsCase {
         }
 
         return ls;
-    }
-
-    private getUserOfPost(post: IPost) {
-        var userPost = post.user;
-        var user: IUserPost = {
-            name: userPost.get("name"),
-            userName: userPost.get("userName"),
-            id: userPost.get("id").toString(),
-        };
-        return user;
     }
 
     private isLikedByUser(post: IPost, userId: string) {
