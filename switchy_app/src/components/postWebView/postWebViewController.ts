@@ -1,6 +1,6 @@
 import Preview from "../../models/preview";
-import GetPostPreviewCase from "../getPostPreviewCase/getPostPreviewCase";
-import IgetPostPreviewCase from "../getPostPreviewCase/IgetPostPreviewCase";
+import GetPostPreviewCase from "../../cases/getPostPreviewCase/getPostPreviewCase";
+import IgetPostPreviewCase from "../../cases/getPostPreviewCase/IgetPostPreviewCase";
 
 export default class PostWebViewController {
     private readonly getPostPreviewCase: IgetPostPreviewCase;

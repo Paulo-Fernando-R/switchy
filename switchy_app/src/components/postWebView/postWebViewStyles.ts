@@ -17,11 +17,11 @@ const styles = StyleSheet.create({
         marginBottom: -50,
     },
 
-    imageContainer:{
+    imageContainer: {
         overflow: "hidden",
         borderRadius: 12,
         width: "100%",
-         minHeight: 200,
+        minHeight: 200,
         maxHeight: 400,
     },
 
@@ -73,6 +73,30 @@ const styles = StyleSheet.create({
         // minHeight: 200,
         maxHeight: 400,
         aspectRatio: 9 / 16,
+    },
+
+    cardTitleContainer: {
+        flexDirection: "row",
+        gap: 12,
+        padding: 12,
+        borderRadius: 24,
+        backgroundColor: appColors.bg200,
+        alignItems: "center",
+        height: 100,
+    },
+
+    cardTitleImg: {
+        height: "100%",
+        width: "40%",
+        objectFit: "cover",
+        overflow: "hidden",
+        borderRadius: 12,
+    },
+
+    cardTitleText: {
+        flex: 1,
+        color: appColors.text200,
+        ...appTexts.paragraph3Regular,
     },
 });
 

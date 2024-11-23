@@ -9,30 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeletePostCase = void 0;
 const postErrors_1 = require("../errors/postErrors");
-class SaveCommentCase {
+class DeletePostCase {
     constructor(postRepository) {
         this.postRepository = postRepository;
     }
-    execute(content, parentId, user) {
+    execute(postId) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!content) {
-                throw new postErrors_1.PostEmptyValueError();
+            try {
+                yield this.postRepository.deletePost(postId);
             }
-            if (!parentId) {
-                throw new postErrors_1.PostEmptyValueError();
+            catch (error) {
+                console.error(error);
+                throw new postErrors_1.UnableDeletePostError();
             }
-            const post = {
-                user: user,
-                comments: [],
-                likes: [],
-                content: content,
-                publishDate: new Date(Date.now()),
-                parentId: parentId,
-            };
-            const postId = yield this.postRepository.createPost(post);
-            yield this.postRepository.addCommentsToPost(parentId, postId.toString());
         });
     }
 }
-exports.default = SaveCommentCase;
+exports.DeletePostCase = DeletePostCase;

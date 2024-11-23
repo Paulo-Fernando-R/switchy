@@ -1,21 +1,14 @@
-import { HomeNavigationProp, ProfileNavigationProp, SearchNavigationProp } from "../../routes/types/navigationTypes";
 import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import { usePostsListContext } from "../../contexts/postsListContext";
 import PostFeedItemController from "./postFeedItemController";
-import { useUserContext } from "../../contexts/userContext";
 import HyperlinkText from "../hypelinkText/HyperlinkText";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import timeAgoFormatter from "../../../timeAgoFormatter";
 import { Facebook } from "react-content-loader/native";
 //@ts-ignore
 import avatar from "../../../assets/icons/avatar.png";
-import PostWebView from "../postWebView/PostWebView";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import BottomModal from "../bottomModal/BottomModal";
 import { useMutation } from "@tanstack/react-query";
-import { Modalize } from "react-native-modalize";
-import Feather from "@expo/vector-icons/Feather";
-import React, { useRef, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import appColors from "../../styles/appColors";
 import SnackBar from "../snackBar/SnackBar";
 import styles from "./postFeedItemStyles";
@@ -24,29 +17,34 @@ import Post from "../../models/post";
 type PostFeedItemProps = {
     item?: Post | undefined;
     error?: Error | null;
-    navigation?: HomeNavigationProp | SearchNavigationProp | ProfileNavigationProp | undefined;
-    actionable?: boolean;
+    actionModal?: ReactNode;
+    moreActionsButton?: ReactNode;
+    postWebView?: ReactNode;
+    navigateComment?: ReactNode;
 };
 
-export default function PostFeedItem({ item, error, navigation, actionable }: PostFeedItemProps) {
-    //console.log(item)
+export default function PostFeedItem({
+    item,
+    error,
+    actionModal,
+    moreActionsButton,
+    postWebView,
+    navigateComment,
+}: PostFeedItemProps) {
     if (!item || error) {
         return <PostFeedItemSkeleton />;
     }
 
     const controller = new PostFeedItemController();
 
-    const { user } = useUserContext();
     const { updateOne } = usePostsListContext();
-
+    const [screenData, setScreenData] = useState(item);
     const [liked, setLiked] = useState(item.likedByUser ?? false);
     const [showSnackBar, setShowSnackBar] = useState(false);
 
     const timeAgo = timeAgoFormatter(item.publishDate);
-    const modalizeRef = useRef<Modalize>(null);
 
     const {
-        data,
         mutate,
         error: qError,
         isPending,
@@ -57,23 +55,18 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
             return controller.handleLike(item.id!, setLiked, state, updateOne);
         },
 
+        onSuccess: (data) => {
+            setScreenData(data);
+        },
+
         onError: () => {
             setShowSnackBar(true);
         },
     });
 
-    function navigate() {
-        //@ts-ignore
-        navigation?.push("Comments", { postId: item.id });
-    }
-
-    const onOpen = () => {
-        controller.openmModal(modalizeRef);
-    };
-
     return (
         <View style={styles.listItem}>
-            <BottomModal modalizeRef={modalizeRef} />
+            {actionModal}
             <SnackBar.Error
                 message={qError?.message ?? "Ocorreu um erro ao realizar a operação."}
                 setVisible={setShowSnackBar}
@@ -87,16 +80,16 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
             <View style={styles.itemContent}>
                 <View style={styles.itemTitle}>
                     <View style={styles.itemTitle}>
-                        <Text style={styles.titleName}>{data ? data.user.name : item.user.name}</Text>
-                        <Text style={styles.titleUname}>@{data ? data.user.userName : item.user.userName}</Text>
+                        <Text style={styles.titleName}>{screenData?.user.name}</Text>
+                        <Text style={styles.titleUname}>@{screenData?.user.userName}</Text>
                         <Text style={styles.titleUname}>{timeAgo}</Text>
                     </View>
-                    {actionable && (
-                        <Feather name="more-horizontal" size={20} color={appColors.text200} onPress={onOpen} />
-                    )}
+
+                    {moreActionsButton}
                 </View>
-                <HyperlinkText text={data ? data.content : item?.content} textStyle={styles.itemContentBody} />
-                <PostWebView text={data ? data.content : item?.content} />
+                <HyperlinkText text={screenData?.content ?? ""} textStyle={styles.itemContentBody} />
+
+                {postWebView}
 
                 <View style={styles.itemContentActions}>
                     {liked ? (
@@ -106,7 +99,7 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
                             onPress={() => mutate(false)}
                         >
                             <AntDesign name="heart" size={20} color={appColors.text100} />
-                            <Text style={styles.contentActionText}>{data ? data.likes : item.likes}</Text>
+                            <Text style={styles.contentActionText}>{screenData?.likes}</Text>
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity
@@ -115,16 +108,11 @@ export default function PostFeedItem({ item, error, navigation, actionable }: Po
                             onPress={() => mutate(true)}
                         >
                             <AntDesign name="hearto" size={20} color={appColors.text100} />
-                            <Text style={styles.contentActionText}>{data ? data.likes : item.likes}</Text>
+                            <Text style={styles.contentActionText}>{screenData?.likes}</Text>
                         </TouchableOpacity>
                     )}
 
-                    {navigation ? (
-                        <TouchableOpacity style={styles.contentActionButton} onPress={navigate}>
-                            <FontAwesome name="comment-o" size={20} color={appColors.text100} />
-                            <Text style={styles.contentActionText}>{data ? data.comments : item.comments}</Text>
-                        </TouchableOpacity>
-                    ) : null}
+                    {navigateComment}
                 </View>
             </View>
         </View>

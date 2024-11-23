@@ -35,6 +35,7 @@ class CommentsController {
                 const aux = {
                     email: user.email,
                     name: user.name,
+                    userName: user.userName,
                     id: new mongoose_1.Types.ObjectId(user.id),
                 };
                 yield new saveCommentCase_1.default(this.postRepository).execute(content, parentId, aux);

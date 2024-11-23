@@ -31,6 +31,7 @@ export default class CustomAxiosClient implements ICustomAxiosClient {
     private async refreshToken(token: string) {
         try {
             const res = await new RefreshTokenService().execute(token);
+           
             this.storage.setItem(res);
             return res;
         } catch (error) {
@@ -45,8 +46,10 @@ export default class CustomAxiosClient implements ICustomAxiosClient {
             if (response.status !== 401) return response;
 
             const res = this.getTokenFromStorage();
+          
             if (res) {
                 const refresh = await this.refreshToken(res?.refreshToken);
+               
                 if (refresh) {
                     this.instance.defaults.headers.common["Authorization"] = refresh.accessToken;
                     response.status = 400;

@@ -4,23 +4,24 @@ import appTexts from "../../styles/appTexts";
 
 const styles = StyleSheet.create({
     modalStyle: {
-        backgroundColor: appColors.bg200,
+        backgroundColor: appColors.bg100,
         elevation: 4,
         overflow: "hidden",
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
     },
     childrenStyle: {
-        backgroundColor: appColors.bg200,
+        backgroundColor: appColors.bg100,
         paddingHorizontal: 20,
         paddingVertical: 20,
         paddingTop: 40,
+        minHeight: 150,
     },
     handleStyle: {
-        backgroundColor: appColors.bg300,
-        color: appColors.bg300,
+        backgroundColor: appColors.accent100,
+        color: appColors.accent100,
         width: 60,
-        marginTop: 10,
+        marginTop: 8,
     },
     button: {
         backgroundColor: appColors.bg300,
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     },
     text: {
         ...appTexts.paragraph1Regular,
-        color: appColors.error,
+        color: appColors.text100,
     },
 });
 

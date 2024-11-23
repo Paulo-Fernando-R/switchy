@@ -4,12 +4,19 @@ import Auth from "../../models/auth";
 import baseAxios from "axios";
 import IRefreshTokenService from "./IrefreshTokenService";
 export default class RefreshTokenService implements IRefreshTokenService {
+    private url: string;
+
+    constructor(){
+        this.url = process.env.EXPO_PUBLIC_API_URL??"";
+    }
+
     async execute(token: string): Promise<Auth> {
         const data = {
             token: token,
         };
 
-        const response = await baseAxios.post("/Login/RefreshToken", data, { validateStatus: () => true });
+        const response = await baseAxios.post(this.url + "/Login/RefreshToken", data, { validateStatus: () => true });
+
         if (!response) {
             throw new NetworkError();
         }

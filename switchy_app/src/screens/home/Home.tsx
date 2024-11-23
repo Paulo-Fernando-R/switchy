@@ -11,7 +11,8 @@ import appColors from "../../styles/appColors";
 import HomeController from "./homeController";
 import React, { useEffect } from "react";
 import styles from "./homeStyles";
-
+import PostWebView from "../../components/postWebView/PostWebView";
+import NavigateComment from "../../components/postFeedItem/privateComponents/NavigateComment";
 
 type HomeProps = {
     navigation: HomeNavigationProp;
@@ -30,6 +31,10 @@ export default function Home({ navigation }: HomeProps) {
         placeholderData: () => ({ pageParams: [1], pages: [controller.placeholderData] }),
     });
 
+    function navigate(id: string | undefined) {
+        if (id) navigation?.push("Comments", { postId: id });
+    }
+
     useEffect(() => {
         isSuccess && setPosts(data?.pages?.flat());
     }, [data]);
@@ -42,7 +47,16 @@ export default function Home({ navigation }: HomeProps) {
             style={styles.page}
             contentContainerStyle={styles.list}
             data={posts}
-            renderItem={({ item }) => <PostFeedItem item={item} error={error} navigation={navigation} />}
+            renderItem={({ item }) => (
+                <PostFeedItem
+                    item={item}
+                    error={error}
+                    postWebView={<PostWebView text={item?.content ?? ""} />}
+                    navigateComment={
+                        <NavigateComment commentsNumber={item?.comments} navigate={() => navigate(item?.id)} />
+                    }
+                />
+            )}
             onEndReachedThreshold={0.8}
             onEndReached={() => fetchNextPage()}
             ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
