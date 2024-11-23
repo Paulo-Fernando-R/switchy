@@ -1,8 +1,8 @@
-import IGetFeedPostsResponse from "../../domain/post/response/getFeedPostsResponse";
 import { IPost } from "../../models/post";
 
 export function getTotalComments(post: IPost) {
     var comments = 0;
+    post.comments = filterDeletedPostComments(post.comments);
     if (post.comments != null) {
         comments = post.comments?.length;
     }
@@ -24,4 +24,8 @@ export function isLikedByUser(post: IPost, userId: string) {
 
     var likedByUser = post.likes.filter((like: any) => like.userId.equals(userId)).length > 0;
     return likedByUser;
+}
+
+function filterDeletedPostComments(comments: IPost["comments"]){
+    return comments ? comments.filter(comment => !comment.deleted) : [];
 }

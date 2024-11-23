@@ -108,7 +108,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
                 limit: 10,
                 sort: { publishDate: -1 },
             }).exec();
-            console.log(list);
+            //console.log(list);
 
             const res: IPost[] = list.map((e) => {
                 return {
@@ -185,7 +185,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
                 user: post?.user!,
                 comments:
                     post?.comments?.map((e) => {
-                        return { postId: e.postId };
+                        return { postId: e.postId, deleted: e.deleted };
                     }) ?? [],
                 likes: post?.likes ?? [],
             };
