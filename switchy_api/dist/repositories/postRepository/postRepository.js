@@ -25,7 +25,7 @@ class PostRepository extends databaseConnection_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const skip = (page - 1) * 10;
             yield this.connect();
-            const list = yield post_1.Post.find({ 'user.id': new mongoose_1.Types.ObjectId(userId) }, null, {
+            const list = yield post_1.Post.find({ "user.id": new mongoose_1.Types.ObjectId(userId), deleted: false }, null, {
                 skip: skip,
                 limit: 10,
                 sort: { publishDate: -1 },
@@ -64,6 +64,7 @@ class PostRepository extends databaseConnection_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.connect();
             const res = yield post_1.Post.find({
+                deleted: false,
                 _id: {
                     $in: ids,
                 },
@@ -85,37 +86,18 @@ class PostRepository extends databaseConnection_1.default {
     }
     createPost(post) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            try {
-                yield this.connect();
-                const newPost = new post_1.Post({
-                    comments: post.comments,
-                    content: post.content,
-                    likes: post.likes,
-                    parentId: post.parentId,
-                    publishDate: post.publishDate,
-                    user: post.user,
-                });
-                const created = yield newPost.save();
-                if (!created) {
-                    throw new serverError_1.default("unnable to insert");
-                }
-                const res = {
-                    id: created.id,
-                    user: created.user,
-                    parentId: created.parentId,
-                    publishDate: created.publishDate,
-                    content: created.content,
-                    comments: created.comments,
-                    likes: created.likes,
-                };
-                console.log(res);
-            }
-            catch (error) {
-                console.error(error);
-                //@ts-ignore
-                throw new serverError_1.default((_a = error.message) !== null && _a !== void 0 ? _a : "");
-            }
+            yield this.connect();
+            const newPost = new post_1.Post({
+                comments: post.comments,
+                content: post.content,
+                likes: post.likes,
+                parentId: post.parentId,
+                publishDate: post.publishDate,
+                user: post.user,
+            });
+            const created = yield newPost.save();
+            var id = created._id;
+            return id;
         });
     }
     getFeedPosts(userId, page, ids) {
@@ -132,7 +114,7 @@ class PostRepository extends databaseConnection_1.default {
             const skip = (page - 1) * 10;
             try {
                 yield this.connect();
-                const list = yield post_1.Post.find({ parentId: null }, null, {
+                const list = yield post_1.Post.find({ parentId: null, deleted: false }, null, {
                     skip: skip,
                     limit: 10,
                     sort: { publishDate: -1 },
@@ -164,7 +146,7 @@ class PostRepository extends databaseConnection_1.default {
             const skip = (page - 1) * 10;
             yield this.connect();
             try {
-                const res = yield post_1.Post.find({ parentId: null }, null, {
+                const res = yield post_1.Post.find({ parentId: null, deleted: false }, null, {
                     _id: {
                         $in: ids,
                     },
@@ -191,28 +173,6 @@ class PostRepository extends databaseConnection_1.default {
                 //@ts-ignore
                 throw new serverError_1.default((_a = error.message) !== null && _a !== void 0 ? _a : "");
             }
-        });
-    }
-    addComment(parentId, content, user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.connect();
-            const newPost = new post_1.Post({
-                content: content,
-                parentId: parentId,
-                user: {
-                    email: user === null || user === void 0 ? void 0 : user.email,
-                    name: user === null || user === void 0 ? void 0 : user.name,
-                    id: new mongoose_1.Types.ObjectId(user.id),
-                },
-            });
-            const res = yield newPost.save();
-            const result = {
-                id: res._id,
-                user: res.user,
-                publishDate: res.publishDate,
-                content: res.content,
-            };
-            return result;
         });
     }
     addCommentsToPost(parentId, commentId) {
@@ -248,6 +208,12 @@ class PostRepository extends databaseConnection_1.default {
                 //@ts-ignore
                 throw new serverError_1.default((_g = error.message) !== null && _g !== void 0 ? _g : "");
             }
+        });
+    }
+    deletePost(postId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.connect();
+            yield post_1.Post.findByIdAndUpdate(postId, { deleted: true });
         });
     }
 }
