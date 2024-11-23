@@ -31,6 +31,7 @@ export default class CommentsController {
             const aux: IUser = {
                 email: user.email,
                 name: user.name,
+                userName: user.userName,
                 id: new Types.ObjectId(user.id as string),
             };
             await new SaveCommentCase(this.postRepository).execute(content, parentId, aux);
