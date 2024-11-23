@@ -2,7 +2,7 @@ import ServerError from "../../../errors/serverError";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { UnableDeletePostError } from "../errors/postErrors";
 
-export class DeletePostCase {
+export default class DeletePostCase {
     private readonly postRepository: IPostRepository;
     constructor(postRepository: IPostRepository) {
         this.postRepository = postRepository;
