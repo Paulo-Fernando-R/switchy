@@ -1,8 +1,10 @@
 import IEncryptService from "./iencryptService";
 import bcrypt from "bcrypt";
 import "dotenv/config";
+import { injectable } from "inversify";
+import "reflect-metadata";
 
-
+@injectable()
 export default class EncryptServiceBcrypt implements IEncryptService {
     constructor(){
 

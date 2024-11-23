@@ -2,13 +2,17 @@ import "dotenv/config";
 import SignInResponse from '../responses/signInResponse';
 import { IUser } from '../../../models/user';
 import ITokenService from '../../../services/token/itokenService';
+import { inject, injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class GenerateTokenFromUserCase {
     private readonly tokenExpires = process.env.TOKEN_EXPIRES!;
     private readonly refreshTokenExpires = process.env.REFRESH_TOKEN_EXPIRES!;
     private readonly tokenService: ITokenService;
 
-    constructor(tokenService: ITokenService) {
+    constructor(
+        @inject('TokenService') tokenService: ITokenService) {
         this.tokenService = tokenService;
     }
 
