@@ -32,6 +32,7 @@ import UpdateUserPostsCase from "../domain/post/cases/updateUserPostsCase";
 import IPostRepository from "../repositories/postRepository/IpostRepository";
 import { PostRepository } from "../repositories/postRepository/postRepository";
 import { IUser } from "../models/user";
+import container from "../injection";
 
 export default class UserController {
     private postRepository: IPostRepository;
@@ -60,7 +61,7 @@ export default class UserController {
         this.tokenService = new JwtTokenService();
         this.signUpCase = new SignUpCase(this.userRepository, this.encryptService);
         this.searchUserCase = new SearchUserCase(this.userRepository, this.encryptService);
-        this.getUserByIdCase = new GetUserByIdCase(this.userRepository);
+        this.getUserByIdCase = container.get<GetUserByIdCase>('GetUserByIdCase');
         this.updateUserCase = new UpdateUserCase(this.userRepository);
         this.changeUserPasswordCase = new ChangeUserPasswordCase(this.userRepository, this.encryptService);
         this.followUserCase = new FollowUserCase(this.userRepository);
@@ -97,7 +98,7 @@ export default class UserController {
 
     async getInfo(req: Request, res: Response) {
         try {
-            const userInfo = await new GetUserByIdCase(this.userRepository).execute(req.userId);
+            const userInfo = await this.getUserByIdCase.execute(req.userId);
 
             res.type("application/json").status(StatusCodes.Ok).send(userInfo);
         } catch (ex) {
@@ -114,7 +115,7 @@ export default class UserController {
         const { userId } = req.params;
 
         try {
-            const userInfo = await new GetUserByIdCase(this.userRepository).execute(userId);
+            const userInfo = await this.getUserByIdCase.execute(userId);
 
             res.type("application/json").status(StatusCodes.Ok).send(userInfo);
         } catch (ex) {
