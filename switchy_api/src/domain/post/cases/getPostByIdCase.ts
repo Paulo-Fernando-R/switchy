@@ -1,6 +1,5 @@
 import { IPost } from "../../../models/post";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
-import IUserPost from "../entities/userPost";
 import IGetPostByIdResponse from "../response/getPostByIdResponse";
 
 export default class getPostByIdCase {
@@ -16,12 +15,11 @@ export default class getPostByIdCase {
         var comments = this.getTotalComments(post);
         var likes = this.getTotalLikes(post);
         var likedByUser = this.isLikedByUser(post, loggedUserId);
-        var user: IUserPost = this.getUserOfPost(post);
 
         var obj: IGetPostByIdResponse = {
             content: post.content,
             publishDate: post.publishDate,
-            user: user,
+            user: post.user,
             id: post.id!.toString(),
             parentId: post.parentId,
             comments: comments,
@@ -30,16 +28,6 @@ export default class getPostByIdCase {
         };
 
         return obj;
-    }
-
-    private getUserOfPost(post: IPost) {
-        var userPost = post.user;
-        var user: IUserPost = {
-            name: userPost.get('name'),
-            userName: userPost.get('userName'),
-            id: userPost.get('id').toString(),
-        };
-        return user;
     }
 
     private isLikedByUser(post: IPost, userId: string) {

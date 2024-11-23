@@ -4,6 +4,8 @@ import IPostRepository from "../../../repositories/postRepository/IpostRepositor
 import { PostEmptyValueError, UnableCreatePostError } from "../errors/postErrors";
 import GetUserByIdCase from "../../user/cases/getUserByIdCase";
 import { UserRepository } from "../../../repositories/userRepository/userRepository";
+import IPostUser from "../../../models/postUser";
+
 export default class CreatePostCase {
     private readonly postRepository: IPostRepository;
 
@@ -20,19 +22,20 @@ export default class CreatePostCase {
         if (!user) {
             throw new UnableCreatePostError();
         }
+
+        var postUser: IPostUser = {
+            id: new Types.ObjectId(user.id.toString()),
+            name: user.name,
+            userName: user.userName,
+        };
+
         const post: IPost = {
-            user: {
-                email: user.email,
-                name: user.name,
-                userName: user.userName,
-                id: new Types.ObjectId(userId as string),
-            },
+            user: postUser,
             comments: [],
             likes: [],
             content: content,
             publishDate: new Date(Date.now()),
-            //@ts-ignore
-            parentId: parentId ? parentId : null,
+            parentId: parentId ? parentId : undefined,
         };
 
         try {
