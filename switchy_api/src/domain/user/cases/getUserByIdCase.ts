@@ -1,11 +1,15 @@
+import { inject, injectable } from "inversify";
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
 import { UserNotFoundError } from "../errors/userErrors";
 import IUserByIdResponse from "../responses/userByIdResponse";
+import "reflect-metadata";
 
+@injectable()
 export default class GetUserByIdCase {
     private readonly userRepository: IUserRepository;
 
-    constructor(userRepository: IUserRepository) {
+    constructor(
+        @inject('UserRepository') userRepository: IUserRepository) {
         this.userRepository = userRepository;
     }
 

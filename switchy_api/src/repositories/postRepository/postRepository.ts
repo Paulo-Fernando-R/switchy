@@ -1,10 +1,13 @@
+import { injectable } from "inversify";
 import DatabaseConnection from "../../database/databaseConnection";
 import ServerError from "../../errors/serverError";
 import { IPost, Post } from "../../models/post";
 import { IUser } from "../../models/user";
 import IPostRepository from "./IpostRepository";
 import { Types } from "mongoose";
+import "reflect-metadata";
 
+@injectable()
 export class PostRepository extends DatabaseConnection implements IPostRepository {
     constructor() {
         super();

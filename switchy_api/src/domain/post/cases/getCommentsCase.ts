@@ -1,14 +1,17 @@
 import { Types } from "mongoose";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
-import { IPost } from "../../../models/post";
 import GetPostsResponse from "../response/getFeedPostsResponse";
 import IGetFeedPostsResponse from "../response/getFeedPostsResponse";
 import { getTotalComments, getTotalLikes, isLikedByUser } from "../../../helpers/post/posthelpers";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export default class GetCommentsCase {
     private readonly postRepository: IPostRepository;
 
-    constructor(postRepository: IPostRepository) {
+    constructor(
+        @inject('PostRepository') postRepository: IPostRepository) {
         this.postRepository = postRepository;
     }
 

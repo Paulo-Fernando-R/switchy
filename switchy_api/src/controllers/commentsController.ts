@@ -1,24 +1,23 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "../utils/status_codes";
-import IPostRepository from "../repositories/postRepository/IpostRepository";
-import { PostRepository } from "../repositories/postRepository/postRepository";
 import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
 import { UserError } from "../domain/user/errors/userErrors";
-import IUserRepository from "../repositories/userRepository/IuserRepository";
-import { UserRepository } from "../repositories/userRepository/userRepository";
 import SaveCommentCase from "../domain/post/cases/saveCommentCase";
 import { PostError } from "../domain/post/errors/postErrors";
 import GetCommentsCase from "../domain/post/cases/getCommentsCase";
 import { IUser } from "../models/user";
 import { Types } from "mongoose";
+import container from "../injection";
 
 export default class CommentsController {
-    private readonly postRepository: IPostRepository;
-    private readonly userRepository: IUserRepository;
+    private readonly getUserByIdCase: GetUserByIdCase;
+    private readonly saveCommentCase: SaveCommentCase;
+    private readonly getCommentsCase: GetCommentsCase;
 
     constructor() {
-        this.postRepository = new PostRepository();
-        this.userRepository = new UserRepository();
+        this.getUserByIdCase = container.get<GetUserByIdCase>('GetUserByIdCase');
+        this.saveCommentCase = container.get<SaveCommentCase>('SaveCommentCase');
+        this.getCommentsCase = container.get<GetCommentsCase>('GetCommentsCase');
     }
 
     async add(req: Request, res: Response) {
@@ -26,7 +25,7 @@ export default class CommentsController {
         const userId = req.userId;
 
         try {
-            const user = await new GetUserByIdCase(this.userRepository).execute(userId);
+            const user = await this.getUserByIdCase.execute(userId);
 
             const aux: IUser = {
                 email: user.email,
@@ -34,7 +33,7 @@ export default class CommentsController {
                 userName: user.userName,
                 id: new Types.ObjectId(user.id as string),
             };
-            await new SaveCommentCase(this.postRepository).execute(content, parentId, aux);
+            await this.saveCommentCase.execute(content, parentId, aux);
 
             res.status(StatusCodes.Ok).send();
         } catch (ex) {
@@ -54,7 +53,7 @@ export default class CommentsController {
         const { postId } = req.params;
         const userId = req.userId;
 
-        const response = await new GetCommentsCase(this.postRepository).execute(postId, userId);
+        const response = await this.getCommentsCase.execute(postId, userId);
         res.status(StatusCodes.Ok).send(response);
     }
 }
