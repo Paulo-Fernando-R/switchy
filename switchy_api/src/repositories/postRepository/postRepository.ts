@@ -74,39 +74,21 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         return posts;
     }
 
-    async createPost(post: IPost) {
-        try {
-            await this.connect();
+    async createPost(post: IPost): Promise<Types.ObjectId> {
+        await this.connect();
 
-            const newPost = new Post({
-                comments: post.comments,
-                content: post.content,
-                likes: post.likes,
-                parentId: post.parentId,
-                publishDate: post.publishDate,
-                user: post.user,
-            });
+        const newPost = new Post({
+            comments: post.comments,
+            content: post.content,
+            likes: post.likes,
+            parentId: post.parentId,
+            publishDate: post.publishDate,
+            user: post.user,
+        });
 
-            const created = await newPost.save();
-
-            if (!created) {
-                throw new ServerError("unnable to insert");
-            }
-            const res: IPost = {
-                id: created.id,
-                user: created.user,
-                parentId: created.parentId,
-                publishDate: created.publishDate,
-                content: created.content,
-                comments: created.comments,
-                likes: created.likes,
-            };
-            console.log(res);
-        } catch (error) {
-            console.error(error);
-            //@ts-ignore
-            throw new ServerError(error.message ?? "");
-        }
+        const created = await newPost.save();
+        var id = created._id;
+        return id;
     }
 
     async getFeedPosts(userId: string, page: number, ids: Types.ObjectId[]) {
@@ -179,30 +161,6 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
             //@ts-ignore
             throw new ServerError(error.message ?? "");
         }
-    }
-
-    async addComment(parentId: string, content: string, user: IUser): Promise<IPost> {
-        await this.connect();
-
-        const newPost = new Post({
-            content: content,
-            parentId: parentId,
-            user: {
-                email: user?.email,
-                name: user?.name,
-                id: new Types.ObjectId(user.id),
-            },
-        });
-
-        const res = await newPost.save();
-
-        const result: IPost = {
-            id: res._id,
-            user: res.user,
-            publishDate: res.publishDate,
-            content: res.content,
-        };
-        return result;
     }
 
     async addCommentsToPost(parentId: string, commentId: string): Promise<void> {
