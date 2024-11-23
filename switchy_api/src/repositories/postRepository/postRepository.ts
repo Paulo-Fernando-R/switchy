@@ -168,7 +168,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         await this.connect();
 
         await Post.findByIdAndUpdate(parentId, {
-            $push: { comments: { postId: commentId } },
+            $push: { comments: { postId: commentId, deleted: false } },
         });
     }
 
