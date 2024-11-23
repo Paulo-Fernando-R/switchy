@@ -15,7 +15,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
 
         await this.connect();
 
-        const list = await Post.find({ "user.id": new Types.ObjectId(userId) }, null, {
+        const list = await Post.find({ "user.id": new Types.ObjectId(userId), deleted: false }, null, {
             skip: skip,
             limit: 10,
             sort: { publishDate: -1 },
@@ -53,6 +53,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         await this.connect();
 
         const res = await Post.find({
+            deleted: false,
             _id: {
                 $in: ids,
             },
@@ -102,7 +103,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         const skip = (page - 1) * 10;
         try {
             await this.connect();
-            const list = await Post.find({ parentId: null }, null, {
+            const list = await Post.find({ parentId: null, deleted: false }, null, {
                 skip: skip,
                 limit: 10,
                 sort: { publishDate: -1 },
@@ -133,7 +134,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         await this.connect();
 
         try {
-            const res = await Post.find({ parentId: null }, null, {
+            const res = await Post.find({ parentId: null, deleted: false }, null, {
                 _id: {
                     $in: ids,
                 },

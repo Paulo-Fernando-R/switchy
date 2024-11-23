@@ -10,5 +10,6 @@ const postSchema = new mongoose_1.Schema({
     content: { type: String, required: true },
     comments: [{ postId: { type: mongoose_1.Types.ObjectId, required: false, default: null } }],
     likes: [{ userId: { type: mongoose_1.Types.ObjectId, required: false, default: null } }],
+    deleted: { type: Boolean, default: false },
 });
 exports.Post = (0, mongoose_1.model)("Post", postSchema);

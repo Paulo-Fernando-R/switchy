@@ -1,14 +1,13 @@
 import { ProfileNavigationProp, ProfileRouteProp } from "../../routes/types/navigationTypes";
-import { Text, View, FlatList, ActivityIndicator, RefreshControl } from "react-native";
+import { View, FlatList, ActivityIndicator, RefreshControl } from "react-native";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import { useUserContext } from "../../contexts/userContext";
 import EmptyList from "../../components/emptyList/EmpyList";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import appColors from "../../styles/appColors";
 import UserController from "./userController";
-import User from "../../models/user";
 import styles from "./userStyles";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePostsListContext } from "../../contexts/postsListContext";
 import NavigateComment from "../../components/postFeedItem/privateComponents/NavigateComment";
 import BottomModal from "../../components/bottomModal/BottomModal";
@@ -19,6 +18,7 @@ import ModalButton from "../../components/bottomModal/privateComponents/ModalBut
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import QuestionPopup from "../../components/questionPopup/QuestionPopup";
 import Header from "./privateComponents/Header";
+import SnackBar from "../../components/snackBar/SnackBar";
 
 type ProfileProps = {
     navigation: ProfileNavigationProp;
@@ -28,6 +28,8 @@ type ProfileProps = {
 export default function Profile({ navigation }: ProfileProps) {
     const controller = new UserController();
 
+    const [snackBar, setSnackBar] = useState(false);
+    const [popup, setPopup] = React.useState(false);
     const { user } = useUserContext();
     const { posts, setPosts } = usePostsListContext();
     const modalizeRef = useRef<Modalize>(null);
@@ -40,7 +42,12 @@ export default function Profile({ navigation }: ProfileProps) {
         initialPageParam: 1,
     });
 
-    const [popup, setPopup] = React.useState(false);
+    const mutation = useMutation({
+        mutationFn: (postId: string | undefined) => controller.deletePost(postId, posts, setPopup),
+        onError: () => setSnackBar(true),
+        onSuccess: () => setSnackBar(true),
+    });
+
     function openPopup() {
         setPopup(true);
         modalizeRef.current?.close();
@@ -60,11 +67,20 @@ export default function Profile({ navigation }: ProfileProps) {
 
     return (
         <View style={styles.page}>
-            {/* <Header user={user!} navigate={navigate} /> */}
-          
-
+            <SnackBar.Error
+                message={error?.message ?? ""}
+                setVisible={setSnackBar}
+                visible={snackBar}
+                autoDismissible={true}
+            />
+            <SnackBar.Sucess
+                message={"Publicação excluida com sucesso"}
+                setVisible={setSnackBar}
+                visible={snackBar}
+                autoDismissible={true}
+            />
             <FlatList
-            ListHeaderComponent={ <Header user={user!} navigate={navigate} />}
+                ListHeaderComponent={<Header user={user!} navigate={navigate} />}
                 ListEmptyComponent={EmptyList}
                 refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
                 contentContainerStyle={styles.list}
@@ -90,7 +106,7 @@ export default function Profile({ navigation }: ProfileProps) {
                                         setVisibility={setPopup}
                                         title="Excluir publicação?"
                                         description="Tem certeza que deseja excluir essa publicação?"
-                                        action={() => alert("Excluir")}
+                                        action={() => mutation.mutate(item?.id)}
                                     />
                                 }
                             >
