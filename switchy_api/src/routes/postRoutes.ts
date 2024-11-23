@@ -45,4 +45,14 @@ postRoutes.get("/GetPostsByUserId/:userId/:page", (req, res) => {
     return controller.getUserPosts(req, res);
 });
 
+postRoutes.delete("/DeletePost/:postId", (req, res) => {
+    // #swagger.tags = ['Post']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[400] = { description: 'Bad Request.' }
+    // #swagger.responses[401] = { description: 'Unauthorized.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+
+    return controller.deletePost(req, res);
+});
+
 export default postRoutes;

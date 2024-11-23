@@ -15,7 +15,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
 
         await this.connect();
 
-        const list = await Post.find({ 'user.id': new Types.ObjectId(userId) }, null, {
+        const list = await Post.find({ "user.id": new Types.ObjectId(userId) }, null, {
             skip: skip,
             limit: 10,
             sort: { publishDate: -1 },
@@ -236,5 +236,10 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
             //@ts-ignore
             throw new ServerError(error.message ?? "");
         }
+    }
+
+    async deletePost(postId: string) {
+        await this.connect();
+        await Post.findByIdAndUpdate(postId, { deleted: true });
     }
 }

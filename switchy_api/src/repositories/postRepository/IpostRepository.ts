@@ -12,4 +12,5 @@ export default interface IPostRepository {
     addLike(postId: string, userId: string): Promise<void>;
     removeLike(postId: string, userId: string): Promise<void>;
     getUserPosts(userId: string, page: number): Promise<IPost[]>;
+    deletePost(postId: string): Promise<void>
 }

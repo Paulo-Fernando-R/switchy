@@ -9,6 +9,7 @@ export interface IPost {
     content: string;
     comments?: { postId: string }[];
     likes?: { userId: string }[];
+    deleted?: boolean;
 }
 
 const postSchema = new Schema<IPost>({
@@ -19,6 +20,7 @@ const postSchema = new Schema<IPost>({
     content: { type: String, required: true },
     comments: [{ postId: { type: Types.ObjectId, required: false, default: null } }],
     likes: [{ userId: { type: Types.ObjectId, required: false, default: null } }],
+    deleted: { type: Boolean, default: false },
 });
 
 export const Post = model<IPost>("Post", postSchema);

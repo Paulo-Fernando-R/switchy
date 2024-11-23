@@ -10,17 +10,20 @@ import UpdateLikeOfPostCase from "../domain/post/cases/updateLikeOfPostCase";
 import GetUserPostsCase from "../domain/post/cases/getUserPostsCase";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
 import { UserRepository } from "../repositories/userRepository/userRepository";
+import { DeletePostCase } from "../domain/post/cases/deletepostCase";
 export default class PostController {
     private postRepository: IPostRepository;
     private userRepository: IUserRepository;
     private getUserPostsCase: GetUserPostsCase;
     private getFeedPostsCase: GetFeedPostsCase;
+    private deletePostCase: DeletePostCase;
 
     constructor() {
         this.postRepository = new PostRepository();
         this.getUserPostsCase = new GetUserPostsCase(this.postRepository);
         this.userRepository = new UserRepository();
         this.getFeedPostsCase = new GetFeedPostsCase(this.postRepository, this.userRepository);
+        this.deletePostCase = new DeletePostCase(this.postRepository);
     }
 
     async createPost(req: Request, res: Response) {
@@ -84,5 +87,21 @@ export default class PostController {
 
         const list = await this.getUserPostsCase.execute(userId, pageInt);
         res.status(StatusCodes.Ok).send(list);
+    }
+
+    async deletePost(req: Request, res: Response) {
+        const { postId } = req.params;
+
+        try {
+            if (!postId) throw new PostEmptyValueError();
+            await this.deletePostCase.execute(postId);
+            res.status(StatusCodes.Ok).send();
+        } catch (error) {
+            if (error instanceof PostEmptyValueError) {
+                res.status(StatusCodes.BadRequest).send("postId is required");
+                return;
+            }
+            res.status(StatusCodes.InternalServerError).send(error);
+        }
     }
 }
