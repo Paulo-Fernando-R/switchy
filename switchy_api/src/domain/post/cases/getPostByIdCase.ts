@@ -1,12 +1,14 @@
+import { inject, injectable } from "inversify";
 import { getTotalComments, getTotalLikes, isLikedByUser } from "../../../helpers/post/posthelpers";
-import { IPost } from "../../../models/post";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import IGetPostByIdResponse from "../response/getPostByIdResponse";
+import "reflect-metadata";
 
-export default class getPostByIdCase {
+@injectable()
+export default class GetPostByIdCase {
     private readonly postRepository: IPostRepository;
 
-    constructor(_postRepository: IPostRepository) {
+    constructor(@inject('PostRepository') _postRepository: IPostRepository) {
         this.postRepository = _postRepository;
     }
 

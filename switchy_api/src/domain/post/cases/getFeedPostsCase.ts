@@ -4,12 +4,17 @@ import IUserRepository from "../../../repositories/userRepository/IuserRepositor
 import { IPost } from "../../../models/post";
 import IGetFeedPostsResponse from "../response/getFeedPostsResponse";
 import { getTotalComments, getTotalLikes, isLikedByUser } from "../../../helpers/post/posthelpers";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export default class GetFeedPostsCase {
     private readonly postRepository: IPostRepository;
     private readonly userRepository: IUserRepository;
 
-    constructor(_postRepository: IPostRepository, _userRepository: IUserRepository) {
+    constructor(
+        @inject('PostRepository') _postRepository: IPostRepository, 
+        @inject('UserRepository') _userRepository: IUserRepository) {
         this.postRepository = _postRepository;
         this.userRepository = _userRepository;
     }
