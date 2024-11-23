@@ -200,6 +200,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     async deletePost(postId: string) {
         await this.connect();
         await Post.findByIdAndUpdate(postId, { deleted: true });
+        await Post.updateOne({"comments.postId": new Types.ObjectId(postId) }, {$set: {"comments.$.deleted": true}})
     }
 
     async updateUserPost(userId: string, user: IUser) {
