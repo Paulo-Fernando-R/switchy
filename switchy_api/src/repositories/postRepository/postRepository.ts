@@ -200,4 +200,8 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         await this.connect();
         await Post.findByIdAndUpdate(postId, { deleted: true });
     }
+
+    async updateUserPost(userId: string, user: IUser) {
+        await Post.updateMany({ "user.id": new Types.ObjectId(userId) }, { $set: { user: user } });
+    }
 }
