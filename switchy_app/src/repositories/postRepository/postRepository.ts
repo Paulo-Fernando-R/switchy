@@ -1,4 +1,4 @@
-import { InternalServerError, NetworkError, UnauthorizedError } from "../../errors/customErrors";
+import { BadRequestError, InternalServerError, NetworkError, NotFoundError, UnauthorizedError } from "../../errors/customErrors";
 import ICustomAxiosClient from "../../services/customAxiosClient/IcustomAxiosClient";
 import CustomAxiosClient from "../../services/customAxiosClient/customAxiosClient";
 import IPostRepository from "./IpostRepository";
@@ -158,5 +158,28 @@ export default class PostRepository implements IPostRepository {
         });
 
         return list;
+    }
+
+    async deletePost(postId: string) {
+        const response = await this.axios.instance.delete("/Post/DeletePost/" + postId);
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 400) {
+            throw new BadRequestError();
+        }
+
+        if (response.status === 401) {
+            throw new UnauthorizedError();
+        }
+
+        if (response.status === 404) {
+            throw new NotFoundError();
+        }
+
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        }
     }
 }

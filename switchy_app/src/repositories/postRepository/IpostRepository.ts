@@ -8,4 +8,5 @@ export default interface IPostRepository{
     getPostById(postId: string): Promise<Post>
     getUserPosts(userId: string, page: number): Promise<Post[]>
     newPost(content: string): Promise<void>
+    deletePost(postId: string): Promise<void>
 }
