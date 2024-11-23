@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeletePostCase = void 0;
 const postErrors_1 = require("../errors/postErrors");
 class DeletePostCase {
     constructor(postRepository) {
@@ -27,4 +26,4 @@ class DeletePostCase {
         });
     }
 }
-exports.DeletePostCase = DeletePostCase;
+exports.default = DeletePostCase;

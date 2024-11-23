@@ -10,7 +10,7 @@ import UpdateLikeOfPostCase from "../domain/post/cases/updateLikeOfPostCase";
 import GetUserPostsCase from "../domain/post/cases/getUserPostsCase";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
 import { UserRepository } from "../repositories/userRepository/userRepository";
-import { DeletePostCase } from "../domain/post/cases/deletePostCase";
+import DeletePostCase from "../domain/post/cases/deletePostCase";
 export default class PostController {
     private postRepository: IPostRepository;
     private userRepository: IUserRepository;

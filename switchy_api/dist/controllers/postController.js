@@ -21,14 +21,14 @@ const getPostByIdCase_1 = __importDefault(require("../domain/post/cases/getPostB
 const updateLikeOfPostCase_1 = __importDefault(require("../domain/post/cases/updateLikeOfPostCase"));
 const getUserPostsCase_1 = __importDefault(require("../domain/post/cases/getUserPostsCase"));
 const userRepository_1 = require("../repositories/userRepository/userRepository");
-const deletePostCase_1 = require("../domain/post/cases/deletePostCase");
+const deletePostCase_1 = __importDefault(require("../domain/post/cases/deletePostCase"));
 class PostController {
     constructor() {
         this.postRepository = new postRepository_1.PostRepository();
         this.getUserPostsCase = new getUserPostsCase_1.default(this.postRepository);
         this.userRepository = new userRepository_1.UserRepository();
         this.getFeedPostsCase = new getFeedPostsCase_1.default(this.postRepository, this.userRepository);
-        this.deletePostCase = new deletePostCase_1.DeletePostCase(this.postRepository);
+        this.deletePostCase = new deletePostCase_1.default(this.postRepository);
     }
     createPost(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
