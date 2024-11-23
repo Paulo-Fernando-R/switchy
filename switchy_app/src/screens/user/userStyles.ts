@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         gap: 10,
         paddingBottom: 30,
 
-        paddingTop: 20,
+        //paddingTop: 20,
     },
     logo: {
         width: 48,
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 
     profileBox: {
         gap: 8,
-        paddingHorizontal: 20,
+       // paddingHorizontal: 20,
         paddingBottom: 12,
     },
     nameBox: {
@@ -61,13 +61,13 @@ const styles = StyleSheet.create({
     subtitle: {
         ...appTexts.paragraph1Regular,
         color: appColors.text200,
-        paddingHorizontal: 20,
+        //paddingHorizontal: 20,
         paddingVertical: 8,
     },
 
     list: {
         gap: 8,
-        paddingTop: 16,
+        paddingTop: 20,
         paddingHorizontal: 20,
         paddingBottom: 80,
     },

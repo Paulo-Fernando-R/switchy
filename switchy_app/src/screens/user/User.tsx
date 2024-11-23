@@ -1,12 +1,9 @@
 import { ProfileNavigationProp, ProfileRouteProp } from "../../routes/types/navigationTypes";
-import { Text, View, Image, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
+import { Text, View, FlatList, ActivityIndicator, RefreshControl } from "react-native";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
 import { useUserContext } from "../../contexts/userContext";
 import EmptyList from "../../components/emptyList/EmpyList";
 import { useInfiniteQuery } from "@tanstack/react-query";
-//@ts-ignore
-import logo from "../../../assets/images/logo.png";
-import Feather from "@expo/vector-icons/Feather";
 import appColors from "../../styles/appColors";
 import UserController from "./userController";
 import User from "../../models/user";
@@ -18,11 +15,10 @@ import BottomModal from "../../components/bottomModal/BottomModal";
 import { Modalize } from "react-native-modalize";
 import PostWebView from "../../components/postWebView/PostWebView";
 import MoreActionsButton from "../../components/postFeedItem/privateComponents/MoreActionsButton";
-
-type UserHeaderProps = {
-    user: User | null;
-    navigate: () => void;
-};
+import ModalButton from "../../components/bottomModal/privateComponents/ModalButton";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import QuestionPopup from "../../components/questionPopup/QuestionPopup";
+import Header from "./privateComponents/Header";
 
 type ProfileProps = {
     navigation: ProfileNavigationProp;
@@ -30,7 +26,6 @@ type ProfileProps = {
 };
 
 export default function Profile({ navigation }: ProfileProps) {
-
     const controller = new UserController();
 
     const { user } = useUserContext();
@@ -45,10 +40,16 @@ export default function Profile({ navigation }: ProfileProps) {
         initialPageParam: 1,
     });
 
+    const [popup, setPopup] = React.useState(false);
+    function openPopup() {
+        setPopup(true);
+        modalizeRef.current?.close();
+    }
+
     function navigate() {
         navigation.navigate("ProfileEdit");
     }
-    
+
     function navigateComent(id: string | undefined) {
         if (id) navigation?.push("Comments", { postId: id });
     }
@@ -59,10 +60,11 @@ export default function Profile({ navigation }: ProfileProps) {
 
     return (
         <View style={styles.page}>
-            <Header user={user!} navigate={navigate} />
-            <Text style={styles.subtitle}>Publicações</Text>
+            {/* <Header user={user!} navigate={navigate} /> */}
+          
 
             <FlatList
+            ListHeaderComponent={ <Header user={user!} navigate={navigate} />}
                 ListEmptyComponent={EmptyList}
                 refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
                 contentContainerStyle={styles.list}
@@ -71,7 +73,6 @@ export default function Profile({ navigation }: ProfileProps) {
                     <PostFeedItem
                         item={item}
                         error={error}
-                        actionModal={<BottomModal modalizeRef={modalizeRef} />}
                         postWebView={<PostWebView text={item?.content} />}
                         moreActionsButton={<MoreActionsButton modalizeRef={modalizeRef} />}
                         navigateComment={
@@ -79,6 +80,26 @@ export default function Profile({ navigation }: ProfileProps) {
                                 commentsNumber={item?.comments}
                                 navigate={() => navigateComent(item?.id)}
                             />
+                        }
+                        actionModal={
+                            <BottomModal
+                                modalizeRef={modalizeRef}
+                                popup={
+                                    <QuestionPopup
+                                        visibility={popup}
+                                        setVisibility={setPopup}
+                                        title="Excluir publicação?"
+                                        description="Tem certeza que deseja excluir essa publicação?"
+                                        action={() => alert("Excluir")}
+                                    />
+                                }
+                            >
+                                <ModalButton
+                                    action={openPopup}
+                                    text="Excluir"
+                                    icon={<MaterialIcons name="delete-outline" size={24} color={appColors.text200} />}
+                                />
+                            </BottomModal>
                         }
                     />
                 )}
@@ -89,37 +110,6 @@ export default function Profile({ navigation }: ProfileProps) {
                     `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`
                 }
             />
-        </View>
-    );
-}
-
-function Header({ user, navigate }: UserHeaderProps) {
-    return (
-        <View>
-            <View style={styles.header}>
-                <Image style={styles.logo} source={logo} />
-                <Text style={styles.headerText}>Swithcy</Text>
-            </View>
-
-            <View style={styles.profileBox}>
-                <View style={styles.nameBox}>
-                    <Text style={styles.name}>{user?.name}</Text>
-                    <TouchableOpacity activeOpacity={0.5} onPress={navigate}>
-                        <Feather name="edit-3" size={20} color={appColors.text300} />
-                    </TouchableOpacity>
-                </View>
-
-                <Text style={styles.userName}>@{user?.userName}</Text>
-                <Text style={styles.bio}>
-                    necessário adicionar ao tipo de usuario no back e front Lorem ipsum dolor sit amet, consectetur
-                    adipiscing elit. Donec sed felis id risus consequat tincidunt.
-                </Text>
-
-                <View style={styles.buttons}>
-                    <Text style={styles.follow}>{user?.followers?.length} Seguidores</Text>
-                    <Text style={styles.follow}>{user?.following?.length} Seguindo</Text>
-                </View>
-            </View>
         </View>
     );
 }

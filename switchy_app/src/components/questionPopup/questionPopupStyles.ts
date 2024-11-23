@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: appColors.overlay,
+        backgroundColor: 'rgba(0, 0, 0, 0.10)',
     },
 
     modalStyle: {
