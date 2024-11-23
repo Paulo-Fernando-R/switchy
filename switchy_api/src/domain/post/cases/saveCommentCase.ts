@@ -1,8 +1,8 @@
-import { Types } from "mongoose";
 import { IPost } from "../../../models/post";
 import { IUser } from "../../../models/user";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { PostEmptyValueError } from "../errors/postErrors";
+import IPostUser from "../../../models/postUser";
 
 export default class SaveCommentCase {
     private readonly postRepository: IPostRepository;
@@ -20,8 +20,14 @@ export default class SaveCommentCase {
             throw new PostEmptyValueError();
         }
 
+        var postUser: IPostUser = {
+            id: user.id!,
+            name: user.name,
+            userName: user.userName!,
+        };
+
         const post: IPost = {
-            user: user,
+            user: postUser,
             comments: [],
             likes: [],
             content: content,

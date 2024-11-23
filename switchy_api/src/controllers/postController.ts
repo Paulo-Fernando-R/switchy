@@ -11,12 +11,17 @@ import GetUserPostsCase from "../domain/post/cases/getUserPostsCase";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
 import { UserRepository } from "../repositories/userRepository/userRepository";
 import DeletePostCase from "../domain/post/cases/deletePostCase";
+import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
+import { UserNotFoundError } from "../domain/user/errors/userErrors";
+import IPostUser from "../models/postUser";
+import { Types } from "mongoose";
 export default class PostController {
     private postRepository: IPostRepository;
     private userRepository: IUserRepository;
     private getUserPostsCase: GetUserPostsCase;
     private getFeedPostsCase: GetFeedPostsCase;
     private deletePostCase: DeletePostCase;
+    private getUserByIdCase: GetUserByIdCase;
 
     constructor() {
         this.postRepository = new PostRepository();
@@ -24,6 +29,7 @@ export default class PostController {
         this.userRepository = new UserRepository();
         this.getFeedPostsCase = new GetFeedPostsCase(this.postRepository, this.userRepository);
         this.deletePostCase = new DeletePostCase(this.postRepository);
+        this.getUserByIdCase = new GetUserByIdCase(this.userRepository);
     }
 
     async createPost(req: Request, res: Response) {
@@ -31,13 +37,24 @@ export default class PostController {
         const userId = req.userId;
 
         try {
-            await new CreatePostCase(this.postRepository).execute(parentId, content, userId);
+            const user = await this.getUserByIdCase.execute(userId);
+
+            var postUser: IPostUser = {
+                id: new Types.ObjectId(user.id!.toString()),
+                name: user.name,
+                userName: user.userName!,
+            };
+
+            await new CreatePostCase(this.postRepository).execute(parentId, content, postUser);
+            
             res.status(StatusCodes.Ok).send();
         } catch (error) {
             if (error instanceof PostEmptyValueError) {
                 res.status(StatusCodes.BadRequest).send("content is required");
             }
             if (error instanceof UnableCreatePostError) {
+                res.status(StatusCodes.InternalServerError).send();
+            } else if (error instanceof UserNotFoundError) {
                 res.status(StatusCodes.InternalServerError).send();
             }
         }

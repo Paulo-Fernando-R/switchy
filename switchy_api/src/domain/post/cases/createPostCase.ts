@@ -1,9 +1,8 @@
-import { Types } from "mongoose";
 import { IPost } from "../../../models/post";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { PostEmptyValueError, UnableCreatePostError } from "../errors/postErrors";
-import GetUserByIdCase from "../../user/cases/getUserByIdCase";
-import { UserRepository } from "../../../repositories/userRepository/userRepository";
+import IPostUser from "../../../models/postUser";
+
 export default class CreatePostCase {
     private readonly postRepository: IPostRepository;
 
@@ -11,34 +10,23 @@ export default class CreatePostCase {
         this.postRepository = _postRepository;
     }
 
-    async execute(parentId: string, content: string, userId: string) {
+    async execute(parentId: string, content: string, postUser: IPostUser) {
         if (!content) {
             throw new PostEmptyValueError();
         }
-        const user = await new GetUserByIdCase(new UserRepository()).execute(userId);
 
-        if (!user) {
-            throw new UnableCreatePostError();
-        }
         const post: IPost = {
-            user: {
-                email: user.email,
-                name: user.name,
-                userName: user.userName,
-                id: new Types.ObjectId(userId as string),
-            },
+            user: postUser,
             comments: [],
             likes: [],
             content: content,
             publishDate: new Date(Date.now()),
-            //@ts-ignore
-            parentId: parentId ? parentId : null,
+            parentId: parentId ? parentId : undefined,
         };
 
         try {
             await this.postRepository.createPost(post);
         } catch (error) {
-            console.error(error);
             throw new UnableCreatePostError();
         }
     }

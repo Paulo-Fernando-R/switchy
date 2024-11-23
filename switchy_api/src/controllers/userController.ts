@@ -28,8 +28,13 @@ import GeneratePasswordService from "../services/crypto/generatePasswordService"
 import IGeneratePasswordService from "../services/crypto/igeneratePasswordService";
 import SendRecoveryPasswordEmailCase from "../domain/user/cases/sendRecoveryPasswordEmailCase";
 import { RecoveryEmail } from "../services/smtp/recoveryEmail";
+import UpdateUserPostsCase from "../domain/post/cases/updateUserPostsCase";
+import IPostRepository from "../repositories/postRepository/IpostRepository";
+import { PostRepository } from "../repositories/postRepository/postRepository";
+import { IUser } from "../models/user";
 
 export default class UserController {
+    private postRepository: IPostRepository;
     private userRepository: IUserRepository;
     private signUpCase: SignUpCase;
     private encryptService: EncryptServiceBcrypt;
@@ -46,8 +51,10 @@ export default class UserController {
     private generatePaswordService: IGeneratePasswordService;
     private recoveryEmail: RecoveryEmail;
     private sendRecoveryPasswordEmailCase: SendRecoveryPasswordEmailCase;
+    private updateUserPostsCase: UpdateUserPostsCase;
 
     constructor() {
+        this.postRepository = new PostRepository();
         this.userRepository = new UserRepository();
         this.encryptService = new EncryptServiceBcrypt();
         this.tokenService = new JwtTokenService();
@@ -64,6 +71,7 @@ export default class UserController {
         this.generatePaswordService = new GeneratePasswordService();
         this.recoveryEmail = new RecoveryEmail();
         this.sendRecoveryPasswordEmailCase = new SendRecoveryPasswordEmailCase(this.recoveryEmail);
+        this.updateUserPostsCase = new UpdateUserPostsCase(this.postRepository);
     }
 
     async signUp(request: Request, response: Response) {
@@ -137,6 +145,14 @@ export default class UserController {
         try {
             const user = await this.updateUserCase.execute(userId, name, email, description);
 
+            var postUser: IUser = {
+                id: user.id,
+                name: user.name,
+                userName: user.userName,
+                email: user.email,
+            };
+            await this.updateUserPostsCase.execute(userId, postUser);
+
             return res.type("application/json").status(StatusCodes.Ok).send(user);
         } catch (ex) {
             if (ex instanceof UserNotFoundError) {
@@ -152,7 +168,15 @@ export default class UserController {
         const userId = req.userId;
 
         try {
-            await this.updateUsernameCase.execute(userId, username);
+            var userUpdated = await this.updateUsernameCase.execute(userId, username);
+
+            var user: IUser = {
+                id: userUpdated.id,
+                name: userUpdated.name,
+                userName: userUpdated.userName,
+                email: userUpdated.email,
+            };
+            await this.updateUserPostsCase.execute(userId, user);
 
             return res.type("application/json").status(StatusCodes.Ok).send();
         } catch (ex) {
