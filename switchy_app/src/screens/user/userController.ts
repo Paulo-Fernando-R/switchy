@@ -1,3 +1,4 @@
+import { InfiniteData, QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import DeletePostCase from "../../cases/deletePostCase/deletePostCase";
 import IDeletePostCase from "../../cases/deletePostCase/IdeletePostCase";
 import Post from "../../models/post";
@@ -28,18 +29,17 @@ export default class UserController {
 
     async deletePost(
         postId: string | undefined,
-        posts: Post[] | null,
-        setPopup: React.Dispatch<React.SetStateAction<boolean>>
+        setPopup: React.Dispatch<React.SetStateAction<boolean>>,
+        refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<InfiniteData<any[], unknown>, Error>>
     ) {
+        console.log(postId);
         if (!postId) return;
 
         try {
-            setPopup(false);
             await this.deletePostCase.execute(postId);
-            posts?.splice(
-                posts.findIndex((post) => post.id === postId),
-                1
-            );
+
+            refetch();
+            setPopup(false);
         } catch (error) {
             throw error;
         }

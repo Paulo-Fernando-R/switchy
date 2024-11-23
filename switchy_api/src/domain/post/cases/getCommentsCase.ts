@@ -3,6 +3,7 @@ import IPostRepository from "../../../repositories/postRepository/IpostRepositor
 import { IPost } from "../../../models/post";
 import GetPostsResponse from "../response/getFeedPostsResponse";
 import IGetFeedPostsResponse from "../response/getFeedPostsResponse";
+import { getTotalComments, getTotalLikes, isLikedByUser } from "../../../helpers/post/posthelpers";
 
 export default class GetCommentsCase {
     private readonly postRepository: IPostRepository;
@@ -25,9 +26,9 @@ export default class GetCommentsCase {
         for (var i = 0; i < posts.length; i++) {
             var item = posts[i];
 
-            var totalComments = this.getTotalComments(item);
-            var likes = this.getTotalLikes(item);
-            var likedByUser = this.isLikedByUser(item, userId);
+            var totalComments = getTotalComments(item);
+            var likes = getTotalLikes(item);
+            var likedByUser = isLikedByUser(item, userId);
 
             var obj: IGetFeedPostsResponse = {
                 content: item.content,
@@ -44,30 +45,5 @@ export default class GetCommentsCase {
         }
 
         return ls;
-    }
-
-    private isLikedByUser(post: IPost, userId: string) {
-        if (post.likes == null) {
-            return false;
-        }
-
-        var likedByUser = post.likes.filter((like: any) => like.userId.equals(userId)).length > 0;
-        return likedByUser;
-    }
-
-    private getTotalComments(post: IPost) {
-        var comments = 0;
-        if (post.comments != null) {
-            comments = post.comments?.length;
-        }
-        return comments;
-    }
-
-    private getTotalLikes(post: IPost) {
-        var likes = 0;
-        if (post.likes != null) {
-            likes = post.likes?.length;
-        }
-        return likes;
     }
 }
