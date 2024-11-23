@@ -145,6 +145,14 @@ export default class UserController {
         try {
             const user = await this.updateUserCase.execute(userId, name, email, description);
 
+            var postUser: IUser = {
+                id: user.id,
+                name: user.name,
+                userName: user.userName,
+                email: user.email,
+            };
+            await this.updateUserPostsCase.execute(userId, postUser);
+
             return res.type("application/json").status(StatusCodes.Ok).send(user);
         } catch (ex) {
             if (ex instanceof UserNotFoundError) {
@@ -161,7 +169,6 @@ export default class UserController {
 
         try {
             var userUpdated = await this.updateUsernameCase.execute(userId, username);
-            console.log(userUpdated);
 
             var user: IUser = {
                 id: userUpdated.id,
