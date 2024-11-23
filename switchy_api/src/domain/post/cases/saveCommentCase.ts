@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+import { IPost } from "../../../models/post";
 import { IUser } from "../../../models/user";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { PostEmptyValueError } from "../errors/postErrors";
@@ -18,7 +20,16 @@ export default class SaveCommentCase {
             throw new PostEmptyValueError();
         }
 
-        const post = await this.postRepository.addComment(parentId, content, user);
-        await this.postRepository.addCommentsToPost(parentId, post.id!.toString());
+        const post: IPost = {
+            user: user,
+            comments: [],
+            likes: [],
+            content: content,
+            publishDate: new Date(Date.now()),
+            parentId: parentId,
+        };
+
+        const postId = await this.postRepository.createPost(post);
+        await this.postRepository.addCommentsToPost(parentId, postId.toString());
     }
 }
