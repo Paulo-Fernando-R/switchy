@@ -21,6 +21,7 @@ type PostFeedItemProps = {
     moreActionsButton?: ReactNode;
     postWebView?: ReactNode;
     navigateComment?: ReactNode;
+    popup?: React.ReactNode;
 };
 
 export default function PostFeedItem({
@@ -30,6 +31,7 @@ export default function PostFeedItem({
     moreActionsButton,
     postWebView,
     navigateComment,
+    popup,
 }: PostFeedItemProps) {
     if (!item || error) {
         return <PostFeedItemSkeleton />;
@@ -66,6 +68,7 @@ export default function PostFeedItem({
 
     return (
         <View style={styles.listItem}>
+            {popup}
             {actionModal}
             <SnackBar.Error
                 message={qError?.message ?? "Ocorreu um erro ao realizar a operação."}
