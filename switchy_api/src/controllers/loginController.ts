@@ -9,26 +9,29 @@ import ITokenService from "../services/token/itokenService";
 import JwtTokenService from "../services/token/jwtTokenService";
 import IUserRepository from "../repositories/userRepository/IuserRepository";
 import { UserRepository } from "../repositories/userRepository/userRepository";
-import IEncryptService from "../services/encrypt/iencryptService";
-import EncryptServiceBcrypt from "../services/encrypt/encryptService";
+import container from "../injection";
 
 export default class LoginController {
     private readonly tokenService: ITokenService;
     private readonly userRepository: IUserRepository;
-    private readonly encryptService: IEncryptService;
+    private readonly getUserByEmailPasswordCase: GetUserByEmailPasswordCase;
+    private readonly generateTokenFromUserCase: GenerateTokenFromUserCase;
+    private readonly getUserFromTokenCase: GetUserFromTokenCase;
     
     constructor() {
         this.tokenService = new JwtTokenService();
         this.userRepository = new UserRepository();
-        this.encryptService = new EncryptServiceBcrypt();
+        this.getUserByEmailPasswordCase = container.get<GetUserByEmailPasswordCase>('GetUserByEmailPasswordCase');
+        this.generateTokenFromUserCase = container.get<GenerateTokenFromUserCase>('GenerateTokenFromUserCase');
+        this.getUserFromTokenCase = container.get<GetUserFromTokenCase>('GetUserFromTokenCase');
     }
 
     async signIn(req: Request, res: Response) {
         const { email, password} = req.body;
 
         try {
-            const user = await new GetUserByEmailPasswordCase(this.userRepository, this.encryptService).execute(email, password);
-            const response = await new GenerateTokenFromUserCase(this.tokenService).execute(user);
+            const user = await this.getUserByEmailPasswordCase.execute(email, password);
+            const response = await this.generateTokenFromUserCase.execute(user);
 
             res.type("application/json").status(StatusCodes.Ok).send(response);
         } catch (ex) {
@@ -48,8 +51,8 @@ export default class LoginController {
         const { token } = req.body;
 
         try {
-            const user = await new GetUserFromTokenCase(this.userRepository, this.tokenService).execute(token);
-            const response = await new GenerateTokenFromUserCase(this.tokenService).execute(user);
+            const user = await this.getUserFromTokenCase.execute(token);
+            const response = await this.generateTokenFromUserCase.execute(user);
 
             res.type("application/json").status(StatusCodes.Ok).send(response);
         } catch (ex) {

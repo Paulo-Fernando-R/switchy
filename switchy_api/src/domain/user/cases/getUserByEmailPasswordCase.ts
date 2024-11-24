@@ -3,12 +3,18 @@ import IUserRepository from '../../../repositories/userRepository/IuserRepositor
 import { IUser } from '../../../models/user';
 import { UserEmptyFieldsError, UserInvalidEmailError, UserInvalidPasswordError, UserNotFoundError } from '../errors/userErrors';
 import IEncryptService from '../../../services/encrypt/iencryptService';
+import { inject, injectable } from 'inversify';
+import "reflect-metadata";
 
+@injectable()
 export default class GetUserByEmailPasswordCase {
-    private readonly userRepository: IUserRepository;
-    private readonly encryptService: IEncryptService;
+    
+    private userRepository: IUserRepository;
+    private encryptService: IEncryptService;
 
-    constructor(userRepository: IUserRepository, encryptService: IEncryptService) {
+    constructor(
+        @inject('UserRepository') userRepository: IUserRepository, 
+        @inject('EncryptService') encryptService: IEncryptService) {
         this.userRepository = userRepository;
         this.encryptService = encryptService;
     }

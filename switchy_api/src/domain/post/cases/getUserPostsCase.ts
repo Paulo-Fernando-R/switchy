@@ -1,11 +1,15 @@
+import { inject, injectable } from "inversify";
+import { getTotalComments, getTotalLikes, isLikedByUser } from "../../../helpers/post/posthelpers";
 import { IPost } from "../../../models/post";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import IGetFeedPostsResponse from "../response/getFeedPostsResponse";
+import "reflect-metadata";
 
+@injectable()
 export default class GetUserPostsCase {
     private readonly postRepository: IPostRepository;
 
-    constructor(_postRepository: IPostRepository) {
+    constructor(@inject('PostRepository') _postRepository: IPostRepository) {
         this.postRepository = _postRepository;
     }
 
@@ -20,9 +24,9 @@ export default class GetUserPostsCase {
         for (var i = 0; i < posts.length; i++) {
             var post = posts[i];
 
-            var comments = this.getTotalComments(post);
-            var likes = this.getTotalLikes(post);
-            var likedByUser = this.isLikedByUser(post, loggedUserId);
+            var comments = getTotalComments(post);
+            var likes = getTotalLikes(post);
+            var likedByUser = isLikedByUser(post, loggedUserId);
 
             var obj: IGetFeedPostsResponse = {
                 content: post.content,
@@ -39,30 +43,5 @@ export default class GetUserPostsCase {
         }
 
         return ls;
-    }
-
-    private isLikedByUser(post: IPost, userId: string) {
-        if (post.likes == null) {
-            return false;
-        }
-
-        var likedByUser = post.likes.filter((like: any) => like.userId.equals(userId)).length > 0;
-        return likedByUser;
-    }
-
-    private getTotalComments(post: IPost) {
-        var comments = 0;
-        if (post.comments != null) {
-            comments = post.comments?.length;
-        }
-        return comments;
-    }
-
-    private getTotalLikes(post: IPost) {
-        var likes = 0;
-        if (post.likes != null) {
-            likes = post.likes?.length;
-        }
-        return likes;
     }
 }

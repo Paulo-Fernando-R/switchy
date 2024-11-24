@@ -474,7 +474,7 @@
         }
       }
     },
-    "/Post/CreatePost": {
+    "/Post/Create": {
       "post": {
         "tags": [
           "Post"
@@ -510,7 +510,7 @@
         }
       }
     },
-    "/Post/GetFeedPosts/{page}": {
+    "/Post/Feed/{page}": {
       "get": {
         "tags": [
           "Post"
@@ -537,7 +537,7 @@
         }
       }
     },
-    "/Post/GetPostById/{postId}": {
+    "/Post/ById/{postId}": {
       "get": {
         "tags": [
           "Post"
@@ -603,7 +603,7 @@
         }
       }
     },
-    "/Post/GetPostsByUserId/{userId}/{page}": {
+    "/Post/ByUserId/{userId}/{page}": {
       "get": {
         "tags": [
           "Post"
@@ -636,7 +636,7 @@
         }
       }
     },
-    "/Post/DeletePost/{postId}": {
+    "/Post/{postId}": {
       "delete": {
         "tags": [
           "Post"

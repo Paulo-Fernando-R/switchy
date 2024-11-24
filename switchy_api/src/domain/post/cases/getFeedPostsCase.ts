@@ -3,12 +3,18 @@ import IPostRepository from "../../../repositories/postRepository/IpostRepositor
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
 import { IPost } from "../../../models/post";
 import IGetFeedPostsResponse from "../response/getFeedPostsResponse";
+import { getTotalComments, getTotalLikes, isLikedByUser } from "../../../helpers/post/posthelpers";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export default class GetFeedPostsCase {
     private readonly postRepository: IPostRepository;
     private readonly userRepository: IUserRepository;
 
-    constructor(_postRepository: IPostRepository, _userRepository: IUserRepository) {
+    constructor(
+        @inject('PostRepository') _postRepository: IPostRepository, 
+        @inject('UserRepository') _userRepository: IUserRepository) {
         this.postRepository = _postRepository;
         this.userRepository = _userRepository;
     }
@@ -35,9 +41,9 @@ export default class GetFeedPostsCase {
         for (var i = 0; i < posts.length; i++) {
             var post = posts[i];
 
-            var comments = this.getTotalComments(post);
-            var likes = this.getTotalLikes(post);
-            var likedByUser = this.isLikedByUser(post, loggedUserId);
+            var comments = getTotalComments(post);
+            var likes = getTotalLikes(post);
+            var likedByUser = isLikedByUser(post, loggedUserId);
 
             var obj: IGetFeedPostsResponse = {
                 content: post.content,
@@ -54,30 +60,5 @@ export default class GetFeedPostsCase {
         }
 
         return ls;
-    }
-
-    private isLikedByUser(post: IPost, userId: string) {
-        if (post.likes == null) {
-            return false;
-        }
-
-        var likedByUser = post.likes.filter((like: any) => like.userId.equals(userId)).length > 0;
-        return likedByUser;
-    }
-
-    private getTotalComments(post: IPost) {
-        var comments = 0;
-        if (post.comments != null) {
-            comments = post.comments?.length;
-        }
-        return comments;
-    }
-
-    private getTotalLikes(post: IPost) {
-        var likes = 0;
-        if (post.likes != null) {
-            likes = post.likes?.length;
-        }
-        return likes;
     }
 }

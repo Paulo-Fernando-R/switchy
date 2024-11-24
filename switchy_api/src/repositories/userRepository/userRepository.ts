@@ -1,10 +1,12 @@
 import { IUser, User } from "../../models/user";
 import DatabaseConnection from "../../database/databaseConnection";
-import ServerError from "../../errors/serverError";
 import IUserRepository from "./IuserRepository";
 import ITokenService from "../../services/token/itokenService";
 import JwtTokenService from "../../services/token/jwtTokenService";
+import { injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export class UserRepository extends DatabaseConnection implements IUserRepository {
     private readonly jwt: ITokenService;
 
@@ -106,7 +108,7 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
             ],
         });
 
-        const userList: IUser[] = res.map((e) => {
+        const userList: IUser[] = res.map((e: any) => {
             return {
                 email: e.email,
                 name: e.name,

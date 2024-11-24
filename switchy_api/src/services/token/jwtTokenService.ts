@@ -1,6 +1,9 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import ITokenService from "./itokenService";
+import { injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class JwtTokenService implements ITokenService {
     private readonly secret: string;
 
