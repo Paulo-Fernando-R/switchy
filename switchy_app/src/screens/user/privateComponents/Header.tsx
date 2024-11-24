@@ -29,10 +29,7 @@ export default function Header({ user, navigate }: ProfileHeaderProps) {
                 </View>
 
                 <Text style={styles.userName}>@{user?.userName}</Text>
-                <Text style={styles.bio}>
-                    necessário adicionar ao tipo de usuario no back e front Lorem ipsum dolor sit amet, consectetur
-                    adipiscing elit. Donec sed felis id risus consequat tincidunt.
-                </Text>
+                <Text style={styles.bio}>{user?.description}</Text>
 
                 <View style={styles.buttons}>
                     <Text style={styles.follow}>{user?.followers?.length} Seguidores</Text>
