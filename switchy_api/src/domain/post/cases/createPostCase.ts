@@ -2,11 +2,14 @@ import { IPost } from "../../../models/post";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { PostEmptyValueError, UnableCreatePostError } from "../errors/postErrors";
 import IPostUser from "../../../models/postUser";
+import { inject, injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class CreatePostCase {
     private readonly postRepository: IPostRepository;
 
-    constructor(_postRepository: IPostRepository) {
+    constructor(@inject('PostRepository') _postRepository: IPostRepository) {
         this.postRepository = _postRepository;
     }
 

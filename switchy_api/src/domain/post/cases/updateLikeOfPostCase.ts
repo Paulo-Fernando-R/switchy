@@ -1,10 +1,13 @@
+import { inject, injectable } from "inversify";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { PostEmptyValueError } from "../errors/postErrors";
+import "reflect-metadata";
 
+@injectable()
 export default class UpdateLikeOfPostCase {
     private readonly postRepository: IPostRepository;
 
-    constructor(_postRepository: IPostRepository) {
+    constructor(@inject('PostRepository') _postRepository: IPostRepository) {
         this.postRepository = _postRepository;
     }
 

@@ -1,12 +1,17 @@
 import IUserRepository from '../../../repositories/userRepository/IuserRepository';
 import IEncryptService from '../../../services/encrypt/iencryptService';
 import { SamePasswordError, UserEmptyFieldsError, UserInvalidPasswordError } from '../errors/userErrors';
+import { inject, injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class ChangeUserPasswordCase {
     private readonly userRepository: IUserRepository;
     private readonly encryptService: IEncryptService;
 
-    constructor(userRepository: IUserRepository, encryptService: IEncryptService) {
+    constructor(
+        @inject('UserRepository') userRepository: IUserRepository, 
+        @inject('EncryptService') encryptService: IEncryptService) {
         this.userRepository = userRepository;
         this.encryptService = encryptService;
     }

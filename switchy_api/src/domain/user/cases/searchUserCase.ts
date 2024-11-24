@@ -1,18 +1,16 @@
 import { IUser } from "../../../models/user";
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
-import { UserEmptyFieldsError, UserInvalidEmailError } from "../errors/userErrors";
-import fieldsExists from "../../../helpers/objects/fieldsExists";
-import fieldsNotEmpty from "../../../helpers/objects/fieldsNotEmpty";
-import signUpRequiredFieldsRule from "../rules/signUpRequiredFields";
+import { UserEmptyFieldsError } from "../errors/userErrors";
 import { StatusCodes } from "../../../utils/status_codes";
-import IEncryptService from "../../../services/encrypt/iencryptService";
-import SignUpRequest from "../requests/signUpRequest";
 import ServerError from "../../../errors/serverError";
+import { inject, injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class SearchUserCase {
     private readonly userRepository: IUserRepository;
 
-    constructor(userRepository: IUserRepository, encryptService: IEncryptService) {
+    constructor(@inject('UserRepository') userRepository: IUserRepository) {
         this.userRepository = userRepository;
     }
 

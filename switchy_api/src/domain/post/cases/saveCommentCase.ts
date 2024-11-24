@@ -3,11 +3,15 @@ import { IUser } from "../../../models/user";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import { PostEmptyValueError } from "../errors/postErrors";
 import IPostUser from "../../../models/postUser";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export default class SaveCommentCase {
     private readonly postRepository: IPostRepository;
 
-    constructor(postRepository: IPostRepository) {
+    constructor(
+        @inject('PostRepository') postRepository: IPostRepository) {
         this.postRepository = postRepository;
     }
 

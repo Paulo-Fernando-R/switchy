@@ -1,8 +1,8 @@
-import IUserPost from "../entities/userPost";
+import IPostUser from "../../../models/postUser";
 
 export default interface IGetFeedPostsResponse {
     id: String;
-    user: IUserPost;
+    user: IPostUser;
     parentId?: string;
     publishDate: Date;
     content: string;

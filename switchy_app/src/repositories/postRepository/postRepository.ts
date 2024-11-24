@@ -54,7 +54,7 @@ export default class PostRepository implements IPostRepository {
         return aux;
     }
     async getFeedPosts(page: number) {
-        const response = await this.axios.instance.get<Post[]>("/Post/GetFeedPosts/" + page);
+        const response = await this.axios.instance.get<Post[]>("/Post/Feed/" + page);
 
         if (!response) {
             throw new NetworkError();
@@ -82,7 +82,7 @@ export default class PostRepository implements IPostRepository {
             content: content,
         };
 
-        const response = await this.axios.instance.post("/Post/CreatePost", data);
+        const response = await this.axios.instance.post("/Post/Create", data);
 
         if (!response) {
             throw new NetworkError();
@@ -119,7 +119,7 @@ export default class PostRepository implements IPostRepository {
     }
 
     async getPostById(postId: string) {
-        const response = await this.axios.instance.get<Post>("/Post/GetPostById/" + postId);
+        const response = await this.axios.instance.get<Post>("/Post/ById/" + postId);
 
         if (!response) {
             throw new NetworkError();
@@ -138,7 +138,7 @@ export default class PostRepository implements IPostRepository {
     }
 
     async getUserPosts(userId: string, page: number) {
-        const response = await this.axios.instance.get<Post[]>("/Post/GetPostsByUserId/" + userId + "/" + page);
+        const response = await this.axios.instance.get<Post[]>("/Post/ByUserId/" + userId + "/" + page);
 
         if (!response) {
             throw new NetworkError();
@@ -161,7 +161,7 @@ export default class PostRepository implements IPostRepository {
     }
 
     async deletePost(postId: string) {
-        const response = await this.axios.instance.delete("/Post/DeletePost/" + postId);
+        const response = await this.axios.instance.delete("/Post/" + postId);
         console.log(response.status, postId);
         if (!response) {
             throw new NetworkError();

@@ -4,12 +4,17 @@ import IUserRepository from "../../../repositories/userRepository/IuserRepositor
 import { UserNotFoundError } from "../../user/errors/userErrors";
 import { AuthEmptyFieldsError, AuthInvalidTokenError } from "../errors/authErrors";
 import ITokenService from "../../../services/token/itokenService";
+import { inject, injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class GetUserFromTokenCase {
     private readonly userRepository: IUserRepository;
     private readonly tokenService: ITokenService;
 
-    constructor(userRepository: IUserRepository, tokenService: ITokenService) {
+    constructor(
+        @inject('UserRepository') userRepository: IUserRepository, 
+        @inject('TokenService') tokenService: ITokenService) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
     }

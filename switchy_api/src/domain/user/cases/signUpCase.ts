@@ -3,12 +3,17 @@ import IUserRepository from "../../../repositories/userRepository/IuserRepositor
 import { UserEmptyFieldsError, UserInvalidEmailError, UserInvalidUsernameError } from "../errors/userErrors";
 import IEncryptService from "../../../services/encrypt/iencryptService";
 import SignUpRequest from "../requests/signUpRequest";
+import { inject, injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class SignUpCase {
     private readonly userRepository: IUserRepository;
     private readonly encryptService: IEncryptService;
 
-    constructor(userRepository: IUserRepository, encryptService: IEncryptService) {
+    constructor(
+        @inject('UserRepository') userRepository: IUserRepository, 
+        @inject('EncryptService') encryptService: IEncryptService) {
         this.userRepository = userRepository;
         this.encryptService = encryptService;
     }

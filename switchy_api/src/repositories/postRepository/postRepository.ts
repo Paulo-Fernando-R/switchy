@@ -1,10 +1,13 @@
+import { injectable } from "inversify";
 import DatabaseConnection from "../../database/databaseConnection";
 import ServerError from "../../errors/serverError";
 import { IPost, Post } from "../../models/post";
 import { IUser } from "../../models/user";
 import IPostRepository from "./IpostRepository";
 import { Types } from "mongoose";
+import "reflect-metadata";
 
+@injectable()
 export class PostRepository extends DatabaseConnection implements IPostRepository {
     constructor() {
         super();
@@ -108,7 +111,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
                 limit: 10,
                 sort: { publishDate: -1 },
             }).exec();
-            console.log(list);
+            //console.log(list);
 
             const res: IPost[] = list.map((e) => {
                 return {
@@ -168,7 +171,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         await this.connect();
 
         await Post.findByIdAndUpdate(parentId, {
-            $push: { comments: { postId: commentId } },
+            $push: { comments: { postId: commentId, deleted: false } },
         });
     }
 
@@ -185,7 +188,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
                 user: post?.user!,
                 comments:
                     post?.comments?.map((e) => {
-                        return { postId: e.postId };
+                        return { postId: e.postId, deleted: e.deleted };
                     }) ?? [],
                 likes: post?.likes ?? [],
             };
@@ -200,6 +203,7 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
     async deletePost(postId: string) {
         await this.connect();
         await Post.findByIdAndUpdate(postId, { deleted: true });
+        await Post.updateOne({"comments.postId": new Types.ObjectId(postId) }, {$set: {"comments.$.deleted": true}})
     }
 
     async updateUserPost(userId: string, user: IUser) {

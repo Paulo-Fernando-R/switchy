@@ -1,35 +1,35 @@
 import { Request, Response } from "express";
-import { PostRepository } from "../repositories/postRepository/postRepository";
 import { StatusCodes } from "../utils/status_codes";
-import IPostRepository from "../repositories/postRepository/IpostRepository";
 import CreatePostCase from "../domain/post/cases/createPostCase";
 import { PostEmptyValueError, UnableCreatePostError } from "../domain/post/errors/postErrors";
 import GetFeedPostsCase from "../domain/post/cases/getFeedPostsCase";
-import getPostByIdCase from "../domain/post/cases/getPostByIdCase";
+import GetPostByIdCase from "../domain/post/cases/getPostByIdCase";
 import UpdateLikeOfPostCase from "../domain/post/cases/updateLikeOfPostCase";
 import GetUserPostsCase from "../domain/post/cases/getUserPostsCase";
-import IUserRepository from "../repositories/userRepository/IuserRepository";
-import { UserRepository } from "../repositories/userRepository/userRepository";
 import DeletePostCase from "../domain/post/cases/deletePostCase";
 import GetUserByIdCase from "../domain/user/cases/getUserByIdCase";
 import { UserNotFoundError } from "../domain/user/errors/userErrors";
 import IPostUser from "../models/postUser";
 import { Types } from "mongoose";
+import container from "../injection";
+
 export default class PostController {
-    private postRepository: IPostRepository;
-    private userRepository: IUserRepository;
     private getUserPostsCase: GetUserPostsCase;
     private getFeedPostsCase: GetFeedPostsCase;
     private deletePostCase: DeletePostCase;
     private getUserByIdCase: GetUserByIdCase;
+    private createPostCase: CreatePostCase;
+    private getPostByIdCase: GetPostByIdCase;
+    private updateLikeOfPostCase: UpdateLikeOfPostCase;
 
     constructor() {
-        this.postRepository = new PostRepository();
-        this.getUserPostsCase = new GetUserPostsCase(this.postRepository);
-        this.userRepository = new UserRepository();
-        this.getFeedPostsCase = new GetFeedPostsCase(this.postRepository, this.userRepository);
-        this.deletePostCase = new DeletePostCase(this.postRepository);
-        this.getUserByIdCase = new GetUserByIdCase(this.userRepository);
+        this.getUserPostsCase = container.get<GetUserPostsCase>('GetUserPostsCase');
+        this.getFeedPostsCase = container.get<GetFeedPostsCase>('GetFeedPostsCase');
+        this.deletePostCase = container.get<DeletePostCase>('DeletePostCase');
+        this.getUserByIdCase = container.get<GetUserByIdCase>('GetUserByIdCase');
+        this.createPostCase = container.get<CreatePostCase>('CreatePostCase');
+        this.getPostByIdCase = container.get<GetPostByIdCase>('GetPostByIdCase');
+        this.updateLikeOfPostCase = container.get<UpdateLikeOfPostCase>('UpdateLikeOfPostCase');
     }
 
     async createPost(req: Request, res: Response) {
@@ -45,7 +45,7 @@ export default class PostController {
                 userName: user.userName!,
             };
 
-            await new CreatePostCase(this.postRepository).execute(parentId, content, postUser);
+            await this.createPostCase.execute(parentId, content, postUser);
             
             res.status(StatusCodes.Ok).send();
         } catch (error) {
@@ -76,7 +76,7 @@ export default class PostController {
         const userId = req.userId;
 
         try {
-            const response = await new getPostByIdCase(this.postRepository).execute(postId, userId);
+            const response = await this.getPostByIdCase.execute(postId, userId);
             res.status(StatusCodes.Ok).send(response);
         } catch (error) {
             res.status(StatusCodes.InternalServerError).send(error);
@@ -88,7 +88,7 @@ export default class PostController {
         const userId = req.userId;
 
         try {
-            await new UpdateLikeOfPostCase(this.postRepository).execute(postId, userId, value);
+            await this.updateLikeOfPostCase.execute(postId, userId, value);
             res.status(StatusCodes.Ok).send();
         } catch (error) {
             if (error instanceof PostEmptyValueError) {

@@ -4,7 +4,7 @@ import PostController from "../controllers/postController";
 const postRoutes = Router();
 const controller = new PostController();
 
-postRoutes.post("/CreatePost", (req, res) => {
+postRoutes.post("/Create", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -12,7 +12,7 @@ postRoutes.post("/CreatePost", (req, res) => {
     return controller.createPost(req, res);
 });
 
-postRoutes.get("/GetFeedPosts/:page", (req, res) => {
+postRoutes.get("/Feed/:page", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -20,7 +20,7 @@ postRoutes.get("/GetFeedPosts/:page", (req, res) => {
     return controller.getFeedPosts(req, res);
 });
 
-postRoutes.get("/GetPostById/:postId", (req, res) => {
+postRoutes.get("/ById/:postId", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -37,7 +37,7 @@ postRoutes.put("/Like", (req, res) => {
     return controller.putLike(req, res);
 });
 
-postRoutes.get("/GetPostsByUserId/:userId/:page", (req, res) => {
+postRoutes.get("/ByUserId/:userId/:page", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
@@ -45,7 +45,7 @@ postRoutes.get("/GetPostsByUserId/:userId/:page", (req, res) => {
     return controller.getUserPosts(req, res);
 });
 
-postRoutes.delete("/DeletePost/:postId", (req, res) => {
+postRoutes.delete("/:postId", (req, res) => {
     // #swagger.tags = ['Post']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[400] = { description: 'Bad Request.' }
