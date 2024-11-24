@@ -20,10 +20,22 @@ import DeletePostCase from "./domain/post/cases/deletePostCase";
 import CreatePostCase from "./domain/post/cases/createPostCase";
 import GetPostByIdCase from "./domain/post/cases/getPostByIdCase";
 import UpdateLikeOfPostCase from "./domain/post/cases/updateLikeOfPostCase";
+import SignUpCase from "./domain/user/cases/signUpCase";
+import SearchUserCase from "./domain/user/cases/searchUserCase";
+import UpdateUserCase from "./domain/user/cases/updateUserCase";
+import ChangeUserPasswordCase from "./domain/user/cases/changePasswordCase";
+import FollowUserCase from "./domain/user/cases/followUserCase";
+import GetUserByEmailCase from "./domain/user/cases/getUserByEmailCase";
+import UpdateUsernameCase from "./domain/user/cases/updateUsernameCase";
+import UnfollowUserCase from "./domain/user/cases/unfollowUserCase";
+import UpdateUserPostsCase from "./domain/post/cases/updateUserPostsCase";
+import IGeneratePasswordService from "./services/crypto/igeneratePasswordService";
+import GeneratePasswordService from "./services/crypto/generatePasswordService";
 
 let container = new Container();
 container.bind<ITokenService>('TokenService').to(JwtTokenService);
 container.bind<IEncryptService>('EncryptService').to(EncryptServiceBcrypt);
+container.bind<IGeneratePasswordService>('GeneratePasswordService').to(GeneratePasswordService);
 
 container.bind<IUserRepository>('UserRepository').to(UserRepository);
 container.bind<IPostRepository>('PostRepository').to(PostRepository);
@@ -40,5 +52,14 @@ container.bind('GetUserPostsCase').to(GetUserPostsCase);
 container.bind('CreatePostCase').to(CreatePostCase);
 container.bind('GetPostByIdCase').to(GetPostByIdCase);
 container.bind('UpdateLikeOfPostCase').to(UpdateLikeOfPostCase);
+container.bind('SignUpCase').to(SignUpCase);
+container.bind('SearchUserCase').to(SearchUserCase);
+container.bind('UpdateUserCase').to(UpdateUserCase);
+container.bind('FollowUserCase').to(FollowUserCase);
+container.bind('ChangeUserPasswordCase').to(ChangeUserPasswordCase);
+container.bind('UnfollowUserCase').to(UnfollowUserCase);
+container.bind('UpdateUsernameCase').to(UpdateUsernameCase);
+container.bind('GetUserByEmailCase').to(GetUserByEmailCase);
+container.bind('UpdateUserPostsCase').to(UpdateUserPostsCase);
 
 export default container;

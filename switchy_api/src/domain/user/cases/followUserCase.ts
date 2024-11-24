@@ -1,9 +1,12 @@
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
+import { inject, injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class FollowUserCase {
     private userRepository: IUserRepository;
 
-    constructor(userRepository: IUserRepository) {
+    constructor(@inject('UserRepository') userRepository: IUserRepository) {
         this.userRepository = userRepository;
     }
 

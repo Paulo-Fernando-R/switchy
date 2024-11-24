@@ -1,10 +1,13 @@
 import { IUser } from "../../../models/user";
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
+import { inject, injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class UpdateUserPostsCase {
     private postRepository: IPostRepository;
 
-    constructor(postRepository: IPostRepository) {
+    constructor(@inject('PostRepository') postRepository: IPostRepository) {
         this.postRepository = postRepository;
     }
 

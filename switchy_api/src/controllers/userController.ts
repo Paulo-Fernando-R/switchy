@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
-import { UserRepository } from "../repositories/userRepository/userRepository";
 import { StatusCodes } from "../utils/status_codes";
-import IUserRepository from "../repositories/userRepository/IuserRepository";
 import SignUpCase from "../domain/user/cases/signUpCase";
-import EncryptServiceBcrypt from "../services/encrypt/encryptService";
 import SignUpRequest from "../domain/user/requests/signUpRequest";
 import {
     SamePasswordError,
@@ -21,24 +18,17 @@ import FollowUserCase from "../domain/user/cases/followUserCase";
 import UnfollowUserCase from "../domain/user/cases/unfollowUserCase";
 import UpdateUsernameCase from "../domain/user/cases/updateUsernameCase";
 import GenerateTokenFromUserCase from "../domain/auth/cases/generateTokenFromUserCase";
-import JwtTokenService from "../services/token/jwtTokenService";
-import ITokenService from "../services/token/itokenService";
 import GetUserByEmailCase from "../domain/user/cases/getUserByEmailCase";
 import GeneratePasswordService from "../services/crypto/generatePasswordService";
 import IGeneratePasswordService from "../services/crypto/igeneratePasswordService";
 import SendRecoveryPasswordEmailCase from "../domain/user/cases/sendRecoveryPasswordEmailCase";
 import { RecoveryEmail } from "../services/smtp/recoveryEmail";
 import UpdateUserPostsCase from "../domain/post/cases/updateUserPostsCase";
-import IPostRepository from "../repositories/postRepository/IpostRepository";
-import { PostRepository } from "../repositories/postRepository/postRepository";
 import { IUser } from "../models/user";
 import container from "../injection";
 
 export default class UserController {
-    private postRepository: IPostRepository;
-    private userRepository: IUserRepository;
     private signUpCase: SignUpCase;
-    private encryptService: EncryptServiceBcrypt;
     private searchUserCase: SearchUserCase;
     private getUserByIdCase: GetUserByIdCase;
     private updateUserCase: UpdateUserCase;
@@ -47,7 +37,6 @@ export default class UserController {
     private unfollowUserCase: UnfollowUserCase;
     private updateUsernameCase: UpdateUsernameCase;
     private generateTokenFromUserCase: GenerateTokenFromUserCase;
-    private tokenService: ITokenService;
     private getUserByEmailCase: GetUserByEmailCase;
     private generatePaswordService: IGeneratePasswordService;
     private recoveryEmail: RecoveryEmail;
@@ -55,24 +44,22 @@ export default class UserController {
     private updateUserPostsCase: UpdateUserPostsCase;
 
     constructor() {
-        this.postRepository = new PostRepository();
-        this.userRepository = new UserRepository();
-        this.encryptService = new EncryptServiceBcrypt();
-        this.tokenService = new JwtTokenService();
-        this.signUpCase = new SignUpCase(this.userRepository, this.encryptService);
-        this.searchUserCase = new SearchUserCase(this.userRepository, this.encryptService);
+        this.signUpCase = container.get<SignUpCase>('SignUpCase');
+        this.searchUserCase = container.get<SearchUserCase>('SearchUserCase');
         this.getUserByIdCase = container.get<GetUserByIdCase>('GetUserByIdCase');
-        this.updateUserCase = new UpdateUserCase(this.userRepository);
-        this.changeUserPasswordCase = new ChangeUserPasswordCase(this.userRepository, this.encryptService);
-        this.followUserCase = new FollowUserCase(this.userRepository);
-        this.unfollowUserCase = new UnfollowUserCase(this.userRepository);
-        this.updateUsernameCase = new UpdateUsernameCase(this.userRepository);
-        this.generateTokenFromUserCase = new GenerateTokenFromUserCase(this.tokenService);
-        this.getUserByEmailCase = new GetUserByEmailCase(this.userRepository);
-        this.generatePaswordService = new GeneratePasswordService();
+        this.updateUserCase = container.get<UpdateUserCase>('UpdateUserCase');
+        this.changeUserPasswordCase = container.get<ChangeUserPasswordCase>('ChangeUserPasswordCase');
+        this.followUserCase = container.get<FollowUserCase>('FollowUserCase');
+        this.unfollowUserCase = container.get<UnfollowUserCase>('UnfollowUserCase');
+        this.updateUsernameCase = container.get<UpdateUsernameCase>('UpdateUsernameCase');
+        this.generateTokenFromUserCase = container.get<GenerateTokenFromUserCase>('GenerateTokenFromUserCase');
+        this.getUserByEmailCase = container.get<GetUserByEmailCase>('GetUserByEmailCase');
+        this.generatePaswordService = container.get<GeneratePasswordService>('GeneratePasswordService');
+        this.updateUserPostsCase = container.get<UpdateUserPostsCase>('UpdateUserPostsCase');
+
+        // TODO: Refactor
         this.recoveryEmail = new RecoveryEmail();
         this.sendRecoveryPasswordEmailCase = new SendRecoveryPasswordEmailCase(this.recoveryEmail);
-        this.updateUserPostsCase = new UpdateUserPostsCase(this.postRepository);
     }
 
     async signUp(request: Request, response: Response) {

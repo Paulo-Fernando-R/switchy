@@ -1,11 +1,14 @@
 import { IUser } from "../../../models/user";
 import IUserRepository from "../../../repositories/userRepository/IuserRepository";
 import { UserInvalidEmailError } from "../errors/userErrors";
+import { inject, injectable } from "inversify";
+import "reflect-metadata";
 
+@injectable()
 export default class GetUserByEmailCase {
     private userRepository: IUserRepository;
 
-    constructor(userRepository: IUserRepository) {
+    constructor(@inject('UserRepository') userRepository: IUserRepository) {
         this.userRepository = userRepository;
     }
 
