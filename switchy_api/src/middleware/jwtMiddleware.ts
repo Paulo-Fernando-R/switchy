@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import "dotenv/config";
 import { StatusCodes } from "../utils/status_codes";
 import ITokenService from "../services/token/itokenService";
-import JwtTokenService from "../services/token/jwtTokenService";
+import UserIsDeletedCase from "../domain/user/cases/userIsDeletedCase";
+import container from "../injection";
 
-export function jwtMiddleware(request: Request, response: Response, next: NextFunction) {
+export async function jwtMiddleware(request: Request, response: Response, next: NextFunction) {
     let token = request.headers["authorization"];
 
     if (!token) {
@@ -12,7 +13,9 @@ export function jwtMiddleware(request: Request, response: Response, next: NextFu
         return;
     }
 
-    const tokenService: ITokenService = new JwtTokenService();
+    const tokenService = container.get<ITokenService>('TokenService');
+    const userIsDeletedCase = container.get<UserIsDeletedCase>('UserIsDeletedCase');;
+
     const reg = new RegExp(/Bearer/i);
     if (reg.test(token)) {
         token = token.split(" ")[1];
@@ -20,8 +23,15 @@ export function jwtMiddleware(request: Request, response: Response, next: NextFu
 
     try {
         const decoded = tokenService.isValid(token);
+        const userId = decoded.userId;
 
-        request.userId = decoded.userId;
+        const isDeleted = await userIsDeletedCase.execute(userId);
+        if (isDeleted) {
+            response.status(StatusCodes.Unauthorized).end();
+            return;
+        }
+
+        request.userId = userId;
         next();
     } catch (ex) {
         console.log(ex);
