@@ -8,7 +8,7 @@ export interface IPost {
     publishDate: Date;
     content: string;
     comments?: { postId: string, deleted: boolean }[];
-    likes?: { userId: string }[];
+    likes?: { userId: string, deleted: boolean }[];
     deleted?: boolean;
 }
 

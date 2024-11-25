@@ -11,6 +11,7 @@ export function getTotalComments(post: IPost) {
 
 export function getTotalLikes(post: IPost) {
     var likes = 0;
+    post.likes = filterDeletedPostLikes(post.likes);
     if (post.likes != null) {
         likes = post.likes?.length;
     }
@@ -28,4 +29,8 @@ export function isLikedByUser(post: IPost, userId: string) {
 
 function filterDeletedPostComments(comments: IPost["comments"]){
     return comments ? comments.filter(comment => !comment.deleted) : [];
+}
+
+function filterDeletedPostLikes(likes: IPost["likes"]){
+    return likes ? likes.filter(likes => !likes.deleted) : [];
 }
