@@ -19,7 +19,7 @@ const postSchema = new Schema<IPost>({
     publishDate: { type: Date, default: new Date(Date.now()) },
     content: { type: String, required: true },
     comments: [{ postId: { type: Types.ObjectId, required: false, default: null }, deleted: {type: Boolean, default: false} }],
-    likes: [{ userId: { type: Types.ObjectId, required: false, default: null } }],
+    likes: [{ userId: { type: Types.ObjectId, required: false, default: null }, deleted: {type: Boolean, default: false} }],
     deleted: { type: Boolean, default: false },
 });
 

@@ -262,6 +262,6 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
     }
 
     async delete(userId: string): Promise<void> {
-        await User.deleteOne({ _id: new Types.ObjectId(userId) });
+        await User.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, { deleted: true });
     }
 }

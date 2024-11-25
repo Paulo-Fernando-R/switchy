@@ -210,7 +210,24 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         await Post.updateMany({ "user.id": new Types.ObjectId(userId) }, { $set: { user: user } });
     }
 
-    async deleteAllByUser(userId: string): Promise<void> {
-        await Post.deleteMany({ "user.id": new Types.ObjectId(userId) });
+    async getAllByUser(userId: string): Promise<IPost[]> {
+        const list = await Post.find({ "user.id": new Types.ObjectId(userId), deleted: false }, null, null);
+
+        const res: IPost[] = list.map((e) => {
+            return {
+                content: e.content,
+                publishDate: e.publishDate,
+                user: e.user,
+                id: e._id,
+                parentId: e.parentId,
+                comments: e.comments,
+                likes: e.likes,
+            };
+        });
+        return res;
+    }
+
+    async deleteLikesByUser(userId: string): Promise<void> {
+        await Post.updateMany({"likes.userId": new Types.ObjectId(userId) }, {$set: {"likes.$.deleted": true}})
     }
 }

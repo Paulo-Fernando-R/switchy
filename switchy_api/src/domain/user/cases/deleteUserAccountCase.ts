@@ -17,7 +17,14 @@ export default class DeleteUserAccountCase {
     }
 
     async execute(userId: string) {
-        await this.postRepository.deleteAllByUser(userId);
+        let posts = await this.postRepository.getAllByUser(userId);
+        for (let i = 0; i < posts.length; i++) {
+            let post = posts[i];
+            let postId = post.id!.toString();
+            await this.postRepository.deletePost(postId);
+        }
+
         await this.userRepository.delete(userId);
+        await this.postRepository.deleteLikesByUser(userId);
     }
 }

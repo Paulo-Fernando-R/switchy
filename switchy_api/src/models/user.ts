@@ -11,6 +11,7 @@ export interface IUser {
     id?: Types.ObjectId;
     following?: { userId: string }[];
     followers?: { userId: string }[];
+    deleted?: boolean;
 }
 
 export const userSchema = new Schema<IUser>({
@@ -23,6 +24,7 @@ export const userSchema = new Schema<IUser>({
     createdAt: { type: Number, default: Date.now() },
     following: [{ userId: { type: Types.ObjectId, required: false, defalt: [] } }],
     followers: [{ userId: { type: Types.ObjectId, required: false, defalt: [] } }],
+    deleted: { type: Boolean, default: false }
 });
 
 export const User = model<IUser>("User", userSchema);
