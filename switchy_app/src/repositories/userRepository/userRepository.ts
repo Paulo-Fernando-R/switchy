@@ -113,7 +113,7 @@ export default class UserRepository {
     }
 
     async chnageUsername(username: string) {
-        const response = await this.axios.instance.put<User[]>("/User/Update", { username });
+        const response = await this.axios.instance.put<User[]>("/User/Update/Username", { username });
 
         if (!response) {
             throw new NetworkError();
