@@ -13,4 +13,5 @@ export default interface IPostRepository {
     getUserPosts(userId: string, page: number): Promise<IPost[]>;
     deletePost(postId: string): Promise<void>
     updateUserPost(userId: string, user: IUser): Promise<void>;
+    deleteAllByUser(userId: string): Promise<void>;
 }

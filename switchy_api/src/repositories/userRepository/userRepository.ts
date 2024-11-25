@@ -5,6 +5,7 @@ import ITokenService from "../../services/token/itokenService";
 import JwtTokenService from "../../services/token/jwtTokenService";
 import { injectable } from "inversify";
 import "reflect-metadata";
+import { Types } from "mongoose";
 
 @injectable()
 export class UserRepository extends DatabaseConnection implements IUserRepository {
@@ -258,5 +259,9 @@ export class UserRepository extends DatabaseConnection implements IUserRepositor
         };
 
         return user;
+    }
+
+    async delete(userId: string): Promise<void> {
+        await User.deleteOne({ _id: new Types.ObjectId(userId) });
     }
 }

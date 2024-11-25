@@ -474,6 +474,25 @@
         }
       }
     },
+    "/User/": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Ok."
+          },
+          "404": {
+            "description": "Not Found."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
+    },
     "/Post/Create": {
       "post": {
         "tags": [

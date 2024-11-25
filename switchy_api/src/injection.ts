@@ -31,6 +31,7 @@ import UnfollowUserCase from "./domain/user/cases/unfollowUserCase";
 import UpdateUserPostsCase from "./domain/post/cases/updateUserPostsCase";
 import IGeneratePasswordService from "./services/crypto/igeneratePasswordService";
 import GeneratePasswordService from "./services/crypto/generatePasswordService";
+import DeleteUserAccountCase from "./domain/user/cases/deleteUserAccountCase";
 
 let container = new Container();
 container.bind<ITokenService>('TokenService').to(JwtTokenService);
@@ -61,5 +62,6 @@ container.bind('UnfollowUserCase').to(UnfollowUserCase);
 container.bind('UpdateUsernameCase').to(UpdateUsernameCase);
 container.bind('GetUserByEmailCase').to(GetUserByEmailCase);
 container.bind('UpdateUserPostsCase').to(UpdateUserPostsCase);
+container.bind('DeleteUserAccountCase').to(DeleteUserAccountCase);
 
 export default container;

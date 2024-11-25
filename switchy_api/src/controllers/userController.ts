@@ -26,6 +26,7 @@ import { RecoveryEmail } from "../services/smtp/recoveryEmail";
 import UpdateUserPostsCase from "../domain/post/cases/updateUserPostsCase";
 import { IUser } from "../models/user";
 import container from "../injection";
+import DeleteUserAccountCase from "../domain/user/cases/deleteUserAccountCase";
 
 export default class UserController {
     private signUpCase: SignUpCase;
@@ -42,6 +43,7 @@ export default class UserController {
     private recoveryEmail: RecoveryEmail;
     private sendRecoveryPasswordEmailCase: SendRecoveryPasswordEmailCase;
     private updateUserPostsCase: UpdateUserPostsCase;
+    private deleteUserAccountCase: DeleteUserAccountCase;
 
     constructor() {
         this.signUpCase = container.get<SignUpCase>('SignUpCase');
@@ -56,6 +58,7 @@ export default class UserController {
         this.getUserByEmailCase = container.get<GetUserByEmailCase>('GetUserByEmailCase');
         this.generatePaswordService = container.get<GeneratePasswordService>('GeneratePasswordService');
         this.updateUserPostsCase = container.get<UpdateUserPostsCase>('UpdateUserPostsCase');
+        this.deleteUserAccountCase = container.get<DeleteUserAccountCase>('DeleteUserAccountCase');
 
         // TODO: Refactor
         this.recoveryEmail = new RecoveryEmail();
@@ -263,6 +266,24 @@ export default class UserController {
             }
             return res.status(StatusCodes.InternalServerError).send();
             //throw ex;
+        }
+    }
+
+    async delete(req: Request, res: Response) {
+        let userId = req.userId;
+
+        try {
+            await this.getUserByIdCase.execute(userId);
+            await this.deleteUserAccountCase.execute(userId);
+
+            res.status(StatusCodes.Ok).send();
+        } catch (err) {
+            if (err instanceof UserNotFoundError) {
+                res.status(StatusCodes.NotFound).send();
+                return;
+            }
+
+            throw err;
         }
     }
 }
