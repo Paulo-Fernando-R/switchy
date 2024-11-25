@@ -1,4 +1,10 @@
-export abstract class AuthError extends Error {}
+export abstract class AuthError extends Error {
+    constructor() {
+        super();
+
+        Object.setPrototypeOf(this, new.target.prototype);
+    }
+}
 
 export class AuthEmptyFieldsError extends AuthError {}
 

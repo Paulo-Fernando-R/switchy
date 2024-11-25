@@ -3,6 +3,8 @@ export abstract class UserError extends Error {
     constructor(message: string = "Default user error", statusCode: number = 400){
         super(message);
         this.statusCode = statusCode;
+
+        Object.setPrototypeOf(this, new.target.prototype);
     }
 }
 
