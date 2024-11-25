@@ -1,25 +1,17 @@
 import { IPost } from "../../models/post";
 
 export function getTotalComments(post: IPost) {
-    var comments = 0;
-    post.comments = filterDeletedPostComments(post.comments);
-    if (post.comments != null) {
-        comments = post.comments?.length;
-    }
+    var comments = getTotal(post.comments);
     return comments;
 }
 
 export function getTotalLikes(post: IPost) {
-    var likes = 0;
-    post.likes = filterDeletedPostLikes(post.likes);
-    if (post.likes != null) {
-        likes = post.likes?.length;
-    }
+    var likes = getTotal(post.likes);
     return likes;
 }
 
 export function isLikedByUser(post: IPost, userId: string) {
-    if (post.likes == null) {
+    if (post.likes == null || post.likes == undefined) {
         return false;
     }
 
@@ -27,10 +19,15 @@ export function isLikedByUser(post: IPost, userId: string) {
     return likedByUser;
 }
 
-function filterDeletedPostComments(comments: IPost["comments"]){
-    return comments ? comments.filter(comment => !comment.deleted) : [];
+function getTotal(ls: any[] | undefined): number {
+    if (ls == undefined || ls == null || ls.length) {
+        return 0;
+    }
+
+    let cn = filterNotDeleted(ls);
+    return cn;
 }
 
-function filterDeletedPostLikes(likes: IPost["likes"]){
-    return likes ? likes.filter(likes => !likes.deleted) : [];
+function filterNotDeleted(ls: any) {
+    return ls ? ls.filter((ls: any) => !ls.deleted) : [];
 }
