@@ -36,10 +36,9 @@ export default function Profile({ navigation }: ProfileProps) {
     const { posts, setPosts } = usePostsListContext();
     const { user, setUser } = useUserContext();
     const { setAuth } = useAuthContext();
-    
+
     let currentSelectedItem = useRef<string>("");
     const modalizeRef = useRef<Modalize>(null);
-
 
     const query = useInfiniteQuery({
         queryKey: ["Profile"],
@@ -92,12 +91,18 @@ export default function Profile({ navigation }: ProfileProps) {
             />
 
             <FlatList
-                ListHeaderComponent={<Header user={user!} navigate={navigate} logout={logout} />}
-                ListEmptyComponent={<EmptyList screenSizeDivider={2} />}
-                refreshControl={<RefreshControl refreshing={query.isRefetching} onRefresh={query.refetch} />}
-                contentContainerStyle={styles.list}
                 data={posts}
-                renderItem={({ item, index }) => (
+                onEndReachedThreshold={0.8}
+                contentContainerStyle={styles.list}
+                onEndReached={() => query.fetchNextPage()}
+                ListEmptyComponent={<EmptyList screenSizeDivider={2} />}
+                ListFooterComponent={query.isFetchingNextPage ? <Footer /> : null}
+                ListHeaderComponent={<Header user={user!} navigate={navigate} logout={logout} />}
+                refreshControl={<RefreshControl refreshing={query.isRefetching} onRefresh={query.refetch} />}
+                keyExtractor={(item, index) =>
+                    `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`
+                }
+                renderItem={({ item }) => (
                     <PostFeedItem
                         item={item}
                         error={query.error}
@@ -126,12 +131,6 @@ export default function Profile({ navigation }: ProfileProps) {
                         }
                     />
                 )}
-                onEndReachedThreshold={0.8}
-                onEndReached={() => query.fetchNextPage()}
-                ListFooterComponent={query.isFetchingNextPage ? <Footer /> : null}
-                keyExtractor={(item, index) =>
-                    `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`
-                }
             />
         </View>
     );
