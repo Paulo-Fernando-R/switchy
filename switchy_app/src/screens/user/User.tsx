@@ -84,7 +84,7 @@ export default function Profile({ navigation }: ProfileProps) {
 
             <FlatList
                 ListHeaderComponent={<Header user={user!} navigate={navigate} />}
-                ListEmptyComponent={EmptyList}
+                ListEmptyComponent={<EmptyList screenSizeDivider={2} />}
                 refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
                 contentContainerStyle={styles.list}
                 data={posts}

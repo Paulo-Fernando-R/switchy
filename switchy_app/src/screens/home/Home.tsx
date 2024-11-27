@@ -41,7 +41,7 @@ export default function Home({ navigation }: HomeProps) {
 
     return (
         <FlatList
-            ListEmptyComponent={EmptyList}
+            ListEmptyComponent={<EmptyList screenSizeDivider={1.5} />}
             refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
             ListHeaderComponent={() => <Header />}
             style={styles.page}
