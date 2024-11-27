@@ -11,28 +11,49 @@ import BottomModal from "../../../components/bottomModal/BottomModal";
 import ModalButton from "../../../components/bottomModal/privateComponents/ModalButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import QuestionPopup from "../../../components/questionPopup/QuestionPopup";
 
 type ProfileHeaderProps = {
     user: User | null;
     navigate: () => void;
+    logout: () => Promise<void>;
 };
 
-export default function Header({ user, navigate }: ProfileHeaderProps) {
+export default function Header({ user, navigate, logout }: ProfileHeaderProps) {
     const modalizeRef = useRef<Modalize>(null);
+    const [popup, setPopup] = React.useState(false);
     const handleOpenModal = () => {
         modalizeRef.current?.open();
     };
+
+    function openPopup() {
+        setPopup(true);
+        modalizeRef.current?.close();
+    }
+
+    function editProfile() {
+        navigate();
+        modalizeRef.current?.close();
+    }
     return (
         <View>
+            <QuestionPopup
+                visibility={popup}
+                setVisibility={setPopup}
+                title="Fazer logout"
+                description="Tem certeza que deseja sair da sua conta?"
+                action={logout}
+                actionText="Logout"
+            />
             <BottomModal modalizeRef={modalizeRef}>
-            <Text style={styles.modalSubtitle}>Opções</Text>
+                <Text style={styles.modalSubtitle}>Opções</Text>
                 <ModalButton
-                    action={() => {}}
+                    action={editProfile}
                     text="Editar perfil"
                     icon={<Feather name="edit-3" size={24} color={appColors.text200} />}
                 />
                 <ModalButton
-                    action={() => {}}
+                    action={openPopup}
                     text="Sair da conta"
                     icon={<MaterialIcons name="logout" size={24} color={appColors.text200} />}
                 />
@@ -53,7 +74,6 @@ export default function Header({ user, navigate }: ProfileHeaderProps) {
                 <View style={styles.nameBox}>
                     <Text style={styles.name}>{user?.name}</Text>
                     <TouchableOpacity activeOpacity={0.5} onPress={handleOpenModal}>
-                       
                         <AntDesign name="setting" size={20} color={appColors.text300} />
                     </TouchableOpacity>
                 </View>

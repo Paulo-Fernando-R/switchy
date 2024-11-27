@@ -19,6 +19,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import QuestionPopup from "../../components/questionPopup/QuestionPopup";
 import Header from "./privateComponents/Header";
 import SnackBar from "../../components/snackBar/SnackBar";
+import { useAuthContext } from "../../contexts/authContext";
 
 type ProfileProps = {
     navigation: ProfileNavigationProp;
@@ -31,7 +32,8 @@ export default function Profile({ navigation }: ProfileProps) {
     const [snackBar, setSnackBar] = useState(false);
     const [errorSnackBar, setErrorSnackBar] = useState(false);
     const [popup, setPopup] = React.useState(false);
-    const { user } = useUserContext();
+    const { user, setUser } = useUserContext();
+    const { setAuth } = useAuthContext();
     const { posts, setPosts } = usePostsListContext();
     const modalizeRef = useRef<Modalize>(null);
     let currentSelectedItem = useRef<string>("");
@@ -63,6 +65,10 @@ export default function Profile({ navigation }: ProfileProps) {
         if (id) navigation?.push("Comments", { postId: id });
     }
 
+    async function logout() {
+        await controller.logout(setUser, setAuth);
+    }
+
     useEffect(() => {
         isSuccess && setPosts(data?.pages?.flat());
     }, [data]);
@@ -83,7 +89,7 @@ export default function Profile({ navigation }: ProfileProps) {
             />
 
             <FlatList
-                ListHeaderComponent={<Header user={user!} navigate={navigate} />}
+                ListHeaderComponent={<Header user={user!} navigate={navigate} logout={logout} />}
                 ListEmptyComponent={<EmptyList screenSizeDivider={2} />}
                 refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
                 contentContainerStyle={styles.list}
