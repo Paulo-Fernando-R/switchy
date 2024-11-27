@@ -1,17 +1,17 @@
-import React, { useRef } from "react";
+import ModalButton from "../../../components/bottomModal/privateComponents/ModalButton";
+import QuestionPopup from "../../../components/questionPopup/QuestionPopup";
+import BottomModal from "../../../components/bottomModal/BottomModal";
 import { View, Image, Text, TouchableOpacity } from "react-native";
-import styles from "../userStyles";
-import Feather from "@expo/vector-icons/Feather";
-import User from "../../../models/user";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 //@ts-ignore
 import logo from "../../../../assets/images/logo.png";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import appColors from "../../../styles/appColors";
 import { Modalize } from "react-native-modalize";
-import BottomModal from "../../../components/bottomModal/BottomModal";
-import ModalButton from "../../../components/bottomModal/privateComponents/ModalButton";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import QuestionPopup from "../../../components/questionPopup/QuestionPopup";
+import Feather from "@expo/vector-icons/Feather";
+import User from "../../../models/user";
+import React, { useRef } from "react";
+import styles from "../userStyles";
 
 type ProfileHeaderProps = {
     user: User | null;
