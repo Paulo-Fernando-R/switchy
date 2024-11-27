@@ -9,12 +9,15 @@ import User from "../../models/user";
 import IStorageService from "../../services/storageService/IstorageService";
 import StorageService from "../../services/storageService/storageService";
 import StorageTypeEnum from "../../enums/storageTypeEnum";
+import DeleteAccountCase from "../../components/deleteAccountCase/deleteAccountCase";
+import IDeleteAccountCase from "../../components/deleteAccountCase/IdeleteAccountCase";
 
 export default class UserController {
     private repository: IPostRepository;
     private deletePostCase: IDeletePostCase;
     private userStorage: IStorageService<User>;
     private postStorage: IStorageService<Auth>;
+    private deleteAccountCase: IDeleteAccountCase;
     placeholderData: any[];
 
     constructor() {
@@ -23,6 +26,7 @@ export default class UserController {
         this.deletePostCase = new DeletePostCase();
         this.userStorage = new StorageService<User>(StorageTypeEnum.user);
         this.postStorage = new StorageService<Auth>(StorageTypeEnum.auth);
+        this.deleteAccountCase = new DeleteAccountCase();
     }
     async getPosts(userId: string, pageParam: number) {
         const posts = await this.repository.getUserPosts(userId, pageParam);
@@ -61,6 +65,18 @@ export default class UserController {
             setAuth(null!);
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    async deleteAccount(
+        setUser: (user: User) => void,
+        setAuth: (value: Auth) => void
+    ) {
+        try {
+            await this.deleteAccountCase.execute();
+            await this.logout(setUser, setAuth);
+        } catch (error) {
+            throw error;
         }
     }
 }

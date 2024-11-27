@@ -71,6 +71,10 @@ export default function Profile({ navigation }: ProfileProps) {
         await controller.logout(setUser, setAuth);
     }
 
+    async function deleteAccount() {
+        await controller.deleteAccount(setUser, setAuth);
+    }
+
     useEffect(() => {
         query.isSuccess && setPosts(query.data?.pages?.flat());
     }, [query.data]);
@@ -97,7 +101,9 @@ export default function Profile({ navigation }: ProfileProps) {
                 onEndReached={() => query.fetchNextPage()}
                 ListEmptyComponent={<EmptyList screenSizeDivider={2} />}
                 ListFooterComponent={query.isFetchingNextPage ? <Footer /> : null}
-                ListHeaderComponent={<Header user={user!} navigate={navigate} logout={logout} />}
+                ListHeaderComponent={
+                    <Header user={user!} navigate={navigate} logout={logout} deleteAccount={deleteAccount} />
+                }
                 refreshControl={<RefreshControl refreshing={query.isRefetching} onRefresh={query.refetch} />}
                 keyExtractor={(item, index) =>
                     `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`

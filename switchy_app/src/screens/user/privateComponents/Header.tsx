@@ -10,18 +10,29 @@ import appColors from "../../../styles/appColors";
 import { Modalize } from "react-native-modalize";
 import Feather from "@expo/vector-icons/Feather";
 import User from "../../../models/user";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styles from "../userStyles";
+import SnackBar from "../../../components/snackBar/SnackBar";
+import { useMutation } from "@tanstack/react-query";
 
 type ProfileHeaderProps = {
     user: User | null;
     navigate: () => void;
     logout: () => Promise<void>;
+    deleteAccount: () => Promise<void>;
 };
 
-export default function Header({ user, navigate, logout }: ProfileHeaderProps) {
+export default function Header({ user, navigate, logout, deleteAccount }: ProfileHeaderProps) {
     const modalizeRef = useRef<Modalize>(null);
     const [popup, setPopup] = React.useState(false);
+    const [popupDelete, setPopupDelete] = React.useState(false);
+    const [errorSnackBar, setErrorSnackBar] = useState(false);
+
+    const mutation = useMutation({
+        mutationFn: () => handleDelete(),
+        onError: () => setErrorSnackBar(true),
+    });
+
     const handleOpenModal = () => {
         modalizeRef.current?.open();
     };
@@ -31,9 +42,19 @@ export default function Header({ user, navigate, logout }: ProfileHeaderProps) {
         modalizeRef.current?.close();
     }
 
+    function openPopupDelete() {
+        setPopupDelete(true);
+        modalizeRef.current?.close();
+    }
+
     function editProfile() {
         navigate();
         modalizeRef.current?.close();
+    }
+
+    async function handleDelete() {
+        setPopupDelete(false);
+        await deleteAccount();
     }
     return (
         <View>
@@ -44,6 +65,21 @@ export default function Header({ user, navigate, logout }: ProfileHeaderProps) {
                 description="Tem certeza que deseja sair da sua conta?"
                 action={logout}
                 actionText="Logout"
+            />
+
+            <QuestionPopup
+                visibility={popupDelete}
+                setVisibility={setPopupDelete}
+                title="Deseja excluir sua conta?"
+                description="Tem certeza que deseja excluir sua conta? Esta ação nao pode ser desfeita."
+                action={mutation.mutate}
+                actionText="Excluir"
+            />
+            <SnackBar.Error
+                message={mutation.error?.message ?? ""}
+                setVisible={setErrorSnackBar}
+                visible={errorSnackBar}
+                autoDismissible={true}
             />
             <BottomModal modalizeRef={modalizeRef}>
                 <Text style={styles.modalSubtitle}>Opções</Text>
@@ -59,7 +95,7 @@ export default function Header({ user, navigate, logout }: ProfileHeaderProps) {
                 />
                 <Text style={styles.modalSubtitleRed}>Área de risco</Text>
                 <ModalButton
-                    action={() => {}}
+                    action={openPopupDelete}
                     text="Excluir conta"
                     icon={<MaterialIcons name="delete-outline" size={24} color={appColors.error} />}
                 />
