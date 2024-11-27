@@ -15,13 +15,14 @@ export default function BottomModal({ modalizeRef, children }: BottomModalProps)
             {/* {popup} */}
             <Portal>
                 <Modalize
-                    closeSnapPointStraightEnabled={true}
+                    //closeSnapPointStraightEnabled={true}
                     ref={modalizeRef}
                     withHandle={true}
                     adjustToContentHeight={true}
                     //modalHeight={300}
-                    velocity={20}
+                    velocity={80}
                     handlePosition="inside"
+
                     childrenStyle={styles.childrenStyle}
                     handleStyle={styles.handleStyle}
                     modalStyle={styles.modalStyle}
