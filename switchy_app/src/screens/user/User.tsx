@@ -1,25 +1,25 @@
+import MoreActionsButton from "../../components/postFeedItem/privateComponents/MoreActionsButton";
+import NavigateComment from "../../components/postFeedItem/privateComponents/NavigateComment";
 import { ProfileNavigationProp, ProfileRouteProp } from "../../routes/types/navigationTypes";
+import ModalButton from "../../components/bottomModal/privateComponents/ModalButton";
 import { View, FlatList, ActivityIndicator, RefreshControl } from "react-native";
+import QuestionPopup from "../../components/questionPopup/QuestionPopup";
+import { usePostsListContext } from "../../contexts/postsListContext";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import PostWebView from "../../components/postWebView/PostWebView";
+import BottomModal from "../../components/bottomModal/BottomModal";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useAuthContext } from "../../contexts/authContext";
 import { useUserContext } from "../../contexts/userContext";
 import EmptyList from "../../components/emptyList/EmpyList";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import React, { useEffect, useRef, useState } from "react";
+import SnackBar from "../../components/snackBar/SnackBar";
+import { Modalize } from "react-native-modalize";
+import Header from "./privateComponents/Header";
 import appColors from "../../styles/appColors";
 import UserController from "./userController";
 import styles from "./userStyles";
-import React, { useEffect, useRef, useState } from "react";
-import { usePostsListContext } from "../../contexts/postsListContext";
-import NavigateComment from "../../components/postFeedItem/privateComponents/NavigateComment";
-import BottomModal from "../../components/bottomModal/BottomModal";
-import { Modalize } from "react-native-modalize";
-import PostWebView from "../../components/postWebView/PostWebView";
-import MoreActionsButton from "../../components/postFeedItem/privateComponents/MoreActionsButton";
-import ModalButton from "../../components/bottomModal/privateComponents/ModalButton";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import QuestionPopup from "../../components/questionPopup/QuestionPopup";
-import Header from "./privateComponents/Header";
-import SnackBar from "../../components/snackBar/SnackBar";
-import { useAuthContext } from "../../contexts/authContext";
 
 type ProfileProps = {
     navigation: ProfileNavigationProp;
@@ -29,16 +29,19 @@ type ProfileProps = {
 export default function Profile({ navigation }: ProfileProps) {
     const controller = new UserController();
 
-    const [snackBar, setSnackBar] = useState(false);
     const [errorSnackBar, setErrorSnackBar] = useState(false);
+    const [snackBar, setSnackBar] = useState(false);
     const [popup, setPopup] = React.useState(false);
+
+    const { posts, setPosts } = usePostsListContext();
     const { user, setUser } = useUserContext();
     const { setAuth } = useAuthContext();
-    const { posts, setPosts } = usePostsListContext();
-    const modalizeRef = useRef<Modalize>(null);
+    
     let currentSelectedItem = useRef<string>("");
+    const modalizeRef = useRef<Modalize>(null);
 
-    const { data, isSuccess, error, fetchNextPage, isFetchingNextPage, isRefetching, refetch } = useInfiniteQuery({
+
+    const query = useInfiniteQuery({
         queryKey: ["Profile"],
         queryFn: ({ pageParam }) => controller.getPosts(user?.id!, pageParam),
         placeholderData: () => ({ pageParams: [1], pages: [controller.placeholderData] }),
@@ -47,7 +50,7 @@ export default function Profile({ navigation }: ProfileProps) {
     });
 
     const mutation = useMutation({
-        mutationFn: () => controller.deletePost(currentSelectedItem.current, setPopup, refetch),
+        mutationFn: () => controller.deletePost(currentSelectedItem.current, setPopup, query.refetch),
         onError: () => setErrorSnackBar(true),
         onSuccess: () => setSnackBar(true),
     });
@@ -70,13 +73,13 @@ export default function Profile({ navigation }: ProfileProps) {
     }
 
     useEffect(() => {
-        isSuccess && setPosts(data?.pages?.flat());
-    }, [data]);
+        query.isSuccess && setPosts(query.data?.pages?.flat());
+    }, [query.data]);
 
     return (
         <View style={styles.page}>
             <SnackBar.Error
-                message={error?.message ?? ""}
+                message={query.error?.message ?? ""}
                 setVisible={setErrorSnackBar}
                 visible={errorSnackBar}
                 autoDismissible={true}
@@ -91,13 +94,13 @@ export default function Profile({ navigation }: ProfileProps) {
             <FlatList
                 ListHeaderComponent={<Header user={user!} navigate={navigate} logout={logout} />}
                 ListEmptyComponent={<EmptyList screenSizeDivider={2} />}
-                refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
+                refreshControl={<RefreshControl refreshing={query.isRefetching} onRefresh={query.refetch} />}
                 contentContainerStyle={styles.list}
                 data={posts}
                 renderItem={({ item, index }) => (
                     <PostFeedItem
                         item={item}
-                        error={error}
+                        error={query.error}
                         postWebView={<PostWebView text={item?.content} />}
                         moreActionsButton={<MoreActionsButton openModal={() => openModal(item?.id)} />}
                         navigateComment={
@@ -124,8 +127,8 @@ export default function Profile({ navigation }: ProfileProps) {
                     />
                 )}
                 onEndReachedThreshold={0.8}
-                onEndReached={() => fetchNextPage()}
-                ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
+                onEndReached={() => query.fetchNextPage()}
+                ListFooterComponent={query.isFetchingNextPage ? <Footer /> : null}
                 keyExtractor={(item, index) =>
                     `${item?.id}-${index}${item?.comments}${item?.likes}${item?.likedByUser}`
                 }
