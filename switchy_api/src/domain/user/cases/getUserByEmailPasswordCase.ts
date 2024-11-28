@@ -34,15 +34,11 @@ export default class GetUserByEmailPasswordCase {
         // }
 
         const user: any = await this.userRepository.getByEmail(email);
-
-        
-        
         if (user == null) {
             throw new UserNotFoundError();
         }
         
         const isValidPassword = await this.encryptService.comparePassword(password, user.password);
-
         if(!isValidPassword){
             throw new UserInvalidPasswordError();
         }

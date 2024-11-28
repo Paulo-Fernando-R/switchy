@@ -3,6 +3,8 @@ export abstract class SignUpError extends Error {
     constructor(message: string = "Error at signup", code: number = 500) {
         super(message);
         this.code = code;
+
+        Object.setPrototypeOf(this, new.target.prototype);
     }
 }
 

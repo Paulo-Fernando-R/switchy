@@ -26,6 +26,9 @@ import { RecoveryEmail } from "../services/smtp/recoveryEmail";
 import UpdateUserPostsCase from "../domain/post/cases/updateUserPostsCase";
 import { IUser } from "../models/user";
 import container from "../injection";
+import DeleteUserAccountCase from "../domain/user/cases/deleteUserAccountCase";
+import { Worker } from "worker_threads";
+import path from "path";
 
 export default class UserController {
     private signUpCase: SignUpCase;
@@ -42,20 +45,22 @@ export default class UserController {
     private recoveryEmail: RecoveryEmail;
     private sendRecoveryPasswordEmailCase: SendRecoveryPasswordEmailCase;
     private updateUserPostsCase: UpdateUserPostsCase;
+    private deleteUserAccountCase: DeleteUserAccountCase;
 
     constructor() {
-        this.signUpCase = container.get<SignUpCase>('SignUpCase');
-        this.searchUserCase = container.get<SearchUserCase>('SearchUserCase');
-        this.getUserByIdCase = container.get<GetUserByIdCase>('GetUserByIdCase');
-        this.updateUserCase = container.get<UpdateUserCase>('UpdateUserCase');
-        this.changeUserPasswordCase = container.get<ChangeUserPasswordCase>('ChangeUserPasswordCase');
-        this.followUserCase = container.get<FollowUserCase>('FollowUserCase');
-        this.unfollowUserCase = container.get<UnfollowUserCase>('UnfollowUserCase');
-        this.updateUsernameCase = container.get<UpdateUsernameCase>('UpdateUsernameCase');
-        this.generateTokenFromUserCase = container.get<GenerateTokenFromUserCase>('GenerateTokenFromUserCase');
-        this.getUserByEmailCase = container.get<GetUserByEmailCase>('GetUserByEmailCase');
-        this.generatePaswordService = container.get<GeneratePasswordService>('GeneratePasswordService');
-        this.updateUserPostsCase = container.get<UpdateUserPostsCase>('UpdateUserPostsCase');
+        this.signUpCase = container.get<SignUpCase>("SignUpCase");
+        this.searchUserCase = container.get<SearchUserCase>("SearchUserCase");
+        this.getUserByIdCase = container.get<GetUserByIdCase>("GetUserByIdCase");
+        this.updateUserCase = container.get<UpdateUserCase>("UpdateUserCase");
+        this.changeUserPasswordCase = container.get<ChangeUserPasswordCase>("ChangeUserPasswordCase");
+        this.followUserCase = container.get<FollowUserCase>("FollowUserCase");
+        this.unfollowUserCase = container.get<UnfollowUserCase>("UnfollowUserCase");
+        this.updateUsernameCase = container.get<UpdateUsernameCase>("UpdateUsernameCase");
+        this.generateTokenFromUserCase = container.get<GenerateTokenFromUserCase>("GenerateTokenFromUserCase");
+        this.getUserByEmailCase = container.get<GetUserByEmailCase>("GetUserByEmailCase");
+        this.generatePaswordService = container.get<GeneratePasswordService>("GeneratePasswordService");
+        this.updateUserPostsCase = container.get<UpdateUserPostsCase>("UpdateUserPostsCase");
+        this.deleteUserAccountCase = container.get<DeleteUserAccountCase>("DeleteUserAccountCase");
 
         // TODO: Refactor
         this.recoveryEmail = new RecoveryEmail();
@@ -78,8 +83,7 @@ export default class UserController {
                 response.status(StatusCodes.InvalidEmail).send();
             } else if (error instanceof UserInvalidUsernameError) {
                 response.status(StatusCodes.InvalidUsername).send();
-            }
-            else throw error;
+            } else throw error;
         }
     }
 
@@ -243,16 +247,15 @@ export default class UserController {
         try {
             const { email } = req.body;
             const user: any = await this.getUserByEmailCase.execute(email);
-            if(user){
+            if (user) {
                 const newPassword = this.generatePaswordService.generateHex(13);
-                console.log(newPassword)
+                console.log(newPassword);
                 await this.changeUserPasswordCase.execute(user.id, user.password, newPassword);
                 await this.sendRecoveryPasswordEmailCase.execute(user.email, newPassword);
                 return res.type("application/json").status(StatusCodes.Ok).send();
             } else {
                 return res.status(StatusCodes.NotFound).send("User not found with this email.");
             }
-
         } catch (ex) {
             console.log(ex);
             if (ex instanceof UserInvalidEmailError) {
@@ -263,6 +266,41 @@ export default class UserController {
             }
             return res.status(StatusCodes.InternalServerError).send();
             //throw ex;
+        }
+    }
+
+    async delete(req: Request, res: Response) {
+        let userId = req.userId;
+
+        try {
+            await this.getUserByIdCase.execute(userId);
+            await this.deleteUserAccountCase.execute(userId);
+
+            res.status(StatusCodes.Ok).send();
+            //!THREAD PARA APAGAR A CONTA | NÃO NECESSARIO POR ENQUANTO
+            // const workerPath = path.resolve(__dirname, "../../dist/domain/user/workers/deleteUserWorker.js");
+            // const worker = new Worker(workerPath);
+            // worker.postMessage(userId);
+            // res.status(StatusCodes.Ok).send(`Account delete process is started form user: ${userId}`);
+
+            // worker.on("message", (message) => {
+            //     console.log("Message from worker:", message);
+            // });
+
+            // worker.on("error", (error) => {
+            //     console.error("Worker error:", error);
+            // });
+
+            // worker.on("exit", (code) => {
+            //     console.log(`Worker stopped with exit code ${code}`);
+            // });
+        } catch (err) {
+            if (err instanceof UserNotFoundError) {
+                res.status(StatusCodes.NotFound).send();
+                return;
+            }
+
+            throw err;
         }
     }
 }

@@ -18,6 +18,7 @@ export default class CustomAxiosClient implements ICustomAxiosClient {
             headers: {
                 Authorization: this.getTokenFromStorage()?.accessToken,
             },
+            timeout: 1000 * 30 // 30 seconds to timeout
         });
 
         this.instance.interceptors.request.use(this.reqInterceptor(), this.errorInterceptor());

@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": ""
   },
-  "host": "localhost:3333",
+  "host": "192.168.142.1:3333",
   "basePath": "/",
   "schemes": [
     "http"
@@ -464,6 +464,25 @@
           },
           "400": {
             "description": "Bad Request."
+          },
+          "404": {
+            "description": "Not Found."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
+    },
+    "/User/": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Ok."
           },
           "404": {
             "description": "Not Found."

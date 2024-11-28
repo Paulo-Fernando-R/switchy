@@ -61,6 +61,7 @@ export default class PostController {
     }
 
     async getFeedPosts(req: Request, res: Response) {
+  
         const userId = req.userId;
         const { page } = req.params;
         let pageInt: number = 1;

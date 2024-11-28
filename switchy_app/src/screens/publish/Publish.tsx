@@ -64,7 +64,7 @@ export default function Publish({ navigation, route }: RootTabsPublishNavigation
             </View>
             <View style={styles.titleBox}>
                 <Text style={styles.name}>{user?.name}</Text>
-                <Text style={styles.userName}>@{user?.email}</Text>
+                <Text style={styles.userName}>@{user?.userName}</Text>
             </View>
             <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}>
                 <TextInput

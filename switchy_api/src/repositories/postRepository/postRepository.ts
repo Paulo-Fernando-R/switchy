@@ -9,6 +9,7 @@ import "reflect-metadata";
 
 @injectable()
 export class PostRepository extends DatabaseConnection implements IPostRepository {
+    
     constructor() {
         super();
     }
@@ -179,7 +180,6 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         try {
             await this.connect();
             const post = await Post.findById(id).exec();
-            //  console.log(post?.user);
             const res: IPost = {
                 id: post?._id,
                 content: post?.content ?? "",
@@ -208,5 +208,26 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
 
     async updateUserPost(userId: string, user: IUser) {
         await Post.updateMany({ "user.id": new Types.ObjectId(userId) }, { $set: { user: user } });
+    }
+
+    async getAllByUser(userId: string): Promise<IPost[]> {
+        const list = await Post.find({ "user.id": new Types.ObjectId(userId), deleted: false }, null, null);
+
+        const res: IPost[] = list.map((e) => {
+            return {
+                content: e.content,
+                publishDate: e.publishDate,
+                user: e.user,
+                id: e._id,
+                parentId: e.parentId,
+                comments: e.comments,
+                likes: e.likes,
+            };
+        });
+        return res;
+    }
+
+    async deleteLikesByUser(userId: string): Promise<void> {
+        await Post.updateMany({"likes.userId": new Types.ObjectId(userId) }, {$set: {"likes.$.deleted": true}})
     }
 }
