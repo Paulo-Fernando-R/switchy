@@ -9,9 +9,17 @@ type QuestionPopupProps = {
     title: string;
     description: string;
     action: () => void;
+    actionText?: string;
 };
 
-export default function QuestionPopup({ visibility, setVisibility, action, description, title }: QuestionPopupProps) {
+export default function QuestionPopup({
+    visibility,
+    setVisibility,
+    action,
+    description,
+    title,
+    actionText,
+}: QuestionPopupProps) {
     function close() {
         setVisibility(false);
     }
@@ -20,10 +28,8 @@ export default function QuestionPopup({ visibility, setVisibility, action, descr
             animationType="fade"
             hardwareAccelerated={true}
             transparent={true}
-            
             visible={visibility}
             onRequestClose={close}
-
         >
             <Pressable style={styles.centeredView} onPressIn={close}>
                 <View style={styles.modalStyle}>
@@ -37,7 +43,9 @@ export default function QuestionPopup({ visibility, setVisibility, action, descr
                             <Text style={styles.button}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.6} onPress={action}>
-                            <Text style={[styles.button, { color: appColors.error }]}>Excluir</Text>
+                            <Text style={[styles.button, { color: appColors.error }]}>
+                                {actionText ? actionText : "Excluir"}
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>

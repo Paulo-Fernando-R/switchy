@@ -46,7 +46,7 @@ export default class AuthRepository implements IAuthRepository {
         };
 
         const response = await this.axios.instance.post("/Login/SignUp", data);
-      
+
         if (!response) {
             throw new NetworkError();
         }
@@ -98,5 +98,24 @@ export default class AuthRepository implements IAuthRepository {
         }
 
         return response.data;
+    }
+
+    async deleteAccount() {
+        const response = await this.axios.instance.delete("/User/");
+     
+        if (!response) {
+            throw new NetworkError();
+        }
+
+        if (response.status === 404) {
+            throw new NotFoundError();
+        }
+
+        if (response.status === 500) {
+            throw new InternalServerError();
+        }
+        if (response.status !== 200) {
+            throw new InternalServerError();
+        } 
     }
 }

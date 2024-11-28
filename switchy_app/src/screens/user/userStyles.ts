@@ -71,6 +71,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingBottom: 80,
     },
+
+    modalSubtitle:{
+        ...appTexts.paragraph1Regular,
+        fontWeight: 'bold',
+        color: appColors.accent300,
+        paddingHorizontal: 6,
+        paddingTop: 10
+    },
+    modalSubtitleRed:{
+        ...appTexts.paragraph1Regular,
+        fontWeight: 'bold',
+        color: appColors.error,
+        paddingHorizontal: 6,
+        paddingTop: 10
+    }
 });
 
 export default styles;

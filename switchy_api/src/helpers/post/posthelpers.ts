@@ -1,31 +1,38 @@
 import { IPost } from "../../models/post";
 
 export function getTotalComments(post: IPost) {
-    var comments = 0;
-    post.comments = filterDeletedPostComments(post.comments);
-    if (post.comments != null) {
-        comments = post.comments?.length;
+    if (!post.comments || post.comments.length === 0) {
+        return 0;
     }
+
+    var comments = getTotal<(typeof post.comments)[0]>(post.comments);
     return comments;
 }
 
 export function getTotalLikes(post: IPost) {
-    var likes = 0;
-    if (post.likes != null) {
-        likes = post.likes?.length;
+    if (!post.likes || post.likes.length === 0) {
+        return 0;
     }
+    var likes = getTotal<(typeof post.likes)[0]>(post.likes);
     return likes;
 }
 
 export function isLikedByUser(post: IPost, userId: string) {
-    if (post.likes == null) {
-        return false;
-    }
-
-    var likedByUser = post.likes.filter((like: any) => like.userId.equals(userId)).length > 0;
+    var likedByUser = post.likes!.some((like) => like.userId == userId);
     return likedByUser;
 }
 
-function filterDeletedPostComments(comments: IPost["comments"]){
-    return comments ? comments.filter(comment => !comment.deleted) : [];
+function getTotal<T extends Object>(list: T[]): number {
+    let total = filterNotDeleted<T>(list!);
+    return total.length;
+}
+
+function filterNotDeleted<T extends Object>(list: T[]) {
+    const arr = list.filter((item: T) => {
+        if ("deleted" in item) {
+            return !item.deleted;
+        }
+    });
+
+    return arr;
 }

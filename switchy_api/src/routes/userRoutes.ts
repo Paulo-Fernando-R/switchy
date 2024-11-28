@@ -77,4 +77,12 @@ userRoutes.delete("/Unfollow", (request: Request, response: Response) => {
     controller.unfollow(request, response);
 });
 
+userRoutes.delete("/", (request: Request, response: Response) => {
+    // #swagger.tags = ['User']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[404] = { description: 'Not Found.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+    controller.delete(request, response);
+});
+
 export default userRoutes;
