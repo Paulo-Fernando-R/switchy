@@ -20,17 +20,20 @@ export default class GetFeedPostsCase {
     }
 
     async execute(userId: string, page: number) {
+       
         const loggedUser = await this.userRepository.getById(userId);
         const followings = loggedUser?.following;
 
         if (!followings || followings.length == 0) {
             const posts = await this.postRepository.getFeedPosts(userId, page);
             const response = this.parsePostsToResponse(posts, userId);
+           
             return response;
         }
 
         const ids = followings.map((e) => new Types.ObjectId(e.userId));
         const posts = await this.postRepository.getFeedPosts(userId, page, ids);
+     
 
         var ls = this.parsePostsToResponse(posts, userId);
         return ls;

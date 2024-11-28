@@ -273,26 +273,27 @@ export default class UserController {
         let userId = req.userId;
 
         try {
-            // await this.getUserByIdCase.execute(userId);
-            // await this.deleteUserAccountCase.execute(userId);
+            await this.getUserByIdCase.execute(userId);
+            await this.deleteUserAccountCase.execute(userId);
 
-            // res.status(StatusCodes.Ok).send();
-            const workerPath = path.resolve(__dirname, "../../dist/domain/user/workers/deleteUserWorker.js");
-            const worker = new Worker(workerPath);
-            worker.postMessage(userId);
-            res.status(StatusCodes.Ok).send(`Account delete process is started form user: ${userId}`);
+            res.status(StatusCodes.Ok).send();
+            //!THREAD PARA APAGAR A CONTA | NÃO NECESSARIO POR ENQUANTO
+            // const workerPath = path.resolve(__dirname, "../../dist/domain/user/workers/deleteUserWorker.js");
+            // const worker = new Worker(workerPath);
+            // worker.postMessage(userId);
+            // res.status(StatusCodes.Ok).send(`Account delete process is started form user: ${userId}`);
 
-            worker.on("message", (message) => {
-                console.log("Message from worker:", message);
-            });
+            // worker.on("message", (message) => {
+            //     console.log("Message from worker:", message);
+            // });
 
-            worker.on("error", (error) => {
-                console.error("Worker error:", error);
-            });
+            // worker.on("error", (error) => {
+            //     console.error("Worker error:", error);
+            // });
 
-            worker.on("exit", (code) => {
-                console.log(`Worker stopped with exit code ${code}`);
-            });
+            // worker.on("exit", (code) => {
+            //     console.log(`Worker stopped with exit code ${code}`);
+            // });
         } catch (err) {
             if (err instanceof UserNotFoundError) {
                 res.status(StatusCodes.NotFound).send();
