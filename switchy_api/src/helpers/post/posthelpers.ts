@@ -1,33 +1,38 @@
 import { IPost } from "../../models/post";
 
 export function getTotalComments(post: IPost) {
-    var comments = getTotal(post.comments);
+    if (!post.comments || post.comments.length === 0) {
+        return 0;
+    }
+
+    var comments = getTotal<(typeof post.comments)[0]>(post.comments);
     return comments;
 }
 
 export function getTotalLikes(post: IPost) {
-    var likes = getTotal(post.likes);
+    if (!post.likes || post.likes.length === 0) {
+        return 0;
+    }
+    var likes = getTotal<(typeof post.likes)[0]>(post.likes);
     return likes;
 }
 
 export function isLikedByUser(post: IPost, userId: string) {
-    if (post.likes == null || post.likes == undefined) {
-        return false;
-    }
-
-    var likedByUser = post.likes.filter((like: any) => like.userId.equals(userId)).length > 0;
+    var likedByUser = post.likes!.some((like) => like.userId == userId);
     return likedByUser;
 }
 
-function getTotal(ls: any[] | undefined): number {
-    if (ls == undefined || ls == null || ls.length) {
-        return 0;
-    }
-
-    let cn = filterNotDeleted(ls);
-    return cn;
+function getTotal<T extends Object>(list: T[]): number {
+    let total = filterNotDeleted<T>(list!);
+    return total.length;
 }
 
-function filterNotDeleted(ls: any) {
-    return ls ? ls.filter((ls: any) => !ls.deleted) : [];
+function filterNotDeleted<T extends Object>(list: T[]) {
+    const arr = list.filter((item: T) => {
+        if ("deleted" in item) {
+            return !item.deleted;
+        }
+    });
+
+    return arr;
 }

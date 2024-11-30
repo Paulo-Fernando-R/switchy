@@ -1,7 +1,9 @@
 import { Text, View, Image, FlatList, RefreshControl, ActivityIndicator } from "react-native";
+import NavigateComment from "../../components/postFeedItem/privateComponents/NavigateComment";
 import { HomeNavigationProp } from "../../routes/types/navigationTypes";
 import { usePostsListContext } from "../../contexts/postsListContext";
 import PostFeedItem from "../../components/postFeedItem/PostFeedItem";
+import PostWebView from "../../components/postWebView/PostWebView";
 import { useUserContext } from "../../contexts/userContext";
 import EmptyList from "../../components/emptyList/EmpyList";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -11,8 +13,6 @@ import appColors from "../../styles/appColors";
 import HomeController from "./homeController";
 import React, { useEffect } from "react";
 import styles from "./homeStyles";
-import PostWebView from "../../components/postWebView/PostWebView";
-import NavigateComment from "../../components/postFeedItem/privateComponents/NavigateComment";
 
 type HomeProps = {
     navigation: HomeNavigationProp;
@@ -41,7 +41,7 @@ export default function Home({ navigation }: HomeProps) {
 
     return (
         <FlatList
-            ListEmptyComponent={EmptyList}
+            ListEmptyComponent={<EmptyList screenSizeDivider={1.5} />}
             refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
             ListHeaderComponent={() => <Header />}
             style={styles.page}

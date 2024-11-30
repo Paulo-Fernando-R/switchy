@@ -74,7 +74,7 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
             <FlatList
                 contentContainerStyle={styles.list}
                 data={data?.posts}
-                renderItem={({ item }) => <PostFeedItem item={item} navigation={navigation} error={error} />}
+                renderItem={({ item }) => <PostFeedItem item={item}  error={error} />}
             />
         </View>
     );
