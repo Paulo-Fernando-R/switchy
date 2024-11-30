@@ -103,7 +103,7 @@ export default function Header({ user, navigate, logout, deleteAccount }: Profil
 
             <View style={styles.header}>
                 <Image style={styles.logo} source={logo} />
-                <Text style={styles.headerText}>Swithcy</Text>
+                <Text style={styles.headerText}>Switchy</Text>
             </View>
 
             <View style={styles.profileBox}>
