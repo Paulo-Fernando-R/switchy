@@ -3,10 +3,10 @@
     "version": "1.0.0",
     "main": "src/server.ts",
     "scripts": {
-        "dev": "node swagger.js && ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server.ts",
-        "build": "npm install && tsc",
+        "dev": "set NODE_ENV=development && node swagger.js && ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server.ts",
+        "build": "npm install && node swagger.js && tsc",
         "swagger": "node swagger.js",
-        "production": "node dist/server.js"
+        "production": "NODE_ENV=production && node dist/server.js"
     },
     "keywords": [],
     "author": "",
