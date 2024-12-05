@@ -757,7 +757,7 @@
     "/Notifications/ByDate/{lastDate}": {
       "get": {
         "tags": [
-          "Comments"
+          "Notifications"
         ],
         "description": "",
         "parameters": [
