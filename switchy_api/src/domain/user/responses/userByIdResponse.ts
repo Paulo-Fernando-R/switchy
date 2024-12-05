@@ -1,5 +1,5 @@
 export default interface IUserByIdResponse {
-    id: String;
+    id: string;
     name: string;
     email: string;
     description: string | null;
