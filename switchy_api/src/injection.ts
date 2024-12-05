@@ -33,6 +33,8 @@ import IGeneratePasswordService from "./services/crypto/igeneratePasswordService
 import GeneratePasswordService from "./services/crypto/generatePasswordService";
 import DeleteUserAccountCase from "./domain/user/cases/deleteUserAccountCase";
 import UserIsDeletedCase from "./domain/user/cases/userIsDeletedCase";
+import INotificationRepository from "./repositories/notificationRepository/inotificationRepository";
+import NotificationRepository from "./repositories/notificationRepository/notificationRepository";
 
 let container = new Container();
 container.bind<ITokenService>('TokenService').to(JwtTokenService);
@@ -41,6 +43,7 @@ container.bind<IGeneratePasswordService>('GeneratePasswordService').to(GenerateP
 
 container.bind<IUserRepository>('UserRepository').to(UserRepository);
 container.bind<IPostRepository>('PostRepository').to(PostRepository);
+container.bind<INotificationRepository>('NotificationRepository').to(NotificationRepository);
 
 container.bind('GetUserByEmailPasswordCase').to(GetUserByEmailPasswordCase);
 container.bind('GenerateTokenFromUserCase').to(GenerateTokenFromUserCase);
