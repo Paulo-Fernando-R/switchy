@@ -19,8 +19,8 @@ export const notificationSchema = new Schema<INotification>({
     sender: { type: Map, required: true },
     receiver: { type: Map, required: true },
     type: { type: Number, required: true },
-    content: { type: Map, required: true },
-    createdAt: { type: Number, required: true },
+    content: { type: Map, required: true, default: null },
+    createdAt: { type: Number, required: false, default: Date.now() },
     read: { type: Boolean, default: false, required: false },
 });
 
