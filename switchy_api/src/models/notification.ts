@@ -7,7 +7,7 @@ export interface INotification {
     receiver: INotificationUser;
     type: Number;
     content: {};
-    createdAt: Number;
+    createdAt: number;
     read: boolean;
 }
 
