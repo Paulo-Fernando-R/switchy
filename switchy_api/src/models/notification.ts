@@ -7,7 +7,7 @@ export interface INotification {
     receiver: INotificationUser;
     type: Number;
     content: {};
-    createdAt: Date;
+    createdAt: Number;
     read: boolean;
 }
 
@@ -17,8 +17,8 @@ export const notificationSchema = new Schema<INotification>({
     receiver: { type: Map, required: true },
     type: { type: Number, required: true },
     content: { type: Map, required: true },
-    createdAt: { type: Date, required: true },
+    createdAt: { type: Number, required: true },
     read: { type: Boolean, default: false, required: false },
 });
 
-export const Notification = model<INotification>('Notification', notificationSchema);
+export const Notification = model<INotification>('Notifications', notificationSchema);

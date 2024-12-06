@@ -15,7 +15,7 @@ export default class NotificationsController {
     }
 
     async getByDate(req: Request, res: Response) {
-        const { lastDate } = req.body;
+        const { lastDate } = req.params;
         const userId = req.userId;
 
         try {
