@@ -2,19 +2,20 @@ import { inject, injectable } from "inversify";
 import INotificationRepository from "../../../repositories/notificationRepository/inotificationRepository";
 import "reflect-metadata";
 import INotificationResponse from "../responses/inotificationResponse";
+import { INotification } from "../../../models/notification";
+import INotificationContent from "../../../models/notificationContent";
 
 @injectable()
 export default class GetNotificationsByDateCase {
-
     private readonly notificationRepository: INotificationRepository;
 
-    constructor(@inject('NotificationRepository') notificationRepository: INotificationRepository) {
+    constructor(@inject("NotificationRepository") notificationRepository: INotificationRepository) {
         this.notificationRepository = notificationRepository;
     }
 
     async execute(userId: string, dateStr: string): Promise<INotificationResponse[]> {
         const date = new Date(dateStr).getTime();
-        const maps = await this.notificationRepository.getByUserAndDate(userId, date);
+        const maps = await this.notificationRepository.getByUserAndDate<INotificationContent>(userId, date);
 
         const responses: INotificationResponse[] = maps.map((x) => {
             return {

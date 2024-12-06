@@ -1,13 +1,16 @@
 import { model, Schema, Types } from "mongoose";
 import INotificationUser from "./notificationUser";
+import INotificationContent from "./notificationContent";
 
-export interface INotification {
+export interface INotification<T = INotificationContent> {
     id?: Types.ObjectId;
     sender: INotificationUser;
     receiver: INotificationUser;
     type: Number;
-    content: {};
+
     createdAt: number;
+    content: T;
+
     read: boolean;
 }
 
@@ -21,4 +24,4 @@ export const notificationSchema = new Schema<INotification>({
     read: { type: Boolean, default: false, required: false },
 });
 
-export const Notification = model<INotification>('Notifications', notificationSchema);
+export const Notification = model<INotification>("Notifications", notificationSchema);
