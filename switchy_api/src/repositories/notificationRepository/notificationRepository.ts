@@ -29,4 +29,18 @@ export default class NotificationRepository extends DatabaseConnection implement
 
         return res;
     }
+
+    async markWithReader(ids: string[]): Promise<void> {
+        await Notification.updateMany({ 
+            "_id": { 
+                $in: ids 
+            } 
+        }, { 
+            $set: { 
+                read: true 
+            } 
+        }, { 
+            multi: true 
+        });
+    }
 }
