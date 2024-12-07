@@ -43,4 +43,9 @@ export default class NotificationRepository extends DatabaseConnection implement
             multi: true 
         });
     }
+
+    async create(notification: INotification): Promise<void> {
+        await this.connect();
+        console.log(await Notification.create(notification));
+    }
 }

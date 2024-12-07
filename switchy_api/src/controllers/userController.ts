@@ -29,6 +29,7 @@ import container from "../injection";
 import DeleteUserAccountCase from "../domain/user/cases/deleteUserAccountCase";
 import { Worker } from "worker_threads";
 import path from "path";
+import NewFollowerNotificationCase from "../domain/notification/cases/newFollowerNotificationCase";
 
 export default class UserController {
     private signUpCase: SignUpCase;
@@ -46,6 +47,7 @@ export default class UserController {
     private sendRecoveryPasswordEmailCase: SendRecoveryPasswordEmailCase;
     private updateUserPostsCase: UpdateUserPostsCase;
     private deleteUserAccountCase: DeleteUserAccountCase;
+    private newFollowerNotificationCase: NewFollowerNotificationCase;
 
     constructor() {
         this.signUpCase = container.get<SignUpCase>("SignUpCase");
@@ -61,6 +63,7 @@ export default class UserController {
         this.generatePaswordService = container.get<GeneratePasswordService>("GeneratePasswordService");
         this.updateUserPostsCase = container.get<UpdateUserPostsCase>("UpdateUserPostsCase");
         this.deleteUserAccountCase = container.get<DeleteUserAccountCase>("DeleteUserAccountCase");
+        this.newFollowerNotificationCase = container.get<NewFollowerNotificationCase>("NewFollowerNotificationCase");
 
         // TODO: Refactor
         this.recoveryEmail = new RecoveryEmail();
@@ -208,10 +211,11 @@ export default class UserController {
         const id = req.userId;
 
         try {
-            await this.getUserByIdCase.execute(userId);
-            await this.getUserByIdCase.execute(id);
+            const followed = await this.getUserByIdCase.execute(userId);
+            const follower = await this.getUserByIdCase.execute(id);
 
             this.followUserCase.execute(id, userId);
+            await this.newFollowerNotificationCase.execute(followed, follower);
 
             return res.type("application/json").status(StatusCodes.Ok).send();
         } catch (ex) {
