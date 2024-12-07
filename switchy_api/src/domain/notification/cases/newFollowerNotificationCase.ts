@@ -4,7 +4,7 @@ import { INotification } from "../../../models/notification";
 import INotificationUser from "../../../models/notificationUser";
 import { NotificationTypes } from "../../../utils/notificationTypes";
 import INotificationContent from "../../../models/notificationContent";
-import { IUser } from "../../../models/user";
+import "reflect-metadata";
 
 @injectable()
 export default class NewFollowerNotificationCase {
