@@ -17,6 +17,7 @@ import React from "react";
 import Recovery from "../screens/recovery/Recovery";
 
 import SignUp from "../screens/signup/SignUp";
+import Notifications from "../screens/notifications/notifications";
 
 const Tab = createBottomTabNavigator<RootTabsParamList>();
 const Stack = createStackNavigator<AuthStackParamList>();
@@ -61,6 +62,7 @@ function AppRouter() {
                 <Tab.Screen name="HomeStack" component={HomeStackRouter} />
                 <Tab.Screen name="SearchStack" component={SearchStackRouter} />
                 <Tab.Screen name="Publish" component={Publish} />
+                <Tab.Screen name="Notifications" component={Notifications} />
                 <Tab.Screen name="ProfileStack" component={ProfileStackRouter} />
             </Tab.Navigator>
         </NavigationContainer>
@@ -69,17 +71,6 @@ function AppRouter() {
 
 export default function Router() {
     const { auth } = useAuthContext();
-
-    const isAuth = () => {
-        if (!auth) {
-            return false;
-        }
-        if (Date.now() > new Date(auth.accessTokenExpiresAtUtc).getTime()) {
-            return false;
-        }
-
-        return true;
-    };
 
     if (!auth) {
         return <AuthRouter />;

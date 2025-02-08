@@ -44,6 +44,7 @@ export default function CustomTabNavigation({ state, descriptors, navigation }: 
         (selected: boolean) => <Image style={styles.image} source={selected ? homeFill : homeOut} />,
         (selected: boolean) => <Image style={styles.image} source={selected ? searchFill : searchOut} />,
         (selected: boolean) => <Image style={styles.image} source={selected ? addFill : addOut} />,
+        (selected: boolean) => <Image style={styles.image} source={selected ? addFill : addOut} />,
         (selected: boolean) => <Image style={styles.image} source={selected ? userFill : userOut} />,
     ];
    
@@ -52,14 +53,6 @@ export default function CustomTabNavigation({ state, descriptors, navigation }: 
         <View style={styles.tabBarBox}>
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
-
-                const label =
-                    options.tabBarLabel !== undefined
-                        ? options.tabBarLabel
-                        : options.title !== undefined
-                        ? options.title
-                        : route.name;
-
                 const isFocused = state.index === index;
 
                 const onPress = () => {
