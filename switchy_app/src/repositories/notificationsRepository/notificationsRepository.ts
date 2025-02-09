@@ -1,4 +1,5 @@
 import { NetworkError, UnauthorizedError } from "../../errors/customErrors";
+import Notification from "../../models/notification";
 import CustomAxiosClient from "../../services/customAxiosClient/customAxiosClient";
 import ICustomAxiosClient from "../../services/customAxiosClient/IcustomAxiosClient";
 import INotificationsRepository from "./InotificationsRepository";

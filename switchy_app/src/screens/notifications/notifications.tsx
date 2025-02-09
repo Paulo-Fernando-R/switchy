@@ -4,7 +4,7 @@ import appColors from "../../styles/appColors";
 import useKeyboard from "../../hooks/useKeyboard";
 import { useUserContext } from "../../contexts/userContext";
 import { RootTabsPublishNavigationProp } from "../../routes/types/navigationTypes";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import styles from "./notificationsStyles";
 import NotificationsController from "./notificationsController";
@@ -21,6 +21,10 @@ export default function Notifications({ navigation, route }: RootTabsPublishNavi
         navigation.navigate("HomeStack", { screen: "Home" });
     }
 
+    useState(() => {
+        controller.load();
+    });
+
     return (
         <View style={styles.page}>
             <View style={styles.header}>
@@ -29,6 +33,7 @@ export default function Notifications({ navigation, route }: RootTabsPublishNavi
 
             <FlatList
                 style={styles.page}
+                refreshControl={<RefreshControl refreshing={false} onRefresh={() => {controller.load();}} />}
                 data={[]}
                 ListEmptyComponent={<Empty/>}
                 renderItem={({item}) => <Text>Ola</Text>}
