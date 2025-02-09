@@ -5,16 +5,19 @@ import container from "../injection";
 import { UserNotFoundError } from "../domain/user/errors/userErrors";
 import GetNotificationsByDateCase from "../domain/notification/cases/getNotificationsByDateCase";
 import MarkNotificationsWithReaderCase from "../domain/notification/cases/markNotificationsWithReaderCase";
+import GetNotificationsByReceiverId from "../domain/notification/cases/getNotificationsByReceive";
 
 export default class NotificationsController {
     private readonly getUserByIdCase: GetUserByIdCase;
     private readonly getNotificationsByDateCase: GetNotificationsByDateCase;
     private readonly markNotificationsWithReaderCase: MarkNotificationsWithReaderCase;
+    private readonly getNotificationsByReceiverId: GetNotificationsByReceiverId;
 
     constructor() {
         this.getUserByIdCase = container.get<GetUserByIdCase>('GetUserByIdCase');
         this.getNotificationsByDateCase = container.get<GetNotificationsByDateCase>('GetNotificationsByDateCase');
         this.markNotificationsWithReaderCase = container.get<MarkNotificationsWithReaderCase>('MarkNotificationsWithReaderCase');
+        this.getNotificationsByReceiverId = container.get<GetNotificationsByReceiverId>('GetNotificationsByReceiverId');
     }
 
     async getByDate(req: Request, res: Response) {
@@ -39,5 +42,19 @@ export default class NotificationsController {
         await this.markNotificationsWithReaderCase.execute(ids);
         
         res.status(StatusCodes.Ok).send();
+    }
+
+    async getLastEntriesByUser(req: Request, res: Response) {
+        const userId = req.userId;
+        const numberOfEntries = parseInt(req.params.lastEntries);
+        try {
+            const response = await this.getNotificationsByReceiverId.execute(userId, numberOfEntries);
+            res.status(StatusCodes.Ok).send(response);
+        } catch (ex) {
+            if (ex instanceof UserNotFoundError) {
+                res.status(StatusCodes.Unauthorized).send();
+            }
+            throw ex;
+        }
     }
 }

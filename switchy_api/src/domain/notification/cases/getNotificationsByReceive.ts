@@ -1,0 +1,32 @@
+import { inject, injectable } from "inversify";
+import INotificationRepository from "../../../repositories/notificationRepository/inotificationRepository";
+import "reflect-metadata";
+import INotificationResponse from "../responses/inotificationResponse";
+import INotificationContent from "../../../models/notificationContent";
+import { INotification } from "../../../models/notification";
+
+@injectable()
+export default class GetNotificationsByReceiverId {
+    private readonly notificationRepository: INotificationRepository;
+
+    constructor(@inject("NotificationRepository") notificationRepository: INotificationRepository) {
+        this.notificationRepository = notificationRepository;
+    }
+
+    async execute(userId: string, numberOfEntries: number): Promise<INotificationResponse[]> {
+        const notifications = await this.notificationRepository.getRecentsByReciever(userId, numberOfEntries);
+
+        const response: INotificationResponse[] = notifications.map((x: INotification) => {
+            return {
+                id: x.id!.toString(),
+                sender: x.sender,
+                receiver: x.receiver,
+                read: x.read,
+                type: x.type,
+                createdAt: new Date(x.createdAt),
+                content: x.content,
+            };
+        });
+        return response;
+    }
+}
