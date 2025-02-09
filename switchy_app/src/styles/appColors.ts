@@ -5,6 +5,7 @@ const primary300 = "#B0AFC6";
 const accent100 = "#4D4D5E";
 const accent200 = "#DAD9EE";
 const accent300 = "#3D65C9";
+const accent400 = "#2094E4";
 
 const text100 = "#FFFFFF";
 const text200 = "#E0E0E0";
@@ -26,6 +27,7 @@ export default {
     accent100,
     accent200,
     accent300,
+    accent400,
     text100,
     text200,
     text300,

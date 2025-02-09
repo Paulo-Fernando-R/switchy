@@ -9,6 +9,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import styles from "./notificationsStyles";
 import NotificationsController from "./notificationsController";
 import Feather from "@expo/vector-icons/Feather";
+import NotificationListItem from "./components/NotificationListItem";
 
 export default function Notifications({ navigation, route }: RootTabsPublishNavigationProp) {
     const controller = new NotificationsController();
@@ -29,15 +30,23 @@ export default function Notifications({ navigation, route }: RootTabsPublishNavi
     return (
         <View style={styles.page}>
             <View style={styles.header}>
-                <Text style={styles.headerText}>Notificações</Text>
+                <Text style={styles.headerText}>Atividade</Text>
             </View>
 
             <FlatList
-                style={styles.page}
-                refreshControl={<RefreshControl refreshing={false} onRefresh={() => {controller.load();}} />}
-                data={[]}
-                ListEmptyComponent={<Empty/>}
-                renderItem={({item}) => <ListItem item={item}/>}
+                // style={styles.page}
+
+                refreshControl={
+                    <RefreshControl
+                        refreshing={false}
+                        onRefresh={() => {
+                            controller.load();
+                        }}
+                    />
+                }
+                data={[1, 2, 3]}
+                ListEmptyComponent={<Empty />}
+                renderItem={({ item }) => <NotificationListItem notification={{ type: item }} />}
             />
         </View>
     );
@@ -46,26 +55,12 @@ export default function Notifications({ navigation, route }: RootTabsPublishNavi
 function Empty() {
     return (
         <View style={styles.emptyList}>
-            <MaterialCommunityIcons name="account-search-outline" size={64} color={appColors.text400} />
+            <MaterialCommunityIcons
+                name="account-search-outline"
+                size={64}
+                color={appColors.text400}
+            />
             <Text style={styles.emptyText}>Nenhuma notificação encontrada</Text>
         </View>
-    );
-}
-
-function ListItem({item}: any) {
-    return (
-        <TouchableOpacity activeOpacity={0.8} /*style={styles.listItem} onPress={() => navigate(user.id!)}*/>
-            <View /*style={styles.avatarBox}*/>
-                <Feather name="user" size={28} color={appColors.text200} />
-            </View>
-            <View /*style={styles.textBox}*/>
-                <Text numberOfLines={1} /*style={styles.name}*/>
-                    user.name
-                </Text>
-                <Text numberOfLines={1} /*style={styles.userName}*/>
-                    user.userName
-                </Text>
-            </View>
-        </TouchableOpacity>
     );
 }

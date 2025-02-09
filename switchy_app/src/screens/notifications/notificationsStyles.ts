@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     page: {
         flex: 1,
         backgroundColor: appColors.bg100,
+        paddingHorizontal: 20,
     },
     header: {
         flexDirection: "column",
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         gap: 16,
         paddingBottom: 30,
-        paddingHorizontal: 20,
+        // paddingHorizontal: 20,
         paddingTop: 20,
     },
     headerText: {
