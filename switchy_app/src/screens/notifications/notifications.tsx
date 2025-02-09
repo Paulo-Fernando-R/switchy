@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import appColors from "../../styles/appColors";
 import useKeyboard from "../../hooks/useKeyboard";
 import { useUserContext } from "../../contexts/userContext";
@@ -8,6 +8,7 @@ import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import styles from "./notificationsStyles";
 import NotificationsController from "./notificationsController";
+import Feather from "@expo/vector-icons/Feather";
 
 export default function Notifications({ navigation, route }: RootTabsPublishNavigationProp) {
     const controller = new NotificationsController();
@@ -36,7 +37,7 @@ export default function Notifications({ navigation, route }: RootTabsPublishNavi
                 refreshControl={<RefreshControl refreshing={false} onRefresh={() => {controller.load();}} />}
                 data={[]}
                 ListEmptyComponent={<Empty/>}
-                renderItem={({item}) => <Text>Ola</Text>}
+                renderItem={({item}) => <ListItem item={item}/>}
             />
         </View>
     );
@@ -51,21 +52,20 @@ function Empty() {
     );
 }
 
-/*
-function ListItem({ navigate, user }: ListItemProps) {
+function ListItem({item}: any) {
     return (
-        <TouchableOpacity activeOpacity={0.8} style={styles.listItem} onPress={() => navigate(user.id!)}>
-            <View style={styles.avatarBox}>
+        <TouchableOpacity activeOpacity={0.8} /*style={styles.listItem} onPress={() => navigate(user.id!)}*/>
+            <View /*style={styles.avatarBox}*/>
                 <Feather name="user" size={28} color={appColors.text200} />
             </View>
-            <View style={styles.textBox}>
-                <Text numberOfLines={1} style={styles.name}>
-                    {user.name}
+            <View /*style={styles.textBox}*/>
+                <Text numberOfLines={1} /*style={styles.name}*/>
+                    user.name
                 </Text>
-                <Text numberOfLines={1} style={styles.userName}>
-                    @{user.userName}
+                <Text numberOfLines={1} /*style={styles.userName}*/>
+                    user.userName
                 </Text>
             </View>
         </TouchableOpacity>
     );
-}*/
+}
