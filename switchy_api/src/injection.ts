@@ -38,6 +38,7 @@ import NotificationRepository from "./repositories/notificationRepository/notifi
 import GetNotificationsByDateCase from "./domain/notification/cases/getNotificationsByDateCase";
 import MarkNotificationsWithReaderCase from "./domain/notification/cases/markNotificationsWithReaderCase";
 import NewFollowerNotificationCase from "./domain/notification/cases/newFollowerNotificationCase";
+import GetNotificationsByReceiverId from "./domain/notification/cases/getNotificationsByReceive";
 
 let container = new Container();
 container.bind<ITokenService>('TokenService').to(JwtTokenService);
@@ -74,5 +75,6 @@ container.bind('UserIsDeletedCase').to(UserIsDeletedCase);
 container.bind('GetNotificationsByDateCase').to(GetNotificationsByDateCase);
 container.bind('MarkNotificationsWithReaderCase').to(MarkNotificationsWithReaderCase);
 container.bind('NewFollowerNotificationCase').to(NewFollowerNotificationCase);
+container.bind('GetNotificationsByReceiverId').to(GetNotificationsByReceiverId);
 
 export default container;

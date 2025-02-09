@@ -30,6 +30,24 @@ export default class NotificationRepository extends DatabaseConnection implement
         return res;
     }
 
+    async getRecentsByReciever(userId: string, numberOfEntries: number): Promise<INotification[]> {
+        const notifications = await Notification.find({
+            'receiver.id': userId,
+        }).sort({ createdAt: -1 }).limit(numberOfEntries);
+        const res: INotification[] = notifications.map((x) => {
+            return {
+                id: x._id,
+                content: x.content,
+                createdAt: x.createdAt,
+                read: x.read,
+                receiver: x.receiver,
+                sender: x.sender,
+                type: x.type,
+            };
+        });
+        return res;
+    }
+
     async markWithReader(ids: string[]): Promise<void> {
         await Notification.updateMany({ 
             "_id": { 

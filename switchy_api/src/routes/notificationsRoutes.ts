@@ -24,4 +24,13 @@ notificationsRoutes.put('/Read', (req, res) => {
     return notificationsController.putReader(req, res);
 });
 
+notificationsRoutes.get('/:lastEntries/ByUser', (req, res) => {
+    // #swagger.tags = ['Notifications']
+    // #swagger.responses[200] = { description: 'Ok.' }
+    // #swagger.responses[401] = { description: 'Unauthorized.' }
+    // #swagger.responses[500] = { description: 'Internal Server Error.' }
+
+    return notificationsController.getLastEntriesByUser(req, res);
+})
+
 export default notificationsRoutes;
