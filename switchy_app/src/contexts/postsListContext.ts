@@ -1,15 +1,10 @@
 import { useContext, createContext } from "react";
 import Post from "../models/post";
+import { ListContextContent } from "./listContextContent";
 
-export type PostsListContextContent = {
-    posts: Post[] | null;
-    setPosts: (list: Post[] | null) => void;
-    updateOne: (post: Post) => void;
-};
-
-export const PostListContext = createContext<PostsListContextContent>({
-    posts: null,
-    setPosts: () => {},
+export const PostListContext = createContext<ListContextContent<Post>>({
+    values: null,
+    setValues: () => {},
     updateOne: () => {},
 });
 

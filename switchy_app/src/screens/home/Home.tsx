@@ -21,7 +21,7 @@ type HomeProps = {
 export default function Home({ navigation }: HomeProps) {
     const controller = new HomeController();
     const { setUser } = useUserContext();
-    const { posts, setPosts } = usePostsListContext();
+    const { values, setValues } = usePostsListContext();
 
     const { isSuccess, data, error, fetchNextPage, isFetchingNextPage, refetch, isRefetching } = useInfiniteQuery({
         queryKey: ["Feed"],
@@ -36,7 +36,7 @@ export default function Home({ navigation }: HomeProps) {
     }
 
     useEffect(() => {
-        isSuccess && setPosts(data?.pages?.flat());
+        isSuccess && setValues(data?.pages?.flat());
     }, [data]);
 
     return (
@@ -46,7 +46,7 @@ export default function Home({ navigation }: HomeProps) {
             ListHeaderComponent={() => <Header />}
             style={styles.page}
             contentContainerStyle={styles.list}
-            data={posts}
+            data={values}
             renderItem={({ item }) => (
                 <PostFeedItem
                     item={item}
