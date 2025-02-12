@@ -1,4 +1,4 @@
-import GetNotificationsByDateCase from "../../cases/getNotificationsByDateCase/getNotificationsByDateCase";
+import GetNotificationsCase from "../../cases/getNotificationsCase/getNotificationsCase";
 
 export default class NotificationsController {
     async load() {
@@ -7,9 +7,9 @@ export default class NotificationsController {
     }
 
     async refresh() {
-        //const date = new Date().toISOString();
-        const date = '2020-01-01T00:00:00'
-        const datas = await new GetNotificationsByDateCase().execute(date);
+        const limit = 10;
+        const skip = 0;
+        const datas = await new GetNotificationsCase().execute(limit, skip);
         console.log(datas);
     }
 }

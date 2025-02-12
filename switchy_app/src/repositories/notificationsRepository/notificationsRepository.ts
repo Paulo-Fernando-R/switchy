@@ -11,8 +11,8 @@ export default class NotificationsRepository implements INotificationsRepository
         this.axios = new CustomAxiosClient();
     }
 
-    async getAllByDate(date: string): Promise<Notification[]> {
-        const response = await this.axios.instance.get<Notification[]>(`/Notifications/ByDate/${date}`);
+    async getAll(limit: number, skip: number): Promise<Notification[]> {
+        const response = await this.axios.instance.get<Notification[]>(`/Notifications/${limit}/${skip}/ByUser`);
         if (!response) {
             throw new NetworkError();
         }
