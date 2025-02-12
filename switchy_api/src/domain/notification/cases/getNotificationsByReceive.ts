@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import INotificationRepository from "../../../repositories/notificationRepository/inotificationRepository";
 import "reflect-metadata";
 import INotificationResponse from "../responses/inotificationResponse";
-import INotificationContent from "../../../models/notificationContent";
 import { INotification } from "../../../models/notification";
 
 @injectable()
@@ -13,8 +12,8 @@ export default class GetNotificationsByReceiverId {
         this.notificationRepository = notificationRepository;
     }
 
-    async execute(userId: string, numberOfEntries: number): Promise<INotificationResponse[]> {
-        const notifications = await this.notificationRepository.getRecentsByReciever(userId, numberOfEntries);
+    async execute(userId: string, numberOfEntries: number, numberToSkip: number): Promise<INotificationResponse[]> {
+        const notifications = await this.notificationRepository.getRecentsByReciever(userId, numberOfEntries, numberToSkip);
 
         const response: INotificationResponse[] = notifications.map((x: INotification) => {
             return {

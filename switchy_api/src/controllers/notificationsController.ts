@@ -46,9 +46,13 @@ export default class NotificationsController {
 
     async getLastEntriesByUser(req: Request, res: Response) {
         const userId = req.userId;
-        const numberOfEntries = parseInt(req.params.lastEntries);
+
+        const { lastEntries, skip } = req.params;
+        const numberOfEntries = parseInt(lastEntries);
+        const numberToSkip = parseInt(skip);
+
         try {
-            const response = await this.getNotificationsByReceiverId.execute(userId, numberOfEntries);
+            const response = await this.getNotificationsByReceiverId.execute(userId, numberOfEntries, numberToSkip);
             res.status(StatusCodes.Ok).send(response);
         } catch (ex) {
             if (ex instanceof UserNotFoundError) {

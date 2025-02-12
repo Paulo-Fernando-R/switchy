@@ -24,7 +24,7 @@ notificationsRoutes.put('/Read', (req, res) => {
     return notificationsController.putReader(req, res);
 });
 
-notificationsRoutes.get('/:lastEntries/ByUser', (req, res) => {
+notificationsRoutes.get('/:lastEntries/:skip/ByUser', (req, res) => {
     // #swagger.tags = ['Notifications']
     // #swagger.responses[200] = { description: 'Ok.' }
     // #swagger.responses[401] = { description: 'Unauthorized.' }
