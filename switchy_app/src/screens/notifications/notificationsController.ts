@@ -1,15 +1,14 @@
 import GetNotificationsCase from "../../cases/getNotificationsCase/getNotificationsCase";
+import Notification from "../../models/notification";
 
 export default class NotificationsController {
-    async load() {
-        // TODO: Carregas as notificações salvas localmente
-        // Caso não exista, buscar todas as notificações na API
+    async loadNotifications(skip: number): Promise<Notification[]> {
+        const limit = 10;
+        const datas = await new GetNotificationsCase().execute(limit, skip);
+        return datas
     }
 
-    async refresh() {
-        const limit = 10;
-        const skip = 0;
-        const datas = await new GetNotificationsCase().execute(limit, skip);
-        console.log(datas);
+    handleNext(lastPage: Notification[], pages: Notification[][]): number {
+        return 0;
     }
 }
