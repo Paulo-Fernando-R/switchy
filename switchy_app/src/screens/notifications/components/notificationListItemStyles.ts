@@ -50,6 +50,12 @@ const styles = StyleSheet.create({
         color: appColors.text200,
         maxWidth: "95%",
     },
+
+    itemContentBodyDark:{
+        ...appTexts.paragraph3Regular,
+        color: appColors.text300,
+        maxWidth: "95%",
+    },
     itemContentActions: {
         flexDirection: "row",
         gap: 16,

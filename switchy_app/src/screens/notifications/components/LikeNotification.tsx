@@ -3,11 +3,11 @@ import HyperlinkText from "../../../components/hypelinkText/HyperlinkText";
 import timeAgoFormatter from "../../../../timeAgoFormatter";
 import { Facebook } from "react-content-loader/native";
 import styles from "./notificationListItemStyles";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { NotificationListItemProps } from "./NotificationListItem";
 import appColors from "../../../styles/appColors";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
-export default function ComentNotification({ notification }: NotificationListItemProps) {
+export default function LikeNotification({ notification }: NotificationListItemProps) {
     if (!notification) {
         return <PostFeedItemSkeleton />;
     }
@@ -16,7 +16,7 @@ export default function ComentNotification({ notification }: NotificationListIte
     return (
         <TouchableOpacity style={styles.listItem} activeOpacity={0.8}>
             <View style={styles.itemAvatar}>
-                <FontAwesome name="comment" size={20} color={appColors.text100} />
+                <AntDesign name="heart" size={20} color={appColors.text100} />
             </View>
 
             <View style={styles.itemContent}>
@@ -27,8 +27,8 @@ export default function ComentNotification({ notification }: NotificationListIte
                         <Text style={styles.titleUname}>timeAgo</Text>
                     </View>
                 </View>
-                <Text style={styles.titleReceiver}>Em resposta a @username</Text>
-                <HyperlinkText text={"content aqui"} textStyle={styles.itemContentBody} />
+                <Text style={styles.titleReceiver}>Curtiu seu post</Text>
+                <HyperlinkText text={"content aqui"} textStyle={styles.itemContentBodyDark} />
             </View>
         </TouchableOpacity>
     );

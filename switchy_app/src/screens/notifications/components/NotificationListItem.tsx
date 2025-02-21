@@ -3,6 +3,8 @@ import NotificationTypeEnum from "../../../enums/notificationTypeEnum";
 import Notification from "../../../models/notification";
 import { Text, View } from "react-native";
 import ComentNotification from "./ComentNotification";
+import FollowNotification from "./FollowNotification";
+import LikeNotification from "./LikeNotification";
 
 export type NotificationListItemProps = {
     notification: Notification;
@@ -10,14 +12,14 @@ export type NotificationListItemProps = {
 
 export default function NotificationListItem({ notification }: NotificationListItemProps) {
     if (notification.type === NotificationTypeEnum.postLike) {
-        return <Text>NotificationListItem Post Like</Text>;
+        return <LikeNotification notification={notification} />;
     }
 
     if (notification.type === NotificationTypeEnum.postComment) {
-        return <ComentNotification notification={notification}/>;
+        return <ComentNotification notification={notification} />;
     }
 
     if (notification.type === NotificationTypeEnum.follow) {
-        return <Text>NotificationListItem Follow</Text>;
+        return <FollowNotification notification={notification} />;
     }
 }
