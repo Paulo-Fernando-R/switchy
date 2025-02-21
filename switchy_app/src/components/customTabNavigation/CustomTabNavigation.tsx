@@ -23,6 +23,10 @@ import addOut from "../../../assets/icons/addOut.png";
 import userFill from "../../../assets/icons/userFill.png";
 //@ts-ignore
 import userOut from "../../../assets/icons/userOut.png";
+//@ts-ignore
+import notificationFill from "../../../assets/icons/notificationFill.png"
+//@ts-ignore
+import notificationOut from "../../../assets/icons/notificationOut.png";
 
 type CustomTabNavigationProps = {
     state: TabNavigationState<ParamListBase>;
@@ -44,7 +48,7 @@ export default function CustomTabNavigation({ state, descriptors, navigation }: 
         (selected: boolean) => <Image style={styles.image} source={selected ? homeFill : homeOut} />,
         (selected: boolean) => <Image style={styles.image} source={selected ? searchFill : searchOut} />,
         (selected: boolean) => <Image style={styles.image} source={selected ? addFill : addOut} />,
-        (selected: boolean) => <Image style={styles.image} source={selected ? addFill : addOut} />,
+        (selected: boolean) => <Image style={styles.image} source={selected ? notificationFill : notificationOut} />,
         (selected: boolean) => <Image style={styles.image} source={selected ? userFill : userOut} />,
     ];
    
