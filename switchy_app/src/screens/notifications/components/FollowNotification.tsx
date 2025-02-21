@@ -26,6 +26,7 @@ export default function FollowNotification({ notification }: NotificationListIte
 
                 <Text style={styles.titleReceiver}>Começou a seguir você</Text>
             </View>
+            {!notification.read && <View style={styles.badge}></View>}
         </TouchableOpacity>
     );
 }

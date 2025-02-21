@@ -7,8 +7,7 @@ import appColors from "../../../styles/appColors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function LikeNotification({ notification }: NotificationListItemProps) {
-
-     const timeAgo = timeAgoFormatter(notification.createdAt);
+    const timeAgo = timeAgoFormatter(notification.createdAt);
 
     return (
         <TouchableOpacity style={styles.listItem} activeOpacity={0.8}>
@@ -25,9 +24,12 @@ export default function LikeNotification({ notification }: NotificationListItemP
                     </View>
                 </View>
                 <Text style={styles.titleReceiver}>Curtiu seu post</Text>
-                <HyperlinkText text={notification.content?.text!} textStyle={styles.itemContentBodyDark} />
+                <HyperlinkText
+                    text={notification.content?.text!}
+                    textStyle={styles.itemContentBodyDark}
+                />
             </View>
+            {!notification.read && <View style={styles.badge}></View>}
         </TouchableOpacity>
     );
 }
-

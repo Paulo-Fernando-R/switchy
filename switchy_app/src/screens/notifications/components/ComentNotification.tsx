@@ -31,6 +31,7 @@ export default function ComentNotification({ notification }: NotificationListIte
                     textStyle={styles.itemContentBody}
                 />
             </View>
+            {!notification.read && <View style={styles.badge}></View>}
         </TouchableOpacity>
     );
 }

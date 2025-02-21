@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         gap: 12,
     },
+
     itemAvatar: {
         width: 40,
         height: 40,
@@ -31,7 +32,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 8,
         justifyContent: "space-between",
-        
     },
     titleName: {
         ...appTexts.paragraph2Regular,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         ...appTexts.paragraph3Regular,
         color: appColors.text300,
     },
-    titleReceiver:{
+    titleReceiver: {
         ...appTexts.paragraph3Regular,
         color: appColors.accent400,
     },
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         maxWidth: "95%",
     },
 
-    itemContentBodyDark:{
+    itemContentBodyDark: {
         ...appTexts.paragraph3Regular,
         color: appColors.text300,
         maxWidth: "95%",
@@ -68,6 +68,13 @@ const styles = StyleSheet.create({
     },
     contentActionText: {
         ...appTexts.paragraph3Regular,
+    },
+    badge: {
+        width: 10,
+        height: 10,
+        borderRadius: 100,
+        backgroundColor: appColors.accent400,
+        alignSelf: "center",
     },
 });
 
