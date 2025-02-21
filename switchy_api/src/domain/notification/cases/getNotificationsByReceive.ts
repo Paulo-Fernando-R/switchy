@@ -12,8 +12,8 @@ export default class GetNotificationsByReceiverId {
         this.notificationRepository = notificationRepository;
     }
 
-    async execute(userId: string, numberOfEntries: number, numberToSkip: number): Promise<INotificationResponse[]> {
-        const notifications = await this.notificationRepository.getRecentsByReciever(userId, numberOfEntries, numberToSkip);
+    async execute(userId: string, page: number): Promise<INotificationResponse[]> {
+        const notifications = await this.notificationRepository.getRecentsByReciever(userId, page);
 
         const response: INotificationResponse[] = notifications.map((x: INotification) => {
             return {

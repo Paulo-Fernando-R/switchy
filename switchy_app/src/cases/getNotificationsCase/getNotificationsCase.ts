@@ -1,4 +1,4 @@
-import { CustomError } from "../../errors/customErrors";
+import { CustomError, InternalServerError } from "../../errors/customErrors";
 import Notification from "../../models/notification";
 import INotificationsRepository from "../../repositories/notificationsRepository/InotificationsRepository";
 import NotificationsRepository from "../../repositories/notificationsRepository/notificationsRepository";
@@ -11,16 +11,16 @@ export default class GetNotificationsCase implements IGetNotificationsCase {
         this.repository = new NotificationsRepository();
     }
 
-    async execute(limit: number, skip: number): Promise<Notification[]> {
+    async execute(page: number): Promise<Notification[]> {
         try {
-            return await this.repository.getAll(limit, skip);
+            return await this.repository.getAll(page);
         } catch (error) {
             console.error(error);
             if (error instanceof CustomError) {
                 throw new Error(error.screenMessage);
             }
 
-            throw error;
+            throw new InternalServerError();
         }
     }
 }

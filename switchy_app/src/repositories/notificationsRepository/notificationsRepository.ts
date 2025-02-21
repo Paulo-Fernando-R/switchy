@@ -11,11 +11,9 @@ export default class NotificationsRepository implements INotificationsRepository
         this.axios = new CustomAxiosClient();
     }
 
-    async getAll(limit: number, skip: number): Promise<Notification[]> {
-        const response = await this.axios.instance.get<Notification[]>(
-            `/Notifications/${limit}/${skip}/ByUser`
-        );
-        //  console.log(response.data, response.status);
+    async getAll(page: number): Promise<Notification[]> {
+        const response = await this.axios.instance.get<Notification[]>(`/Notifications/${page}`);
+          console.log(response.data, response.status);
         if (!response) {
             throw new NetworkError();
         }

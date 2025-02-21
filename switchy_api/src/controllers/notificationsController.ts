@@ -10,27 +10,30 @@ export default class NotificationsController {
     private readonly getNotificationsByReceiverId: GetNotificationsByReceiverId;
 
     constructor() {
-        this.markNotificationsWithReaderCase = container.get<MarkNotificationsWithReaderCase>('MarkNotificationsWithReaderCase');
-        this.getNotificationsByReceiverId = container.get<GetNotificationsByReceiverId>('GetNotificationsByReceiverId');
+        this.markNotificationsWithReaderCase = container.get<MarkNotificationsWithReaderCase>(
+            "MarkNotificationsWithReaderCase"
+        );
+        this.getNotificationsByReceiverId = container.get<GetNotificationsByReceiverId>(
+            "GetNotificationsByReceiverId"
+        );
     }
 
     async putReader(req: Request, res: Response) {
         const { ids } = req.body;
 
         await this.markNotificationsWithReaderCase.execute(ids);
-        
+
         res.status(StatusCodes.Ok).send();
     }
 
     async getLastEntriesByUser(req: Request, res: Response) {
         const userId = req.userId;
 
-        const { lastEntries, skip } = req.params;
-        const numberOfEntries = parseInt(lastEntries);
-        const numberToSkip = parseInt(skip);
+        const { page } = req.params;
+        const pageInt = parseInt(page);
 
         try {
-            const response = await this.getNotificationsByReceiverId.execute(userId, numberOfEntries, numberToSkip);
+            const response = await this.getNotificationsByReceiverId.execute(userId, pageInt);
             res.status(StatusCodes.Ok).send(response);
         } catch (ex) {
             if (ex instanceof UserNotFoundError) {

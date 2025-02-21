@@ -6,10 +6,11 @@ import { injectable } from "inversify";
 
 @injectable()
 export default class NotificationRepository extends DatabaseConnection implements INotificationRepository {
-    async getRecentsByReciever(userId: string, numberOfEntries: number, numberToSkip: number): Promise<INotification[]> {
+    async getRecentsByReciever(userId: string, page: number): Promise<INotification[]> {
+        const skip = (page - 1) * 10;
         const notifications = await Notification.find({
             'receiver.id': userId,
-        }).sort({ createdAt: -1 }).skip(numberToSkip).limit(numberOfEntries);
+        }).sort({ createdAt: -1 }).skip(skip).limit(10);
         const res: INotification[] = notifications.map((x) => {
             return {
                 id: x._id,

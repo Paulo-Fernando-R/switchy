@@ -790,7 +790,7 @@
         }
       }
     },
-    "/Notifications/{lastEntries}/{skip}/ByUser": {
+    "/Notifications/{page}": {
       "get": {
         "tags": [
           "Notifications"
@@ -798,13 +798,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "lastEntries",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "skip",
+            "name": "page",
             "in": "path",
             "required": true,
             "type": "string"

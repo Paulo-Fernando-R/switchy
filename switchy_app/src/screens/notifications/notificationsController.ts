@@ -11,9 +11,8 @@ export default class NotificationsController {
     }
 
     async getNotifications(pageParam: number) {
-        const limit = 10;
-        const skip = 0;
-        const datas = await new GetNotificationsCase().execute(limit, skip);
+    
+        const datas = await new GetNotificationsCase().execute(pageParam);
       //  console.log(datas);
         return datas;
     }
