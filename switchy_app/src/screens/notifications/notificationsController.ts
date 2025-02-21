@@ -10,6 +10,6 @@ export default class NotificationsController {
         const limit = 10;
         const skip = 0;
         const datas = await new GetNotificationsCase().execute(limit, skip);
-        console.log(datas);
+      //  console.log(datas);
     }
 }

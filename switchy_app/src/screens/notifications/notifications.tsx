@@ -24,7 +24,7 @@ export default function Notifications({ navigation, route }: RootTabsPublishNavi
     }
 
     useState(() => {
-        controller.load();
+        controller.refresh();
     });
 
     return (

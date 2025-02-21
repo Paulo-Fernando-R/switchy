@@ -13,6 +13,7 @@ export default class NotificationsRepository implements INotificationsRepository
 
     async getAll(limit: number, skip: number): Promise<Notification[]> {
         const response = await this.axios.instance.get<Notification[]>(`/Notifications/${limit}/${skip}/ByUser`);
+        console.log(response.data, response.status);
         if (!response) {
             throw new NetworkError();
         }

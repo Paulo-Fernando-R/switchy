@@ -1,7 +1,6 @@
 import React from "react";
 import NotificationTypeEnum from "../../../enums/notificationTypeEnum";
 import Notification from "../../../models/notification";
-import { Text, View } from "react-native";
 import ComentNotification from "./ComentNotification";
 import FollowNotification from "./FollowNotification";
 import LikeNotification from "./LikeNotification";
