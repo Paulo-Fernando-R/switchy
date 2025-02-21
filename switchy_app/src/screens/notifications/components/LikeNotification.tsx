@@ -1,7 +1,6 @@
 import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import HyperlinkText from "../../../components/hypelinkText/HyperlinkText";
 import timeAgoFormatter from "../../../../timeAgoFormatter";
-import { Facebook } from "react-content-loader/native";
 import styles from "./notificationListItemStyles";
 import { NotificationListItemProps } from "./NotificationListItem";
 import appColors from "../../../styles/appColors";

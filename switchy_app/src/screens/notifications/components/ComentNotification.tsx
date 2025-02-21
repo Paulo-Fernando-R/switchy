@@ -1,15 +1,13 @@
-import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import HyperlinkText from "../../../components/hypelinkText/HyperlinkText";
 import timeAgoFormatter from "../../../../timeAgoFormatter";
-import { Facebook } from "react-content-loader/native";
 import styles from "./notificationListItemStyles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { NotificationListItemProps } from "./NotificationListItem";
 import appColors from "../../../styles/appColors";
 
 export default function ComentNotification({ notification }: NotificationListItemProps) {
-
-     const timeAgo = timeAgoFormatter(notification.createdAt);
+    const timeAgo = timeAgoFormatter(notification.createdAt);
 
     return (
         <TouchableOpacity style={styles.listItem} activeOpacity={0.8}>
@@ -25,10 +23,14 @@ export default function ComentNotification({ notification }: NotificationListIte
                         <Text style={styles.titleUname}>{timeAgo}</Text>
                     </View>
                 </View>
-                <Text style={styles.titleReceiver}>Em resposta a @{notification.receiver.userName}</Text>
-                <HyperlinkText text={notification.content?.text!} textStyle={styles.itemContentBody} />
+                <Text style={styles.titleReceiver}>
+                    Em resposta a @{notification.receiver.userName}
+                </Text>
+                <HyperlinkText
+                    text={notification.content?.text!}
+                    textStyle={styles.itemContentBody}
+                />
             </View>
         </TouchableOpacity>
     );
 }
-

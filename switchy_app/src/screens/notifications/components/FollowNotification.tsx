@@ -3,7 +3,6 @@ import styles from "./notificationListItemStyles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import appColors from "../../../styles/appColors";
 import { NotificationListItemProps } from "./NotificationListItem";
-import { Facebook } from "react-content-loader/native";
 import timeAgoFormatter from "../../../../timeAgoFormatter";
 
 export default function FollowNotification({ notification }: NotificationListItemProps) {
