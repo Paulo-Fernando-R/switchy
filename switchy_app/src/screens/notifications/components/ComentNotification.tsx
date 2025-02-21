@@ -8,10 +8,8 @@ import { NotificationListItemProps } from "./NotificationListItem";
 import appColors from "../../../styles/appColors";
 
 export default function ComentNotification({ notification }: NotificationListItemProps) {
-    if (!notification) {
-        return <PostFeedItemSkeleton />;
-    }
-    // const timeAgo = timeAgoFormatter(item.publishDate);
+
+     const timeAgo = timeAgoFormatter(notification.createdAt);
 
     return (
         <TouchableOpacity style={styles.listItem} activeOpacity={0.8}>
@@ -22,24 +20,15 @@ export default function ComentNotification({ notification }: NotificationListIte
             <View style={styles.itemContent}>
                 <View style={styles.itemTitle}>
                     <View style={styles.itemTitle}>
-                        <Text style={styles.titleName}>name</Text>
-                        <Text style={styles.titleUname}>@username</Text>
-                        <Text style={styles.titleUname}>timeAgo</Text>
+                        <Text style={styles.titleName}>{notification.sender.name}</Text>
+                        <Text style={styles.titleUname}>@{notification.sender.userName}</Text>
+                        <Text style={styles.titleUname}>{timeAgo}</Text>
                     </View>
                 </View>
-                <Text style={styles.titleReceiver}>Em resposta a @username</Text>
-                <HyperlinkText text={"content aqui"} textStyle={styles.itemContentBody} />
+                <Text style={styles.titleReceiver}>Em resposta a @{notification.receiver.userName}</Text>
+                <HyperlinkText text={notification.content?.text!} textStyle={styles.itemContentBody} />
             </View>
         </TouchableOpacity>
     );
 }
 
-function PostFeedItemSkeleton() {
-    return (
-        <Facebook
-            backgroundColor={appColors.bg300}
-            foregroundColor={appColors.primary200}
-            width={Dimensions.get("window").width}
-        />
-    );
-}

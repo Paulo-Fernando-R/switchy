@@ -16,7 +16,7 @@ export default class HomeController {
     constructor() {
         this.repository = new PostRepository();
         this.getUserDataCase = new GetUserDataCase();
-        this.placeholderData = [null, null, null, null, null, null, null, null];
+        this.placeholderData = [null, null, null, null];
         this.storageService = new StorageService<User>(StorageTypeEnum.user);
     }
 

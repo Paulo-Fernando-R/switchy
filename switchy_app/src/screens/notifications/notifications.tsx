@@ -1,30 +1,27 @@
-import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Text, View } from "react-native";
 import appColors from "../../styles/appColors";
-import useKeyboard from "../../hooks/useKeyboard";
-import { useUserContext } from "../../contexts/userContext";
 import { RootTabsPublishNavigationProp } from "../../routes/types/navigationTypes";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import styles from "./notificationsStyles";
 import NotificationsController from "./notificationsController";
-import Feather from "@expo/vector-icons/Feather";
 import NotificationListItem from "./components/NotificationListItem";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 export default function Notifications({ navigation, route }: RootTabsPublishNavigationProp) {
     const controller = new NotificationsController();
-    const [text, setText] = useState("");
-    const keyBoard = useKeyboard();
-    const { user } = useUserContext();
-    const [snackBarError, setSnackBarError] = useState(false);
-    const [snackBarSucess, setSnackBarSucess] = useState(false);
 
     function navigate() {
         navigation.navigate("HomeStack", { screen: "Home" });
     }
 
-    useState(() => {
-        controller.refresh();
+    const { data, refetch } = useInfiniteQuery({
+        queryKey: ["Notifications"],
+        queryFn: ({ pageParam }) => controller.getNotifications(pageParam),
+        initialPageParam: 1,
+        getNextPageParam: controller.handleNext,
+        placeholderData: () => ({ pageParams: [1], pages: [controller.placeholderData] }),
     });
 
     return (
@@ -34,19 +31,10 @@ export default function Notifications({ navigation, route }: RootTabsPublishNavi
             </View>
 
             <FlatList
-                // style={styles.page}
-
-                refreshControl={
-                    <RefreshControl
-                        refreshing={false}
-                        onRefresh={() => {
-                            controller.load();
-                        }}
-                    />
-                }
-                data={[1, 2, 3]}
+                refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}
+                data={data?.pages.flat()}
                 ListEmptyComponent={<Empty />}
-                renderItem={({ item }) => <NotificationListItem notification={{ type: item }} />}
+                renderItem={({ item }) => <NotificationListItem notification={item} />}
             />
         </View>
     );

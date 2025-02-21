@@ -6,14 +6,16 @@ import INotificationsRepository from "./InotificationsRepository";
 
 export default class NotificationsRepository implements INotificationsRepository {
     private axios: ICustomAxiosClient;
-    
+
     constructor() {
         this.axios = new CustomAxiosClient();
     }
 
     async getAll(limit: number, skip: number): Promise<Notification[]> {
-        const response = await this.axios.instance.get<Notification[]>(`/Notifications/${limit}/${skip}/ByUser`);
-        console.log(response.data, response.status);
+        const response = await this.axios.instance.get<Notification[]>(
+            `/Notifications/${limit}/${skip}/ByUser`
+        );
+        //  console.log(response.data, response.status);
         if (!response) {
             throw new NetworkError();
         }
@@ -27,7 +29,7 @@ export default class NotificationsRepository implements INotificationsRepository
         }
 
         const data = response.data;
+        data.forEach((notification) => (notification.createdAt = new Date(notification.createdAt)));
         return data;
     }
-
 }

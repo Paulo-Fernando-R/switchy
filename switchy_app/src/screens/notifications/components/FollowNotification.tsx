@@ -7,10 +7,8 @@ import { Facebook } from "react-content-loader/native";
 import timeAgoFormatter from "../../../../timeAgoFormatter";
 
 export default function FollowNotification({ notification }: NotificationListItemProps) {
-    if (!notification) {
-        return <PostFeedItemSkeleton />;
-    }
-    // const timeAgo = timeAgoFormatter(item.publishDate);
+
+    const timeAgo = timeAgoFormatter(notification.createdAt);
 
     return (
         <TouchableOpacity style={styles.listItem} activeOpacity={0.8}>
@@ -21,9 +19,9 @@ export default function FollowNotification({ notification }: NotificationListIte
             <View style={styles.itemContent}>
                 <View style={styles.itemTitle}>
                     <View style={styles.itemTitle}>
-                        <Text style={styles.titleName}>name</Text>
-                        <Text style={styles.titleUname}>@username</Text>
-                        <Text style={styles.titleUname}>timeAgo</Text>
+                        <Text style={styles.titleName}>{notification.sender.name}</Text>
+                        <Text style={styles.titleUname}>@{notification.sender.userName}</Text>
+                        <Text style={styles.titleUname}>{timeAgo}</Text>
                     </View>
                 </View>
 
@@ -33,12 +31,3 @@ export default function FollowNotification({ notification }: NotificationListIte
     );
 }
 
-function PostFeedItemSkeleton() {
-    return (
-        <Facebook
-            backgroundColor={appColors.bg300}
-            foregroundColor={appColors.primary200}
-            width={Dimensions.get("window").width}
-        />
-    );
-}
