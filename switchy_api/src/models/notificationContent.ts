@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
-
 export default interface INotificationContent {
+    content: string;
 }

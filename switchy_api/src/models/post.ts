@@ -1,9 +1,8 @@
 import { Schema, Types, model } from "mongoose";
-import IPostUser from "./postUser";
 
 export interface IPost {
     id?: Types.ObjectId;
-    user: IPostUser;
+    user: Map<string, any>;
     parentId?: string;
     publishDate: Date;
     content: string;

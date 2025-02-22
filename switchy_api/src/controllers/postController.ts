@@ -12,6 +12,7 @@ import { UserNotFoundError } from "../domain/user/errors/userErrors";
 import IPostUser from "../models/postUser";
 import { Types } from "mongoose";
 import container from "../injection";
+import NewLikeNotificationCase from "../domain/notification/cases/newLikeNotificationCase";
 
 export default class PostController {
     private getUserPostsCase: GetUserPostsCase;
@@ -21,6 +22,7 @@ export default class PostController {
     private createPostCase: CreatePostCase;
     private getPostByIdCase: GetPostByIdCase;
     private updateLikeOfPostCase: UpdateLikeOfPostCase;
+    private newLikeNotificationCase: NewLikeNotificationCase;
 
     constructor() {
         this.getUserPostsCase = container.get<GetUserPostsCase>('GetUserPostsCase');
@@ -30,6 +32,7 @@ export default class PostController {
         this.createPostCase = container.get<CreatePostCase>('CreatePostCase');
         this.getPostByIdCase = container.get<GetPostByIdCase>('GetPostByIdCase');
         this.updateLikeOfPostCase = container.get<UpdateLikeOfPostCase>('UpdateLikeOfPostCase');
+        this.newLikeNotificationCase = container.get<NewLikeNotificationCase>('NewLikeNotificationCase');
     }
 
     async createPost(req: Request, res: Response) {
@@ -90,6 +93,14 @@ export default class PostController {
 
         try {
             await this.updateLikeOfPostCase.execute(postId, userId, value);
+
+            if (value) {
+                const post = await this.getPostByIdCase.execute(postId, userId);
+                const user = await this.getUserByIdCase.execute(userId);
+
+                await this.newLikeNotificationCase.execute(user, post);
+            }
+            
             res.status(StatusCodes.Ok).send();
         } catch (error) {
             if (error instanceof PostEmptyValueError) {

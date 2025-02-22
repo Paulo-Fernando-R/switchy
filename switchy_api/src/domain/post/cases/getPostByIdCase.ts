@@ -22,7 +22,11 @@ export default class GetPostByIdCase {
         var obj: IGetPostByIdResponse = {
             content: post.content,
             publishDate: post.publishDate,
-            user: post.user,
+            user: {
+                id: post.user.get('id'),
+                name: post.user.get('name'),
+                userName: post.user.get('userName'),
+            },
             id: post.id!.toString(),
             parentId: post.parentId,
             comments: comments,
