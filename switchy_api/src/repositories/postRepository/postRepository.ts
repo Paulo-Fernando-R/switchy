@@ -180,19 +180,36 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
         try {
             await this.connect();
             const post = await Post.findById(id).exec();
-            const res: IPost = {
+            const json = post?.toJSON();
+            
+            const response: IPost = {
+                id: json?._id,
+                content: json?.content ?? "",
+                parentId: json?.parentId,
+                publishDate: json?.publishDate!,
+                user: json?.user!,
+                comments: json?.comments,
+                likes: json?.likes,
+
+            }
+           /* const res: IPost = {
                 id: post?._id,
                 content: post?.content ?? "",
                 parentId: post?.parentId ?? "",
                 publishDate: post?.publishDate ?? new Date(),
-                user: post?.user!,
+                //user: post?.user!,
+                user: {
+                    id: post?.user.get("id")!,
+                    name: post?.user.name!,
+                    userName: post?.user.userName!
+                },
                 comments:
                     post?.comments?.map((e) => {
                         return { postId: e.postId, deleted: e.deleted };
                     }) ?? [],
                 likes: post?.likes ?? [],
-            };
-            return res;
+            };*/
+            return response;
         } catch (error) {
             console.error(error);
             //@ts-ignore

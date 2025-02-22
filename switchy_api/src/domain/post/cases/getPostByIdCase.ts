@@ -3,12 +3,13 @@ import { getTotalComments, getTotalLikes, isLikedByUser } from "../../../helpers
 import IPostRepository from "../../../repositories/postRepository/IpostRepository";
 import IGetPostByIdResponse from "../response/getPostByIdResponse";
 import "reflect-metadata";
+import { IPost } from "../../../models/post";
 
 @injectable()
 export default class GetPostByIdCase {
     private readonly postRepository: IPostRepository;
 
-    constructor(@inject('PostRepository') _postRepository: IPostRepository) {
+    constructor(@inject("PostRepository") _postRepository: IPostRepository) {
         this.postRepository = _postRepository;
     }
 
@@ -23,9 +24,9 @@ export default class GetPostByIdCase {
             content: post.content,
             publishDate: post.publishDate,
             user: {
-                id: post.user.get('id'),
-                name: post.user.get('name'),
-                userName: post.user.get('userName'),
+                id: post.user.id,
+                name: post.user.name,
+                userName: post.user.userName,
             },
             id: post.id!.toString(),
             parentId: post.parentId,
