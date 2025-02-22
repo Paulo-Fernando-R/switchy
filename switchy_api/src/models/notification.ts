@@ -8,8 +8,8 @@ export interface INotification<T = INotificationContent> {
     receiver: INotificationUser;
     type: Number;
 
-    createdAt: number;
-    content: T;
+    createdAt?: number;
+    content?: T | null;
 
     read: boolean;
 }
@@ -19,7 +19,7 @@ export const notificationSchema = new Schema<INotification>({
     sender: { type: Map, required: true },
     receiver: { type: Map, required: true },
     type: { type: Number, required: true },
-    content: { type: Map, required: true, default: null },
+    content: { type: Map, required: false, default: null },
     createdAt: { type: Number, required: false, default: Date.now() },
     read: { type: Boolean, default: false, required: false },
 });

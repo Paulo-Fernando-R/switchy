@@ -3,7 +3,6 @@ import INotificationRepository from "../../../repositories/notificationRepositor
 import { INotification } from "../../../models/notification";
 import INotificationUser from "../../../models/notificationUser";
 import { NotificationTypes } from "../../../utils/notificationTypes";
-import INotificationContent from "../../../models/notificationContent";
 import "reflect-metadata";
 
 @injectable()
@@ -29,19 +28,12 @@ export default class NewFollowerNotificationCase {
             userName: followed.userName!
         };
 
-        const notificationContent: INotificationContent = {
-            title: 'Novo seguidor',
-            text: `${sender.name} seguiu você!`,
-        };
-
         const notification: INotification = {
             sender: sender,
             receiver: receiver,
             type: NotificationTypes.follow,
-            content: notificationContent,
-            read: false
+            read: false,
         };
-
 
         await this.notificationRepository.create(notification);
     }

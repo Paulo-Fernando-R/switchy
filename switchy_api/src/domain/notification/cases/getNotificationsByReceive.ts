@@ -3,6 +3,7 @@ import INotificationRepository from "../../../repositories/notificationRepositor
 import "reflect-metadata";
 import INotificationResponse from "../responses/inotificationResponse";
 import { INotification } from "../../../models/notification";
+import { NotificationTypes } from "../../../utils/notificationTypes";
 
 @injectable()
 export default class GetNotificationsByReceiverId {
@@ -16,14 +17,19 @@ export default class GetNotificationsByReceiverId {
         const notifications = await this.notificationRepository.getRecentsByReciever(userId, page);
 
         const response: INotificationResponse[] = notifications.map((x: INotification) => {
+            var content = null;
+            if (x.type == NotificationTypes.follow) {
+                content = null;
+            }
+
             return {
                 id: x.id!.toString(),
                 sender: x.sender,
                 receiver: x.receiver,
                 read: x.read,
                 type: x.type,
-                createdAt: new Date(x.createdAt),
-                content: x.content,
+                createdAt: new Date(x.createdAt!),
+                content: content,
             };
         });
         return response;
