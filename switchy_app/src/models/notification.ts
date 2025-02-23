@@ -9,7 +9,6 @@ export default interface Notification {
 }
 
 export interface NotificationContent {
-    title: string;
     text:string;
 }
 

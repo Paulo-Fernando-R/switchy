@@ -17,10 +17,11 @@ export default class GetNotificationsByReceiverId {
         const notifications = await this.notificationRepository.getRecentsByReciever(userId, page);
 
         const response: INotificationResponse[] = notifications.map((x: INotification) => {
-            var content = null;
-            if (x.type == NotificationTypes.follow) {
+            var content = x.content ? x.content : null;
+            /*if (x.type == NotificationTypes.follow) {
                 content = null;
-            }
+            }*/
+           
 
             return {
                 id: x.id!.toString(),
@@ -29,7 +30,7 @@ export default class GetNotificationsByReceiverId {
                 read: x.read,
                 type: x.type,
                 createdAt: new Date(x.createdAt!),
-                content: content,
+                content:content
             };
         });
         return response;
