@@ -10,23 +10,42 @@ import { Dimensions } from "react-native";
 
 export type NotificationListItemProps = {
     notification: Notification;
+    onNotificationClick?: (ids: string[]) => void;
 };
 
-export default function NotificationListItem({ notification }: NotificationListItemProps) {
+export default function NotificationListItem({
+    notification,
+    onNotificationClick,
+}: NotificationListItemProps) {
     if (!notification) {
         return <PostFeedItemSkeleton />;
     }
 
     if (notification.type === NotificationTypeEnum.postLike) {
-        return <LikeNotification notification={notification} />;
+        return (
+            <LikeNotification
+                notification={notification}
+                onNotificationClick={onNotificationClick}
+            />
+        );
     }
 
     if (notification.type === NotificationTypeEnum.postComment) {
-        return <ComentNotification notification={notification} />;
+        return (
+            <ComentNotification
+                notification={notification}
+                onNotificationClick={onNotificationClick}
+            />
+        );
     }
 
     if (notification.type === NotificationTypeEnum.follow) {
-        return <FollowNotification notification={notification} />;
+        return (
+            <FollowNotification
+                notification={notification}
+                onNotificationClick={onNotificationClick}
+            />
+        );
     }
 }
 

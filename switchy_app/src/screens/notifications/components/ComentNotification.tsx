@@ -6,11 +6,14 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { NotificationListItemProps } from "./NotificationListItem";
 import appColors from "../../../styles/appColors";
 
-export default function ComentNotification({ notification }: NotificationListItemProps) {
+export default function ComentNotification({
+    notification,
+    onNotificationClick,
+}: NotificationListItemProps) {
     const timeAgo = timeAgoFormatter(notification.createdAt);
-
+    const action = () => onNotificationClick?.([notification.id]);
     return (
-        <TouchableOpacity style={styles.listItem} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.listItem} activeOpacity={0.8} onPress={action}>
             <View style={styles.itemAvatar}>
                 <FontAwesome name="comment" size={20} color={appColors.text100} />
             </View>

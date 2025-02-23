@@ -1,4 +1,5 @@
 import GetNotificationsCase from "../../cases/getNotificationsCase/getNotificationsCase";
+import NotificationMarkAsReadCase from "../../cases/notificationMarkAsReadCase/notificationMarkAsReadCase";
 
 export default class NotificationsController {
     placeholderData: any[];
@@ -10,6 +11,10 @@ export default class NotificationsController {
         const datas = await new GetNotificationsCase().execute(pageParam);
         console.log(datas);
         return datas;
+    }
+
+    async markAsRead(ids: string[]) {
+        await new NotificationMarkAsReadCase().execute(ids);
     }
 
     handleNext(lastPage: Notification[], pages: Notification[][], lastPageParam: number) {

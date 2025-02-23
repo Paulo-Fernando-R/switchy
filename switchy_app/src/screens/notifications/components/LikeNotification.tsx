@@ -6,11 +6,16 @@ import { NotificationListItemProps } from "./NotificationListItem";
 import appColors from "../../../styles/appColors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
-export default function LikeNotification({ notification }: NotificationListItemProps) {
+export default function LikeNotification({
+    notification,
+    onNotificationClick,
+}: NotificationListItemProps) {
     const timeAgo = timeAgoFormatter(notification.createdAt);
 
+    const action = () => onNotificationClick?.([notification.id]);
+
     return (
-        <TouchableOpacity style={styles.listItem} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.listItem} activeOpacity={0.8} onPress={action}>
             <View style={styles.itemAvatar}>
                 <AntDesign name="heart" size={20} color={appColors.text100} />
             </View>

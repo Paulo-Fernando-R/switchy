@@ -7,7 +7,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import styles from "./notificationsStyles";
 import NotificationsController from "./notificationsController";
 import NotificationListItem from "./components/NotificationListItem";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
 export default function Notifications({ navigation, route }: RootTabsPublishNavigationProp) {
     const controller = new NotificationsController();
@@ -24,6 +24,16 @@ export default function Notifications({ navigation, route }: RootTabsPublishNavi
         placeholderData: () => ({ pageParams: [1], pages: [controller.placeholderData] }),
     });
 
+    const { mutate } = useMutation({
+        mutationKey: ["NotificationsRead"],
+        mutationFn: (ids: string[]) => controller.markAsRead(ids),
+    });
+
+    const action = (ids: string[]) => {
+        mutate(ids);
+        refetch();
+    };
+
     return (
         <View style={styles.page}>
             <View style={styles.header}>
@@ -34,7 +44,12 @@ export default function Notifications({ navigation, route }: RootTabsPublishNavi
                 refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}
                 data={data?.pages.flat()}
                 ListEmptyComponent={<Empty />}
-                renderItem={({ item }) => <NotificationListItem notification={item} />}
+                renderItem={({ item }) => (
+                    <NotificationListItem
+                        notification={item}
+                        onNotificationClick={action}
+                    />
+                )}
             />
         </View>
     );

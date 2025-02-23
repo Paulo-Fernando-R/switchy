@@ -5,12 +5,12 @@ import appColors from "../../../styles/appColors";
 import { NotificationListItemProps } from "./NotificationListItem";
 import timeAgoFormatter from "../../../../timeAgoFormatter";
 
-export default function FollowNotification({ notification }: NotificationListItemProps) {
+export default function FollowNotification({ notification, onNotificationClick }: NotificationListItemProps) {
 
     const timeAgo = timeAgoFormatter(notification.createdAt);
-
+    const action = () => onNotificationClick?.([notification.id]);
     return (
-        <TouchableOpacity style={styles.listItem} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.listItem} activeOpacity={0.8} onPress={action}>
             <View style={styles.itemAvatar}>
                 <Ionicons name="person-add" size={20} color={appColors.text100} />
             </View>
