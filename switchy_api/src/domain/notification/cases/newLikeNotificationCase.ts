@@ -31,7 +31,7 @@ export default class NewLikeNotificationCase {
         };
 
         const content: INotificationContent = {
-            content: post.content
+            text: post.content
         };
 
         const notification: INotification = {

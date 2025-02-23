@@ -1,3 +1,3 @@
 export default interface INotificationContent {
-    content: string;
+    text: string;
 }
