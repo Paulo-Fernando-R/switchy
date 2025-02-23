@@ -3,13 +3,14 @@ import { INotification, Notification } from "../../models/notification";
 import INotificationRepository from "./inotificationRepository";
 import "reflect-metadata";
 import { injectable } from "inversify";
+import { Types } from "mongoose";
 
 @injectable()
 export default class NotificationRepository extends DatabaseConnection implements INotificationRepository {
     async getRecentsByReciever(userId: string, page: number): Promise<INotification[]> {
         const skip = (page - 1) * 10;
         const notifications = await Notification.find({
-            'receiver.id': userId,
+            'receiver.id': new Types.ObjectId(userId),
         }).sort({ createdAt: -1 }).skip(skip).limit(10);
         const res: INotification[] = notifications.map((x) => {
             return {

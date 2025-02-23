@@ -1,5 +1,5 @@
 export enum NotificationTypes {
-    follow = 1,
-    like = 2,
-    comment = 3
+    follow = 3,
+    like = 1,
+    comment = 2
 }

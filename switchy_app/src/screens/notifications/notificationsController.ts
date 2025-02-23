@@ -8,6 +8,7 @@ export default class NotificationsController {
 
     async getNotifications(pageParam: number) {
         const datas = await new GetNotificationsCase().execute(pageParam);
+        console.log(datas);
         return datas;
     }
 
