@@ -4,7 +4,7 @@
     "main": "src/server.ts",
     "scripts": {
         "dev": "node swagger.js && ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server.ts",
-        "build": "npm install && tsc",
+        "build": "npm install && tsc && copy .env dist\\.env",
         "swagger": "node swagger.js",
         "production": "node dist/server.js",
         "server": "pm2 start dist/server.js"
