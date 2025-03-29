@@ -17,3 +17,4 @@ yarn-error.*
 *.tsbuildinfo
 
 /dist/
+swagger_output.json
