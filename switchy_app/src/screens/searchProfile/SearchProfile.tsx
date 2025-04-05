@@ -54,8 +54,7 @@ export default function SearchProfile({ navigation, route }: SearchProfileProps)
                     @{data?.userData.userName}
                 </Text>
                 <Text style={styles.bio}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed felis id risus consequat
-                    tincidunt.
+                   {data?.userData.description ?? ""}
                 </Text>
 
                 <Text style={styles.follow}>{data?.userData.followers?.length} Seguidores</Text>
