@@ -6,12 +6,30 @@ import { IUser } from "../../models/user";
 import IPostRepository from "./IpostRepository";
 import { Types } from "mongoose";
 import "reflect-metadata";
+import IPostUser from "../../models/postUser";
 
 @injectable()
 export class PostRepository extends DatabaseConnection implements IPostRepository {
     
     constructor() {
         super();
+    }
+
+    async getUserFromPost(postId: string): Promise<IPostUser | null> {
+        await this.connect();
+        const post = await Post.findById(postId).exec();
+        if (post == null) return null;
+
+        const json = post?.toJSON();
+        const user = json.user;
+        
+        const response: IPostUser = {
+            id: user.id,
+            name: user.name,
+            userName: user.userName
+        }
+        
+        return response;
     }
 
     async getUserPosts(userId: string, page: number) {
@@ -190,25 +208,8 @@ export class PostRepository extends DatabaseConnection implements IPostRepositor
                 user: json?.user!,
                 comments: json?.comments,
                 likes: json?.likes,
-
             }
-           /* const res: IPost = {
-                id: post?._id,
-                content: post?.content ?? "",
-                parentId: post?.parentId ?? "",
-                publishDate: post?.publishDate ?? new Date(),
-                //user: post?.user!,
-                user: {
-                    id: post?.user.get("id")!,
-                    name: post?.user.name!,
-                    userName: post?.user.userName!
-                },
-                comments:
-                    post?.comments?.map((e) => {
-                        return { postId: e.postId, deleted: e.deleted };
-                    }) ?? [],
-                likes: post?.likes ?? [],
-            };*/
+           
             return response;
         } catch (error) {
             console.error(error);

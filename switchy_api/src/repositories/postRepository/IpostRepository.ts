@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { IPost } from "../../models/post";
 import { IUser } from "../../models/user";
+import IPostUser from "../../models/postUser";
 
 export default interface IPostRepository {
     createPost(post: IPost): Promise<Types.ObjectId>;
@@ -15,4 +16,5 @@ export default interface IPostRepository {
     updateUserPost(userId: string, user: IUser): Promise<void>;
     getAllByUser(userId: string): Promise<IPost[]>;
     deleteLikesByUser(userId: string): Promise<void>;
+    getUserFromPost(postId: string): Promise<IPostUser | null>;
 }
