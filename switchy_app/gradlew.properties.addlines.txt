@@ -1,0 +1,2 @@
+# Dkotlin.daemon.jvm.options specifies memory limits for kotlin compiler
+org.gradle.jvmargs=-Xmx4G -Dkotlin.daemon.jvm.options=-Xmx2G -XX:+HeapDumpOnOutOfMemoryError -XX:+UseParallelGC -Dfile.encoding=UTF-8

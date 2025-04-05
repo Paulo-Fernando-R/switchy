@@ -11,8 +11,9 @@ module.exports = {
             resizeMode: "contain",
             backgroundColor: "#3D65C9",
         },
-        ios: {
-            supportsTablet: true,
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "com.ferreira.switchy"
         },
         android: {
             adaptiveIcon: {
