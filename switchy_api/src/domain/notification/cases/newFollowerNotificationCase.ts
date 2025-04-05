@@ -4,6 +4,7 @@ import { INotification } from "../../../models/notification";
 import INotificationUser from "../../../models/notificationUser";
 import { NotificationTypes } from "../../../utils/notificationTypes";
 import "reflect-metadata";
+import { Types } from "mongoose";
 
 @injectable()
 export default class NewFollowerNotificationCase {
@@ -17,13 +18,13 @@ export default class NewFollowerNotificationCase {
     async execute(followed: any, follower: any) {
 
         const sender: INotificationUser = {
-            id: follower.id!,
+            id: new Types.ObjectId(follower.id!),
             name: follower.name,
             userName: follower.userName!
         };
 
         const receiver: INotificationUser = {
-            id: followed.id!,
+            id: new Types.ObjectId(followed.id!),
             name: followed.name,
             userName: followed.userName!
         };
