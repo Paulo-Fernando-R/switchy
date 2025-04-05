@@ -18,11 +18,7 @@ export default class GetNotificationsByReceiverId {
 
         const response: INotificationResponse[] = notifications.map((x: INotification) => {
             var content = x.content ? x.content : null;
-            /*if (x.type == NotificationTypes.follow) {
-                content = null;
-            }*/
-           
-
+            
             return {
                 id: x.id!.toString(),
                 sender: x.sender,

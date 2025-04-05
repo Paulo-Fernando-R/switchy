@@ -40,6 +40,7 @@ import NewFollowerNotificationCase from "./domain/notification/cases/newFollower
 import GetNotificationsByReceiverId from "./domain/notification/cases/getNotificationsByReceive";
 import NewLikeNotificationCase from "./domain/notification/cases/newLikeNotificationCase";
 import GetUserByPostIdCase from "./domain/user/cases/getUserByPostCase";
+import NewCommentNotificationCase from "./domain/notification/cases/newCommentNotificationCase";
 
 let container = new Container();
 container.bind<ITokenService>('TokenService').to(JwtTokenService);
@@ -78,5 +79,6 @@ container.bind('NewFollowerNotificationCase').to(NewFollowerNotificationCase);
 container.bind('GetNotificationsByReceiverId').to(GetNotificationsByReceiverId);
 container.bind('NewLikeNotificationCase').to(NewLikeNotificationCase);
 container.bind('GetUserByPostIdCase').to(GetUserByPostIdCase);
+container.bind('NewCommentNotificationCase').to(NewCommentNotificationCase);
 
 export default container;

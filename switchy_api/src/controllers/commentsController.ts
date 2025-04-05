@@ -8,16 +8,22 @@ import GetCommentsCase from "../domain/post/cases/getCommentsCase";
 import { IUser } from "../models/user";
 import { Types } from "mongoose";
 import container from "../injection";
+import NewCommentNotificationCase from "../domain/notification/cases/newCommentNotificationCase";
+import GetUserByPostIdCase from "../domain/user/cases/getUserByPostCase";
 
 export default class CommentsController {
     private readonly getUserByIdCase: GetUserByIdCase;
     private readonly saveCommentCase: SaveCommentCase;
     private readonly getCommentsCase: GetCommentsCase;
+    private readonly newCommentNotificationCase: NewCommentNotificationCase;
+    private readonly getUserByPostIdCase: GetUserByPostIdCase;
 
     constructor() {
         this.getUserByIdCase = container.get<GetUserByIdCase>('GetUserByIdCase');
         this.saveCommentCase = container.get<SaveCommentCase>('SaveCommentCase');
         this.getCommentsCase = container.get<GetCommentsCase>('GetCommentsCase');
+        this.newCommentNotificationCase = container.get<NewCommentNotificationCase>('NewCommentNotificationCase');
+        this.getUserByPostIdCase = container.get<GetUserByPostIdCase>('GetUserByPostIdCase');
     }
 
     async add(req: Request, res: Response) {
@@ -34,6 +40,9 @@ export default class CommentsController {
                 id: new Types.ObjectId(user.id as string),
             };
             await this.saveCommentCase.execute(content, parentId, aux);
+
+            const userReceiver = await this.getUserByPostIdCase.execute(parentId);
+            await this.newCommentNotificationCase.execute(content, user, userReceiver)
 
             res.status(StatusCodes.Ok).send();
         } catch (ex) {
