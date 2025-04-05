@@ -17,7 +17,7 @@ import React from "react";
 import Recovery from "../screens/recovery/Recovery";
 
 import SignUp from "../screens/signup/SignUp";
-import Notifications from "../screens/notifications/Notifications";
+import Notifications from "../screens/notifications/notifications";
 
 const Tab = createBottomTabNavigator<RootTabsParamList>();
 const Stack = createStackNavigator<AuthStackParamList>();
