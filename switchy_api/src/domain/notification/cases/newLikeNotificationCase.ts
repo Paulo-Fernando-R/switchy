@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify";
+import { inject, } from "inversify";
 import { Types } from "mongoose";
 import INotificationUser from "../../../models/notificationUser";
 import IGetPostByIdResponse from "../../post/response/getPostByIdResponse";
@@ -41,6 +41,10 @@ export default class NewLikeNotificationCase {
             read: false,
             content: content,
         };
+
+        if (sender.id.toString() == receiver.id.toString()) {
+            return;
+        }
 
         await this.notificationRepository.create(notification);
     }
