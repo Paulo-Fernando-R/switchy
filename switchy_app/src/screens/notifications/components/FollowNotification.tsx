@@ -4,11 +4,21 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import appColors from "../../../styles/appColors";
 import { NotificationListItemProps } from "./NotificationListItem";
 import timeAgoFormatter from "../../../../timeAgoFormatter";
+import { useState } from "react";
 
-export default function FollowNotification({ notification, onNotificationClick }: NotificationListItemProps) {
-
+export default function FollowNotification({
+    notification,
+    onNotificationClick,
+}: NotificationListItemProps) {
     const timeAgo = timeAgoFormatter(notification.createdAt);
-    const action = () => onNotificationClick?.([notification.id]);
+    //const action = () => onNotificationClick?.([notification.id]);
+    const [read, setRead] = useState(notification.read);
+
+    const action = () => {
+        onNotificationClick?.([notification.id]);
+        notification.read = true;
+        setRead(true);
+    };
     return (
         <TouchableOpacity style={styles.listItem} activeOpacity={0.8} onPress={action}>
             <View style={styles.itemAvatar}>
@@ -26,8 +36,7 @@ export default function FollowNotification({ notification, onNotificationClick }
 
                 <Text style={styles.titleReceiver}>Começou a seguir você</Text>
             </View>
-            {!notification.read && <View style={styles.badge}></View>}
+            {!read && <View style={styles.badge}></View>}
         </TouchableOpacity>
     );
 }
-
