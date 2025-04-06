@@ -5,14 +5,20 @@ import styles from "./notificationListItemStyles";
 import { NotificationListItemProps } from "./NotificationListItem";
 import appColors from "../../../styles/appColors";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useState } from "react";
 
 export default function LikeNotification({
     notification,
     onNotificationClick,
 }: NotificationListItemProps) {
     const timeAgo = timeAgoFormatter(notification.createdAt);
+    const [read, setRead] = useState(notification.read);
 
-    const action = () => onNotificationClick?.([notification.id]);
+    const action = () => {
+        onNotificationClick?.([notification.id]);
+        notification.read = true;
+        setRead(true);
+    };
 
     return (
         <TouchableOpacity style={styles.listItem} activeOpacity={0.8} onPress={action}>
@@ -34,7 +40,7 @@ export default function LikeNotification({
                     textStyle={styles.itemContentBodyDark}
                 />
             </View>
-            {!notification.read && <View style={styles.badge}></View>}
+            {!read && <View style={styles.badge}></View>}
         </TouchableOpacity>
     );
 }
