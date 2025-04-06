@@ -5,13 +5,21 @@ import styles from "./notificationListItemStyles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { NotificationListItemProps } from "./NotificationListItem";
 import appColors from "../../../styles/appColors";
+import { useState } from "react";
 
 export default function ComentNotification({
     notification,
     onNotificationClick,
 }: NotificationListItemProps) {
     const timeAgo = timeAgoFormatter(notification.createdAt);
-    const action = () => onNotificationClick?.([notification.id]);
+    // const action = () => onNotificationClick?.([notification.id]);
+    const [read, setRead] = useState(notification.read);
+
+    const action = () => {
+        onNotificationClick?.([notification.id]);
+        notification.read = true;
+        setRead(true);
+    };
     return (
         <TouchableOpacity style={styles.listItem} activeOpacity={0.8} onPress={action}>
             <View style={styles.itemAvatar}>
@@ -34,7 +42,7 @@ export default function ComentNotification({
                     textStyle={styles.itemContentBody}
                 />
             </View>
-            {!notification.read && <View style={styles.badge}></View>}
+            {!read && <View style={styles.badge}></View>}
         </TouchableOpacity>
     );
 }
