@@ -40,9 +40,9 @@ export default class NewCommentNotificationCase {
             content: content
         };
 
-        if (sender.id.toString() == receiver.id.toString()) {
+        /*if (sender.id.toString() == receiver.id.toString()) {
             return;
-        }
+        }*/
 
         await this.notificationRepository.create(notification);
     }
