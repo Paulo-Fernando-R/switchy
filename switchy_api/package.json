@@ -4,7 +4,7 @@
     "main": "src/server.ts",
     "scripts": {
         "dev": "set NODE_ENV=development && node swagger.js && ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server.ts",
-        "build": "npm install && node swagger.js && tsc",
+        "build": "npm install && node swagger.js && tsc && copy .env.prd dist\\.env.prd",
         "swagger": "node swagger.js",
         "production": "NODE_ENV=production && node dist/server.js"
     },
